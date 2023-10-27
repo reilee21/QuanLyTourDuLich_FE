@@ -5,7 +5,7 @@ import Header from "./Header"
 const DefaultLayout = () =>{
     return(
         <>
-        <Header/>
+       <Header/>
        <div className="container">
               <Outlet/>
        </div>
