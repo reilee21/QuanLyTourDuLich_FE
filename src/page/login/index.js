@@ -3,7 +3,7 @@ import FormLogin from "./Formlogin"
 import Cookies from 'universal-cookie';
 import { jwtDecode } from 'jwt-decode';
 import { useAuth } from "../../context/AuthContext";
-import { GoogleOAuthProvider,,GoogleLogin } from "@react-oauth/google";
+import { GoogleOAuthProvider,GoogleLogin } from "@react-oauth/google";
 
 
 const LoginPage = () =>{
