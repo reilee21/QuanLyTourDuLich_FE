@@ -3,6 +3,7 @@ import React, { createContext, useContext, useState,useEffect } from 'react';
 import Cookies from 'universal-cookie';
 import { jwtDecode } from 'jwt-decode';
 import axios from '../api/axios';
+import { googleLogout } from '@react-oauth/google';
 const AuthContext = createContext();
 
 export function useAuth() {    
@@ -11,16 +12,23 @@ export function useAuth() {
 
 export function AuthProvider({ children }) {
   const [isLogin, setIsLogin] = useState();
+  const [phuongthuc, setPhuongthuc] = useState('');
+
   const cookie = new Cookies();
+
+  const googlelogin = () =>{
+    console.log("gglogin");
+
+  }
 
   const login = async (username, password) => {
     try {
       const response = await axios.post(`/api/DangNhap?username=${username}&password=${password}`);
       const decoded = jwtDecode(response.token);
-      console.log(response.token);
       cookie.set("jwt-auth", response, {
         expires: new Date(decoded.exp * 1000),
       });
+      setPhuongthuc("jwt-auth");
       setIsLogin(true);
     } catch (error) {
       console.error('Login error:', error);
@@ -28,9 +36,16 @@ export function AuthProvider({ children }) {
   };
 
   const logout = () => {
+    if(phuongthuc === "jwt-auth"){
+      cookie.remove("jwt-auth");
+    }
+    else{
+      console.log("gg");
+        
+      googleLogout();
+    }
     console.log("out");
-
-    cookie.remove("jwt-auth");
+    setPhuongthuc("");
     setIsLogin(false);
   };
   const checkTokenExpiration = async () => {
@@ -47,12 +62,15 @@ export function AuthProvider({ children }) {
     }
   };
   useEffect(() => {
-    if(isLogin){
+    if(phuongthuc === "jwt-auth")
+    {
+      if(isLogin){
         checkTokenExpiration();    
         const intervalId = setInterval(checkTokenExpiration, 600000);
         return () => clearInterval(intervalId);
     }
-  }, [isLogin]);
+    }
+  }, [isLogin, phuongthuc]);
   const refreshToken = async () => {
     const oldTokenData = cookie.get("jwt-auth");
     if (oldTokenData) {
@@ -65,7 +83,7 @@ export function AuthProvider({ children }) {
     }
   };
   return (
-    <AuthContext.Provider value={{ isLogin, login, logout }}>
+    <AuthContext.Provider value={{ isLogin, login, logout, googlelogin }}>
       {children}
     </AuthContext.Provider>
   );
