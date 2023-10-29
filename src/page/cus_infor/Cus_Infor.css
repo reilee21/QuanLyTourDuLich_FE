@@ -1,0 +1,19 @@
+.cus_infor-form {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    background: #ffffff;
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+}
+
+
+.cus_infor-form input {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 20px;
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
+    outline: none;
+}

@@ -11,7 +11,7 @@
 }
 
 .trum {
-    transform: translateY(+60%);
+    transform: translateY(+50%);
 }
 
 .page-title {
@@ -72,11 +72,6 @@
     padding-left: 65px;
     cursor: pointer;
     text-align: center;
-}
-
-.google .oauth-google:hover {
-
-    background: #0056b3;
 }
 
 .login-container {
