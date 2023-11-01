@@ -1,32 +1,32 @@
-import axios from "../../api/axios";
-import FormLogin from "./Formlogin"
-import Cookies from 'universal-cookie';
-import { jwtDecode } from 'jwt-decode';
+import FormLogin from "./Formlogin";
+
 import { useAuth } from "../../context/AuthContext";
-import { GoogleOAuthProvider,GoogleLogin } from "@react-oauth/google";
+import { GoogleOAuthProvider, GoogleLogin, useGoogleLogin, googleLogout } from "@react-oauth/google";
+import { Button } from "react-bootstrap";
+import { useState } from "react";
 
+const LoginPage = () => {
+  const { logout, googlelogin } = useAuth();
 
-const LoginPage = () =>{
-  const {logout,googlelogin} = useAuth();
-
-  return(
+  return (
     <>
-      <h1>Login Page</h1>  
-      <FormLogin/>    
-      <button type="submit" onClick={logout}>logout</button>
-      <GoogleOAuthProvider clientId="958123963258-tl9ffg26r7ioopmh519m2q22o681ggi9.apps.googleusercontent.com">
+      <h1>Login Page</h1>
+      <FormLogin />
+      <button type="submit" onClick={logout}>
+        logout
+      </button>
+
       <GoogleLogin
-          onSuccess={credentialResponse => {
-            const decoded = jwtDecode(credentialResponse.credential)
-            googlelogin()
-          }}
-          onError={() => {
-            console.log('Login Failed');
-          }}
-        />;
-      </GoogleOAuthProvider>
-     
+        onSuccess={(credentialResponse) => {
+          googlelogin();
+        }}
+        onError={() => {
+          console.log('Login Failed');
+        }}
+      />
     </>
-  )
-}
-export default LoginPage
+  );
+};
+
+
+export default LoginPage;
