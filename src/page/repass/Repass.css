@@ -1,5 +1,5 @@
-.main_contact {
-    max-width: 600px;
+.main-repass {
+    max-width: 500px;
     margin: 0 auto;
     padding: 20px;
     background: #ffffff;
@@ -7,24 +7,24 @@
     border-radius: 10px;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
     text-align: center;
-    margin-top: 100px;
+    margin-top: 150px;
 }
 
-.tile_contact {
+.repass_title {
     text-align: center;
     color: #007bff;
     margin-bottom: 10px;
     font-size: 30px;
 }
 
-.main_contact label {
+.main-repass label {
     font-weight: bold;
     display: block;
     text-align: left;
     margin-bottom: 10px;
 }
 
-.main_contact input {
+.main-repass input {
     width: 100%;
     padding: 10px;
     margin: 5px 0;
@@ -33,7 +33,7 @@
     outline: none;
 }
 
-.contact_button {
+.repass-button {
     width: 100%;
     padding: 10px;
     background: #007bff;
@@ -45,21 +45,9 @@
     transition: background-color 0.3s;
 }
 
-.main_contact textarea {
-    width: 100%;
-    padding: 10px;
-    margin: 5px 0;
-    border: 1px solid #e0e0e0;
-    border-radius: 10px;
-    outline: none;
-    resize: none;
-    /* Ngăn người dùng thay đổi kích thước */
-    height: 150px;
-    /* Điều chỉnh chiều cao mặc định */
-}
 
-.contact-container {
-    background-image: url('C:\Users\thanh\OneDrive\Máy tính\Dulich\QuanLyTourDuLich_FE\public\image\contact.png');
+.repass_container {
+    background-image: url('C:\Users\thanh\OneDrive\Máy tính\Dulich\QuanLyTourDuLich_FE\public\image\login.png');
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;

@@ -30,41 +30,43 @@ const ChangePasswordPage = () => {
     };
 
     return (
-        <div>
-            <h1>Đổi Mật Khẩu</h1>
-            <form onSubmit={handleSubmit}>
-                <div>
-                    <label>Mật khẩu cũ</label>
-                    <input
-                        type="password"
-                        name="oldPassword"
-                        value={oldPassword}
-                        onChange={handleChange}
-                        required
-                    />
-                </div>
-                <div>
-                    <label>Mật khuẩu mới</label>
-                    <input
-                        type="password"
-                        name="newPassword"
-                        value={newPassword}
-                        onChange={handleChange}
-                        required
-                    />
-                </div>
-                <div>
-                    <label>Nhập lại mật khuẩu</label>
-                    <input
-                        type="password"
-                        name="confirmPassword"
-                        value={confirmPassword}
-                        onChange={handleChange}
-                        required
-                    />
-                </div>
-                <button type="submit">Xác nhận</button>
-            </form>
+        <div className="repass_container">
+            <div className="main-repass">
+                <h1 className="repass_title">Đổi Mật Khẩu</h1>
+                <form onSubmit={handleSubmit}>
+                    <div>
+                        <label>Mật khẩu cũ</label>
+                        <input
+                            type="password"
+                            name="oldPassword"
+                            value={oldPassword}
+                            onChange={handleChange}
+                            required
+                        />
+                    </div>
+                    <div>
+                        <label>Mật khuẩu mới</label>
+                        <input
+                            type="password"
+                            name="newPassword"
+                            value={newPassword}
+                            onChange={handleChange}
+                            required
+                        />
+                    </div>
+                    <div>
+                        <label>Nhập lại mật khuẩu</label>
+                        <input
+                            type="password"
+                            name="confirmPassword"
+                            value={confirmPassword}
+                            onChange={handleChange}
+                            required
+                        />
+                    </div>
+                    <button className="repass-button" type="submit">Xác nhận</button>
+                </form>
+            </div>
         </div>
     );
 };
