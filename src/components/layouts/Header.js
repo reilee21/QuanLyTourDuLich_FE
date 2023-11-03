@@ -12,7 +12,6 @@ const Header = () => {
                     <Nav className="nav-cus_info" style={{ display: 'inline-block' }} as={Link} to="/cus_info">Thông tin khách hàng</Nav >
                 </div>
                 <Nav >
-
                     <div className="nav-main">
                         <input placeholder="Tìm kiếm ở đây...." type="text" className='nav-input' />
                         <Nav className="nav-cus_info" as={Link} to="/cus_info"></Nav >

@@ -29,6 +29,20 @@ function CustomerInfoForm() {
 
     return (
         <>
+            <div className="cusinfo">
+                <tr>
+                    <Link to="/doithuong" className="black-link">Đổi thưởng</Link>
+                </tr>
+                <tr>
+                    <Link to="/histour" className="black-link">Tour đã đi</Link>
+                </tr>
+                <tr>
+                    <Link to="/histour" className="black-link">Đổi mật khẩu</Link>
+                </tr>
+                <tr>
+                    <td><a style={{ color: "red", borderTop: "1px solid #e0e0e0" }}>Đăng xuất</a></td>
+                </tr>
+            </div >
             <div className="cus_infor-container">
                 <div className="trum">
                     <div className="cus_infor-form">
@@ -44,7 +58,7 @@ function CustomerInfoForm() {
                                     <input type="tel" name="SoDienThoaiKH" value={customerInfo.SoDienThoaiKH} onChange={handleChange} required />
                                 </div>
                                 <div className="grid-item">
-                                    <label>Ngay Sinh</label>
+                                    <label>Ngày Sinh</label>
                                     <input type="date" name="NgaySinh" value={customerInfo.NgaySinh} onChange={handleChange} required />
                                 </div>
                                 <div className="grid-item">
@@ -52,15 +66,15 @@ function CustomerInfoForm() {
                                     <input type="email" name="Email" value={customerInfo.Email} onChange={handleChange} required />
                                 </div>
                                 <div className="grid-item">
-                                    <label>So CCCD</label>
+                                    <label>Số CCCD</label>
                                     <input type="text" name="SoCCCD" value={customerInfo.SoCCCD} onChange={handleChange} required />
                                 </div>
                                 <div className="grid-item">
-                                    <label>Ma Passport</label>
+                                    <label>Mã Passport</label>
                                     <input type="text" name="MaPassport" value={customerInfo.MaPassport} onChange={handleChange} required />
                                 </div>
                                 <div className="grid-item">
-                                    <label>Dia Chi</label>
+                                    <label>Địa Chỉ</label>
                                     <input type="text" name="DiaChi" value={customerInfo.DiaChi} onChange={handleChange} required />
                                 </div>
                             </div>
