@@ -1,38 +1,72 @@
 import React, { useState } from 'react';
-// Import CSS stylesheet if needed
+import "./Repass.css"
 
 const ChangePasswordPage = () => {
-    const [password, setPassword] = useState('');
+    const [oldPassword, setOldPassword] = useState('');
+    const [newPassword, setNewPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setPassword(value);
+        if (name === 'oldPassword') {
+            setOldPassword(value);
+        } else if (name === 'newPassword') {
+            setNewPassword(value);
+        } else if (name === 'confirmPassword') {
+            setConfirmPassword(value);
+        }
     };
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        // Xử lý việc đổi mật khẩu ở đây, ví dụ: gửi dữ liệu đổi mật khẩu lên máy chủ
-        console.log('Mật khẩu đã được thay đổi:', password);
+        if (newPassword !== confirmPassword) {
+            alert('New password and confirm password do not match.');
+        } else {
+            // You can implement your password change logic here
+            console.log('Old Password:', oldPassword);
+            console.log('New Password:', newPassword);
+            console.log('Confirm Password:', confirmPassword);
+        }
     };
+
     return (
-        <div className="change-password-page">
+        <div>
             <h1>Đổi Mật Khẩu</h1>
             <form onSubmit={handleSubmit}>
                 <div>
-                    <label htmlFor="password">Mật Khẩu Mới:</label>
+                    <label>Mật khẩu cũ</label>
                     <input
                         type="password"
-                        id="password"
-                        name="password"
-                        value={password}
+                        name="oldPassword"
+                        value={oldPassword}
                         onChange={handleChange}
                         required
                     />
                 </div>
-                <button type="submit">Đổi Mật Khẩu</button>
+                <div>
+                    <label>Mật khuẩu mới</label>
+                    <input
+                        type="password"
+                        name="newPassword"
+                        value={newPassword}
+                        onChange={handleChange}
+                        required
+                    />
+                </div>
+                <div>
+                    <label>Nhập lại mật khuẩu</label>
+                    <input
+                        type="password"
+                        name="confirmPassword"
+                        value={confirmPassword}
+                        onChange={handleChange}
+                        required
+                    />
+                </div>
+                <button type="submit">Xác nhận</button>
             </form>
         </div>
     );
-}
+};
 
 export default ChangePasswordPage;
