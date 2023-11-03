@@ -10,6 +10,7 @@ const Header = () => {
                     <Navbar.Brand href="#home" style={{ display: 'inline-block' }}>Hufitravel</Navbar.Brand>
                     <Nav className="nav-home" style={{ display: 'inline-block' }} as={Link} to="/">Trang chủ</Nav >
                     <Nav className="nav-cus_info" style={{ display: 'inline-block' }} as={Link} to="/cus_info">Thông tin khách hàng</Nav >
+                    <Nav className="nav-cus_info" style={{ display: 'inline-block' }} as={Link} to="/contact">Liên hệ</Nav >
                 </div>
                 <Nav >
                     <div className="nav-main">

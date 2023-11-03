@@ -6,6 +6,7 @@ import Cus_Infro from "../page/cus_infor"
 import DoiThuong from "../page/doithuong"
 import Histour from "../page/histour"
 import Repass from "../page/repass"
+import Contact from "../page/contact"
 const defaultRoute = [
     { path: '/', component: HomePage },
     { path: '/login', component: LoginPage },
@@ -15,5 +16,6 @@ const defaultRoute = [
     { path: '/doithuong', component: DoiThuong },
     { path: '/histour', component: Histour },
     { path: '/repass', component: Repass },
+    { path: '/contact', component: Contact },
 ]
 export { defaultRoute }
