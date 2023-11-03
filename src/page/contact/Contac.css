@@ -7,7 +7,7 @@
     border-radius: 10px;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
     text-align: center;
-    margin-top: 50px;
+    margin-top: 100px;
 }
 
 .tile_contact {
@@ -59,7 +59,7 @@
 }
 
 .contact-container {
-    background-image: url('C:\Users\thanh\OneDrive\Máy tính\Dulich\QuanLyTourDuLich_FE\public\image\login.png');
+    background-image: url('C:\Users\thanh\OneDrive\Máy tính\Dulich\QuanLyTourDuLich_FE\public\image\contact.png');
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;

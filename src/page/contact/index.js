@@ -27,7 +27,6 @@ const ContactForm = () => {
         <div className="contact-container">
             <div className="main_contact">
                 <h2 className='tile_contact'>Liên hệ chúng tôi</h2>
-                <p>Để có thể đáp ứng được các yêu cầu và các ý kiến đóng góp của quý vị một cách nhanh chóng, xin vui lòng liên hệ.</p>
                 <form onSubmit={handleSubmit}>
                     <div>
                         <label htmlFor="name">Họ và Tên:</label>
