@@ -47,7 +47,7 @@
 
 
 .repass_container {
-    background-image: url('C:\Users\thanh\OneDrive\Máy tính\Dulich\QuanLyTourDuLich_FE\public\image\login.png');
+    background-image: url(../../../src/assets/image/login.png);
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;

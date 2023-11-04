@@ -3,9 +3,8 @@
     margin: 0 auto;
     padding: 20px;
     background: #ffffff;
-    border: 1px solid #e0e0e0;
+    border: 0.5px solid #e0e0e0;
     border-radius: 10px;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
     text-align: center;
     margin-top: 100px;
 }
@@ -59,7 +58,7 @@
 }
 
 .contact-container {
-    background-image: url('C:\Users\thanh\OneDrive\Máy tính\Dulich\QuanLyTourDuLich_FE\public\image\contact.png');
+    background-image: url(../../../src/assets/image/contact.png);
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;
