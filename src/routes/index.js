@@ -1,4 +1,4 @@
-import HomePage from "../page/home"
+import HomePage from "../page/home/ImageSlider"
 import LoginPage from "../page/login"
 import SearchPage from "../page/search"
 import RegisterPage from "../page/register"

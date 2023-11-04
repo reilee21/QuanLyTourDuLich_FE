@@ -1,0 +1,12 @@
+/* ImageSlider.css */
+.image-slider {
+    width: 100%;
+    height: auto;
+}
+
+.image-slider img {
+    width: 100%;
+    height: auto;
+    display: block;
+    /* Ensures there is no extra space below the images */
+}
