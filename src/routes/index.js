@@ -7,6 +7,7 @@ import DoiThuong from "../page/doithuong"
 import Histour from "../page/histour"
 import Repass from "../page/repass"
 import Contact from "../page/contact"
+import FAQ from "../page/FAQ"
 const defaultRoute = [
     { path: '/', component: HomePage },
     { path: '/login', component: LoginPage },
@@ -17,5 +18,6 @@ const defaultRoute = [
     { path: '/histour', component: Histour },
     { path: '/repass', component: Repass },
     { path: '/contact', component: Contact },
+    { path: '/FAQ', component: FAQ },
 ]
 export { defaultRoute }

@@ -11,6 +11,7 @@ const Header = () => {
                     <Nav className="nav-home" style={{ display: 'inline-block' }} as={Link} to="/">Trang chủ</Nav >
                     <Nav className="nav-cus_info" style={{ display: 'inline-block' }} as={Link} to="/cus_info">Thông tin khách hàng</Nav >
                     <Nav className="nav-cus_info" style={{ display: 'inline-block' }} as={Link} to="/contact">Liên hệ</Nav >
+                    <Nav className="nav-cus_info" style={{ display: 'inline-block' }} as={Link} to="/FAQ">FAQ</Nav >
                 </div>
                 <Nav >
                     <div className="nav-main">
