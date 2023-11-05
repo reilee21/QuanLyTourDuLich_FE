@@ -1,5 +1,5 @@
 .register-form {
-    max-width: 400px;
+    max-width: 550px;
     margin: 0 auto;
     padding: 20px;
     background: #ffffff;
@@ -10,7 +10,7 @@
 }
 
 .trum {
-    transform: translateY(+15%);
+    transform: translateY(+12%);
 }
 
 .register-form label {

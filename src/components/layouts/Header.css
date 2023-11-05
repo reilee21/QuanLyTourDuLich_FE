@@ -1,5 +1,6 @@
 .nav-login,
-.nav-search {
+.nav-search,
+.nav-cus_info {
     color: black;
     margin: 0 10px;
     text-decoration: none;
@@ -9,7 +10,7 @@
 .nav-search {
     position: absolute;
     top: 8 px;
-    right: 100px;
+    right: 120px;
 }
 
 .nav-home {

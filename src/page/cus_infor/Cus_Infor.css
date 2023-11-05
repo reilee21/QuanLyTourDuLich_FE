@@ -1,0 +1,57 @@
+.cus_main {
+    display: flex;
+    align-items: flex-start;
+    margin-top: 50px;
+
+}
+
+.cusinfo {
+    max-width: 400px;
+    padding: 50px;
+    margin: 0 100px;
+    background: #ffffff;
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+    margin-right: 20px;
+    /* Add margin to the right to create the gap */
+}
+
+.cus_infor-form {
+
+    flex-grow: 0.7;
+    /* Allow cus_infor-form to grow and take up available space */
+    padding: 50px;
+    /* Adjust the padding to make it wider */
+    background: #ffffff;
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+}
+
+.cusinfo a {
+    display: block;
+    padding: 10px;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.cus_infor-form input {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0px;
+    border: 2px solid #e0e0e0;
+    border-radius: 10px;
+    outline: none;
+}
+
+.cus_infor-form label {
+    font-weight: bold;
+    display: block;
+    text-align: left;
+    margin-bottom: 5px;
+}
+
+.black-link {
+    color: black;
+}

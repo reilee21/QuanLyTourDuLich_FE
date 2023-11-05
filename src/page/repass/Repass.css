@@ -1,6 +1,5 @@
-/* CSS cho FormLogin */
-.login-form {
-    max-width: 450px;
+.main-repass {
+    max-width: 500px;
     margin: 0 auto;
     padding: 20px;
     background: #ffffff;
@@ -11,22 +10,21 @@
     margin-top: 150px;
 }
 
-
-.page-title {
+.repass_title {
     text-align: center;
     color: #007bff;
     margin-bottom: 10px;
     font-size: 30px;
 }
 
-.login-form label {
+.main-repass label {
     font-weight: bold;
     display: block;
     text-align: left;
     margin-bottom: 10px;
 }
 
-.login-form input {
+.main-repass input {
     width: 100%;
     padding: 10px;
     margin: 5px 0;
@@ -35,7 +33,7 @@
     outline: none;
 }
 
-.login-button {
+.repass-button {
     width: 100%;
     padding: 10px;
     background: #007bff;
@@ -47,33 +45,9 @@
     transition: background-color 0.3s;
 }
 
-.login-button:hover {
-    background: #e71515;
-    /* Màu đỏ khi hover */
-}
 
-.register {
-    width: 100%;
-    padding: 10px;
-    background: #e71515;
-    border: none;
-    border-radius: 10px;
-    cursor: pointer;
-    margin-bottom: 10px;
-
-}
-
-.google {
-    width: 300px !important;
-    color: #fff;
-    border: none;
-    padding-left: 92px;
-    cursor: pointer;
-    text-align: center;
-}
-
-.login-container {
-    background-image: url(../../assets/image/login.png);
+.repass_container {
+    background-image: url(../../../src/assets/image/login.png);
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;
@@ -88,6 +62,3 @@
     overflow: hidden;
     /* Set the height to the full viewport height */
 }
-
-
-/* Thêm CSS cho các thành phần khác nếu cần */
