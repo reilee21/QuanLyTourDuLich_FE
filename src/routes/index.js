@@ -2,11 +2,15 @@ import HomePage from "../page/home"
 import LoginPage from "../page/login"
 import SearchPage from "../page/search"
 import RegisterPage from "../page/register"
+
 import Cus_Infro from "../page/cus_infor"
 import DoiThuong from "../page/doithuong"
 import Histour from "../page/histour"
 import Repass from "../page/repass"
 import Contact from "../page/contact"
+
+import PhuongTien from "../page/quanly/phuongtien"
+
 const defaultRoute = [
     { path: '/', component: HomePage },
     { path: '/login', component: LoginPage },
@@ -18,4 +22,9 @@ const defaultRoute = [
     { path: '/repass', component: Repass },
     { path: '/contact', component: Contact },
 ]
-export { defaultRoute }
+
+const quanlyRoute = [
+    { path: '/', component: HomePage },
+    { path: '/phuongtien', component: PhuongTien }
+]
+export { defaultRoute, quanlyRoute }
