@@ -7,7 +7,7 @@ import { useState } from "react";
 import HomePage from "./page/home";
 
 function App() {
-  const [role, setRole] = useState("qly");
+  const [role, setRole] = useState("client");
   return (
     <div className="App">
       <Routes>
