@@ -12,8 +12,8 @@ const defaultRoute = [
 ];
 
 const quanlyRoute = [
-  { path: "/", component: HomePage },
-  { path: "/phuongtien", component: PhuongTien },
-  { path: "/diadiem", component: DiaDiem },
+  { path: "/admin", component: HomePage },
+  { path: "/admin/ptdv/phuongtien", component: PhuongTien },
+  { path: "/admin/ptdv/diadiem", component: DiaDiem },
 ];
 export { defaultRoute, quanlyRoute };

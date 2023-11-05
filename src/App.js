@@ -4,6 +4,7 @@ import { defaultRoute, quanlyRoute } from "./routes";
 import DefaultLayout from "./components/layouts/Layout";
 import LayoutQly from "./components/layouts/LayoutQly";
 import { useState } from "react";
+import HomePage from "./page/home";
 
 function App() {
   const [role, setRole] = useState("qly");
@@ -11,7 +12,7 @@ function App() {
     <div className="App">
       <Routes>
         {role && role !== "client" ? (
-          <Route element={<LayoutQly />}>
+          <Route path="/admin" element={<LayoutQly />}>
             {quanlyRoute.map((route, index) => {
               const Page = route.component;
               return <Route key={index} path={route.path} element={<Page />} />;

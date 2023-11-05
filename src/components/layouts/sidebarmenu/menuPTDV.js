@@ -8,17 +8,16 @@ const PTDVMenu = () => {
 
   const handleNavLinkClick = (linkName) => {
     setActiveLink(linkName);
+    navigate(`ptdv/${linkName}`);
   };
-  useEffect(() => {
-    navigate(`/${activeLink}`);
-  }, [navigate]);
+
   return (
     <>
       <NavLink
         className={`link-name ${activeLink === "phuongtien" ? "active" : ""}`}
         onClick={() => handleNavLinkClick("phuongtien")}
         as={Link}
-        to="/phuongtien"
+        to="ptdv/phuongtien"
       >
         <span> Phương tiện</span>
       </NavLink>
@@ -26,7 +25,7 @@ const PTDVMenu = () => {
         className={`link-name ${activeLink === "diadiem" ? "active" : ""}`}
         onClick={() => handleNavLinkClick("diadiem")}
         as={Link}
-        to="/diadiem"
+        to="ptdv/diadiem"
       >
         <span> Địa điểm</span>
       </NavLink>
@@ -34,7 +33,7 @@ const PTDVMenu = () => {
         className={`link-name ${activeLink === "Tour" ? "active" : ""}`}
         onClick={() => handleNavLinkClick("Tour")}
         as={Link}
-        to="/tour"
+        to="ptdv/tour"
       >
         <span> Tour</span>
       </NavLink>
@@ -42,7 +41,7 @@ const PTDVMenu = () => {
         className={`link-name ${activeLink === "khachsan" ? "active" : ""}`}
         onClick={() => handleNavLinkClick("khachsan")}
         as={Link}
-        to="/khachsan"
+        to="ptdv/khachsan"
       >
         <span> Khách sạn</span>
       </NavLink>
@@ -50,7 +49,7 @@ const PTDVMenu = () => {
         className={`link-name ${activeLink === "khuyenmai" ? "active" : ""}`}
         onClick={() => handleNavLinkClick("khuyenmai")}
         as={Link}
-        to="/khuyenmai"
+        to="ptdv/khuyenmai"
       >
         <span> Khuyến mãi</span>
       </NavLink>
