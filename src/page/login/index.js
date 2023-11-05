@@ -59,7 +59,6 @@ const FormLogin = () => {
                   />
                 </GoogleOAuthProvider>
               </div>
-
             </form>
           </div >
         </div >
