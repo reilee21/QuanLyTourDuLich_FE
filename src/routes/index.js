@@ -8,8 +8,8 @@ import DoiThuong from "../page/doithuong"
 import Histour from "../page/histour"
 import Repass from "../page/repass"
 import Contact from "../page/contact"
-
-import PhuongTien from "../page/quanly/phuongtien"
+import PhuongTien from "../page/quanly/phuongtien";
+import DiaDiem from "../page/quanly/diadiem";
 
 const defaultRoute = [
     { path: '/', component: HomePage },
@@ -24,7 +24,8 @@ const defaultRoute = [
 ]
 
 const quanlyRoute = [
-    { path: '/', component: HomePage },
-    { path: '/phuongtien', component: PhuongTien }
-]
-export { defaultRoute, quanlyRoute }
+  { path: "/admin", component: HomePage },
+  { path: "/admin/ptdv/phuongtien", component: PhuongTien },
+  { path: "/admin/ptdv/diadiem", component: DiaDiem },
+];
+export { defaultRoute, quanlyRoute };

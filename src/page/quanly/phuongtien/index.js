@@ -65,7 +65,7 @@ const PhuongTien = () => {
   const currentPageData = filteredData.slice(offset, offset + itemsPerPage);
 
   return (
-    <div className="container">
+    <>
       <div className="row">
         <div className="title">
           <h4>Danh sách phương tiện</h4>
@@ -159,7 +159,7 @@ const PhuongTien = () => {
         onSubmit={handleEditSubmit}
         editData={editData}
       />
-    </div>
+    </>
   );
 };
 

@@ -1,0 +1,32 @@
+#navbarqly {
+  padding: 0;
+  margin: 0;
+  .title {
+    width: 100%;
+    margin-top: 5%;
+  }
+  .sidebar-menu {
+    margin-top: 20px;
+    list-style-type: none;
+    padding: 0;
+    .link-name {
+      margin: 10px 0;
+      padding: 12px 8px;
+      border-radius: 8px;
+      min-width: 200px;
+      span {
+        display: flex;
+        align-items: center;
+      }
+    }
+    .link-name:hover {
+      background-color: #163061;
+      color: white;
+    }
+
+    .active {
+      background-color: #021639;
+      color: white;
+    }
+  }
+}
