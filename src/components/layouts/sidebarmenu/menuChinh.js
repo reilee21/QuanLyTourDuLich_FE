@@ -12,13 +12,28 @@ const MainMenu = ({ onMenuChange }) => {
       >
         <span> Phương tiện và dịch vụ</span>
       </NavLink>
-      <NavLink className="link-name" onClick={() => onMenuChange("cskh")}>
+      <NavLink
+        className="link-name"
+        as={Link}
+        to="cskh/thanhvien"
+        onClick={() => onMenuChange("cskh")}
+      >
         <span> Khách hàng</span>
       </NavLink>
-      <NavLink className="link-name" onClick={() => onMenuChange("bk")}>
+      <NavLink
+        className="link-name"
+        as={Link}
+        to="booking/tour"
+        onClick={() => onMenuChange("bk")}
+      >
         <span>Booking</span>
       </NavLink>
-      <NavLink className="link-name" onClick={() => onMenuChange("more")}>
+      <NavLink
+        className="link-name"
+        as={Link}
+        to="more/doitac"
+        onClick={() => onMenuChange("more")}
+      >
         <span> Thêm</span>
       </NavLink>
     </>
