@@ -1,0 +1,35 @@
+#bangnv {
+  width: 100%;
+  margin-bottom: 20px;
+  background-color: white;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+
+  thead {
+    margin: 10px;
+    height: 50px;
+    background-color: #5e76c2;
+    color: white;
+    .maNV {
+      border-top-left-radius: 8px;
+    }
+    .del {
+      border-top-right-radius: 8px;
+    }
+  }
+  tbody tr {
+    border-bottom: 2px solid #5e76c2;
+  }
+  .maNV {
+    text-align: center;
+  }
+  .detail,
+  .edit,
+  .del {
+    width: 3%;
+    padding: 10px;
+  }
+  tbody tr:hover {
+    background-color: rgb(238, 243, 241);
+  }
+}

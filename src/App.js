@@ -4,10 +4,9 @@ import { defaultRoute, quanlyRoute } from "./routes";
 import DefaultLayout from "./components/layouts/Layout";
 import LayoutQly from "./components/layouts/LayoutQly";
 import { useState } from "react";
-import HomePage from "./page/home";
 
 function App() {
-  const [role, setRole] = useState("client");
+  const [role, setRole] = useState("qly");
   return (
     <div className="App">
       <Routes>
