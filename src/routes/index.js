@@ -8,6 +8,8 @@ import DoiThuong from "../page/doithuong"
 import Histour from "../page/histour"
 import Repass from "../page/repass"
 import Contact from "../page/contact"
+
+import FAQ from "../page/FAQ"
 import PhuongTien from "../page/quanly/phuongtien";
 import DiaDiem from "../page/quanly/diadiem";
 
@@ -21,6 +23,7 @@ const defaultRoute = [
     { path: '/histour', component: Histour },
     { path: '/repass', component: Repass },
     { path: '/contact', component: Contact },
+    { path: '/FAQ', component: FAQ },
 ]
 
 const quanlyRoute = [
