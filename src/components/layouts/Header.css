@@ -32,6 +32,7 @@
     justify-content: space-between;
     padding-left: 200px;
     align-items: center;
+
 }
 
 .navbar-main {
@@ -41,4 +42,13 @@
     align-items: center;
 
 
+
+}
+
+.color {
+    background-color: #fff;
+}
+
+.brand-text {
+    font-size: 25px;
 }
