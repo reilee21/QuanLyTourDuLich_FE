@@ -30,6 +30,14 @@ const PTDVMenu = () => {
         <span> Địa điểm</span>
       </NavLink>
       <NavLink
+        className={`link-name ${activeLink === "diemden" ? "active" : ""}`}
+        onClick={() => handleNavLinkClick("diemden")}
+        as={Link}
+        to="ptdv/diemden"
+      >
+        <span> Điểm đến</span>
+      </NavLink>
+      <NavLink
         className={`link-name ${activeLink === "Tour" ? "active" : ""}`}
         onClick={() => handleNavLinkClick("Tour")}
         as={Link}

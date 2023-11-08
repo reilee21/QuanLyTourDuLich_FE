@@ -1,23 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Button, Form } from "react-bootstrap";
 import { AiFillEdit, AiFillDelete } from "react-icons/ai";
 import AddDoiTacFormModal from "./AddForm";
 import EditDoiTacFormModal from "./EditForm";
-
+import ReactPaginate from "react-paginate";
 const DoiTac = () => {
-  const [showAddFormModal, setShowAddFormModal] = useState(false);
-  const [showEditFormModal, setShowEditFormModal] = useState(false);
-  const [editData, setEditData] = useState({});
-
-  const handleAddClick = () => {
-    setShowAddFormModal(true);
-  };
-
-  const handleEditClick = (item) => {
-    setEditData(item);
-    setShowEditFormModal(true);
-  };
-
   // Example data for Doi Tac
   const data = [
     {
@@ -33,6 +20,33 @@ const DoiTac = () => {
       sdt: "9876543210",
     },
   ];
+
+  const [showAddFormModal, setShowAddFormModal] = useState(false);
+  const [showEditFormModal, setShowEditFormModal] = useState(false);
+  const [editData, setEditData] = useState({});
+
+  const [listdata, setListdata] = useState([]);
+  const [pageNumber, setPageNumber] = useState(0);
+  const itemsPerPage = 10;
+  const offset = pageNumber * itemsPerPage;
+
+  const handlePageClick = (data) => {
+    const selectedPage = data.selected;
+    setPageNumber(selectedPage);
+  };
+  const currentPageData = listdata.slice(offset, offset + itemsPerPage);
+
+  useEffect(() => {
+    setListdata(data);
+  }, []);
+  const handleAddClick = () => {
+    setShowAddFormModal(true);
+  };
+
+  const handleEditClick = (item) => {
+    setEditData(item);
+    setShowEditFormModal(true);
+  };
 
   return (
     <>
@@ -68,7 +82,7 @@ const DoiTac = () => {
                 </tr>
               </thead>
               <tbody>
-                {data.map((item) => (
+                {currentPageData.map((item) => (
                   <tr key={item.stt}>
                     <td className="stt">{item.stt}</td>
                     <td className="ten">{item.ten}</td>
@@ -93,6 +107,22 @@ const DoiTac = () => {
             </table>
           </div>
         </div>
+        <ReactPaginate
+          pageCount={Math.ceil(listdata.length / itemsPerPage)} // Tổng số trang
+          pageRangeDisplayed={3} // Số trang hiển thị trước và sau trang hiện tại
+          marginPagesDisplayed={2} // Số trang hiển thị ở hai bên
+          onPageChange={handlePageClick} // Xử lý khi chuyển trang
+          containerClassName={"pagination"}
+          activeClassName={"active"}
+          previousLabel={"Trước"}
+          nextLabel={"Sau"}
+          previousLinkClassName={"page-link"} // Class cho nút "Trang trước"
+          nextLinkClassName={"page-link"} // Class cho nút "Trang sau"
+          pageClassName={"page-item"} // Class cho nút trang
+          pageLinkClassName={"page-link"} // Class cho liên kết trang
+          breakClassName={"page-item"} // Class cho nút "..."
+          breakLinkClassName={"page-link"} // Class cho liên kết "..."
+        />
       </div>
       <AddDoiTacFormModal
         show={showAddFormModal}
