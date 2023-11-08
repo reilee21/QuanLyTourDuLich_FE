@@ -16,6 +16,10 @@ import {
   DoiTac,
   NhanVien,
   TaiKhoanNV,
+  KhachHang,
+  TaiKhoanKH,
+  DiemDen,
+  DanhGia,
 } from "../page/quanly/export";
 
 const defaultRoute = [
@@ -35,8 +39,12 @@ const quanlyRoute = [
   { path: "/admin", component: HomePage },
   { path: "ptdv/phuongtien", component: PhuongTien },
   { path: "ptdv/diadiem", component: DiaDiem },
+  { path: "ptdv/diemden", component: DiemDen },
   { path: "more/doitac", component: DoiTac },
   { path: "more/nhanvien", component: NhanVien },
   { path: "more/nhanvien/taikhoannv", component: TaiKhoanNV },
+  { path: "cskh/thanhvien", component: KhachHang },
+  { path: "cskh/thanhvien/taikhoan", component: TaiKhoanKH },
+  { path: "cskh/phanhoi", component: DanhGia },
 ];
 export { defaultRoute, quanlyRoute };

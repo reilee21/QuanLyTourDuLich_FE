@@ -1,25 +1,37 @@
 import React, { useState } from "react";
-import { Button } from "react-bootstrap";
+import { Button, Form } from "react-bootstrap";
+import { Link } from "react-router-dom";
+import ReactPaginate from "react-paginate";
 import { AiFillEdit, AiFillDelete } from "react-icons/ai";
 import "./index.scss";
-import EditAccountModal from "./EditAcc";
-import ReactPaginate from "react-paginate";
+import EditCustomerAccountModal from "./EditAccKH";
 
-const TaiKhoanNV = () => {
-  const employeeAccounts = [
+const TaiKhoanKH = () => {
+  const [searchQuery, setSearchQuery] = useState("");
+  const [pageNumber, setPageNumber] = useState(0);
+
+  const customerAccounts = [
     {
-      MaNV: "NV1",
-      TenNV: "Nguyen Van A",
-      Username: "nva",
-      Password: "password123",
+      MaKH: "KH1",
+      HoTen: "Nguyen Thi C",
+      Username: "ntc",
+      Password: "customer123",
     },
     {
-      MaNV: "NV2",
-      TenNV: "Nguyen Van B",
-      Username: "nvb",
+      MaKH: "KH2",
+      HoTen: "Nguyen Van D",
+      Username: "nvd",
       Password: "securePwd",
     },
   ];
+
+  const itemsPerPage = 10; // You can adjust this value as needed
+  const offset = pageNumber * itemsPerPage;
+  const handlePageClick = (data) => {
+    const selectedPage = data.selected;
+    setPageNumber(selectedPage);
+  };
+  const currentPageData = customerAccounts.slice(offset, offset + itemsPerPage);
 
   const [showEditModal, setShowEditModal] = useState(false);
   const [editData, setEditData] = useState({});
@@ -28,25 +40,24 @@ const TaiKhoanNV = () => {
     setEditData(account);
     setShowEditModal(true);
   };
-  const [listdata, setListdata] = useState(employeeAccounts);
-  const [pageNumber, setPageNumber] = useState(0);
-  const itemsPerPage = 10;
-  const offset = pageNumber * itemsPerPage;
 
-  const handlePageClick = (data) => {
-    const selectedPage = data.selected;
-    setPageNumber(selectedPage);
-  };
-  const currentPageData = listdata.slice(offset, offset + itemsPerPage);
   return (
     <>
       <div className="col-md-12">
-        <div className="table-responsive">
-          <h4>Tài khoản nhân viên</h4>
-          <table id="bangnv">
+        <div className="table-responsive" id="ackh">
+          <h4>Tài khoản khách hàng</h4>
+          <Form.Group className="search" id="search-acc">
+            <Form.Control
+              type="text"
+              placeholder="Họ tên hoặc số điện thoại"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+          </Form.Group>
+          <table id="bangkh">
             <thead>
               <tr>
-                <th className="maNV">Mã NV</th>
+                <th className="maKH">Mã KH</th>
                 <th className="hoTen">Họ và Tên</th>
                 <th className="username">Username</th>
                 <th className="password">Password</th>
@@ -56,9 +67,9 @@ const TaiKhoanNV = () => {
             </thead>
             <tbody>
               {currentPageData.map((account) => (
-                <tr key={account.MaNV} onClick={() => handleEditClick(account)}>
-                  <td className="maNV">{account.MaNV}</td>
-                  <td className="hoTen">{account.TenNV}</td>
+                <tr key={account.MaKH} onClick={() => handleEditClick(account)}>
+                  <td className="maKH">{account.MaKH}</td>
+                  <td className="hoTen">{account.HoTen}</td>
                   <td className="username">{account.Username}</td>
                   <td className="password">{account.Password}</td>
                   <td className="edit">
@@ -83,7 +94,7 @@ const TaiKhoanNV = () => {
           </table>
         </div>
         <ReactPaginate
-          pageCount={Math.ceil(listdata.length / itemsPerPage)} // Tổng số trang
+          pageCount={Math.ceil(customerAccounts.length / itemsPerPage)}
           pageRangeDisplayed={3} // Số trang hiển thị trước và sau trang hiện tại
           marginPagesDisplayed={2} // Số trang hiển thị ở hai bên
           onPageChange={handlePageClick} // Xử lý khi chuyển trang
@@ -100,11 +111,11 @@ const TaiKhoanNV = () => {
         />
       </div>
 
-      <EditAccountModal
+      <EditCustomerAccountModal
         show={showEditModal}
         onClose={() => setShowEditModal(false)}
         onSubmit={(updatedAccount) => {
-          // Handle updating the account password here with the updatedAccount.Password
+          // Handle updating the customer account password here with the updatedAccount.Password
           console.log(updatedAccount);
         }}
         itemToEdit={editData}
@@ -113,4 +124,4 @@ const TaiKhoanNV = () => {
   );
 };
 
-export default TaiKhoanNV;
+export default TaiKhoanKH;

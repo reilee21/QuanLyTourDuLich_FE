@@ -6,6 +6,7 @@ import "./index.scss";
 import AddNhanVienFormModal from "./Add";
 import EditNhanVienFormModal from "./Edit";
 import { Link } from "react-router-dom";
+import ReactPaginate from "react-paginate";
 
 const NhanVien = () => {
   const [showAddFormModal, setShowAddFormModal] = useState(false);
@@ -49,6 +50,16 @@ const NhanVien = () => {
     },
   ];
 
+  const [listdata, setListdata] = useState(data);
+  const [pageNumber, setPageNumber] = useState(0);
+  const itemsPerPage = 10;
+  const offset = pageNumber * itemsPerPage;
+
+  const handlePageClick = (data) => {
+    const selectedPage = data.selected;
+    setPageNumber(selectedPage);
+  };
+  const currentPageData = listdata.slice(offset, offset + itemsPerPage);
   return (
     <>
       <div className="row">
@@ -88,7 +99,7 @@ const NhanVien = () => {
                 </tr>
               </thead>
               <tbody>
-                {data.map((item) => (
+                {currentPageData.map((item) => (
                   <tr key={item.MaNV} onClick={() => handleEditClick(item)}>
                     <td className="maNV">{item.MaNV}</td>
                     <td className="hoTen">{item.HoTen}</td>
@@ -123,6 +134,22 @@ const NhanVien = () => {
             </table>
           </div>
         </div>
+        <ReactPaginate
+          pageCount={Math.ceil(listdata.length / itemsPerPage)} // Tổng số trang
+          pageRangeDisplayed={3} // Số trang hiển thị trước và sau trang hiện tại
+          marginPagesDisplayed={2} // Số trang hiển thị ở hai bên
+          onPageChange={handlePageClick} // Xử lý khi chuyển trang
+          containerClassName={"pagination"}
+          activeClassName={"active"}
+          previousLabel={"Trước"}
+          nextLabel={"Sau"}
+          previousLinkClassName={"page-link"} // Class cho nút "Trang trước"
+          nextLinkClassName={"page-link"} // Class cho nút "Trang sau"
+          pageClassName={"page-item"} // Class cho nút trang
+          pageLinkClassName={"page-link"} // Class cho liên kết trang
+          breakClassName={"page-item"} // Class cho nút "..."
+          breakLinkClassName={"page-link"} // Class cho liên kết "..."
+        />
       </div>
       <AddNhanVienFormModal
         show={showAddFormModal}

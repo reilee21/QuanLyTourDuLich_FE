@@ -1,8 +1,9 @@
 import { NavLink } from "react-bootstrap";
 import { useState } from "react";
+import { Link } from "react-router-dom";
 
 const CSKHMenu = () => {
-  const [activeLink, setActiveLink] = useState("Thành viên");
+  const [activeLink, setActiveLink] = useState("thanhvien");
 
   const handleNavLinkClick = (linkName) => {
     setActiveLink(linkName);
@@ -11,20 +12,19 @@ const CSKHMenu = () => {
   return (
     <>
       <NavLink
-        className={`link-name ${activeLink === "Thành viên" ? "active" : ""}`}
-        onClick={() => handleNavLinkClick("Thành viên")}
+        className={`link-name ${activeLink === "thanhvien" ? "active" : ""}`}
+        onClick={() => handleNavLinkClick("thanhvien")}
+        as={Link}
+        to="cskh/thanhvien"
       >
         <span> Thành viên</span>
       </NavLink>
+
       <NavLink
-        className={`link-name ${activeLink === "Liên hệ" ? "active" : ""}`}
-        onClick={() => handleNavLinkClick("Liên hệ")}
-      >
-        <span> Liên hệ</span>
-      </NavLink>
-      <NavLink
-        className={`link-name ${activeLink === "Phản hồi" ? "active" : ""}`}
-        onClick={() => handleNavLinkClick("Phản hồi")}
+        className={`link-name ${activeLink === "phanhoi" ? "active" : ""}`}
+        onClick={() => handleNavLinkClick("phanhoi")}
+        as={Link}
+        to="cskh/phanhoi"
       >
         <span> Phản hồi</span>
       </NavLink>
