@@ -142,7 +142,7 @@ const ImageSlider = () => {
             </div>
             <div className="home-features">
                 <div className="feature-container">
-                    <Link to="/booktour" style={{ textDecoration: 'none' }}>
+                    <Link to="/ordertour" style={{ textDecoration: 'none' }}>
                         <div className="feature">
                             <div className="feature-icon">
                                 <FontAwesomeIcon icon={faPlane} size="3x" />
