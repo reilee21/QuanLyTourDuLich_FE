@@ -30,8 +30,8 @@ const MoreMenu = () => {
         <span> Nhân viên</span>
       </NavLink>
       <NavLink
-        className={`link-name ${activeLink === "Bài viết" ? "active" : ""}`}
-        onClick={() => handleNavLinkClick("Bài viết")}
+        className={`link-name ${activeLink === "baiviet" ? "active" : ""}`}
+        onClick={() => handleNavLinkClick("baiviet")}
       >
         <span> Bài viết</span>
       </NavLink>
