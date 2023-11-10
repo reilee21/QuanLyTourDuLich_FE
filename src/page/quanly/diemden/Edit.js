@@ -3,20 +3,35 @@ import { Modal, Button, Form } from "react-bootstrap";
 import "./index.scss";
 
 const destinationOptions = [
-  { value: 0, label: "Địa Điểm 1" },
-  { value: 1, label: "Địa Điểm 2" },
-  { value: 2, label: "Địa Điểm 3" },
+  { value: 1, label: "Địa Điểm 1" },
+  { value: 2, label: "Địa Điểm 2" },
+  { value: 3, label: "Địa Điểm 3" },
   // Add more destination options as needed
 ];
 
 const EditDiemDenFormModal = ({ show, onClose, onSubmit, itemToEdit }) => {
   const [formData, setFormData] = useState(itemToEdit);
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchQuery, setSearchQuery] = useState();
   const [isDropdownVisible, setIsDropdownVisible] = useState(false);
   const [filteredOptions, setFilteredOptions] = useState(destinationOptions);
 
   useEffect(() => {
     setFormData(itemToEdit);
+
+    // Find the corresponding label for the IdDiaDiem
+    const defaultLabel = destinationOptions.find(
+      (option) => option.value === itemToEdit.IdDiaDiem
+    )?.label;
+
+    // Set the default value for searchQuery and update filteredOptions accordingly
+    setSearchQuery(defaultLabel || "");
+    setFilteredOptions(
+      defaultLabel
+        ? destinationOptions.filter((option) =>
+            option.label.toLowerCase().includes(defaultLabel.toLowerCase())
+          )
+        : destinationOptions
+    );
   }, [itemToEdit]);
 
   const handleSearchChange = (e) => {
@@ -31,6 +46,7 @@ const EditDiemDenFormModal = ({ show, onClose, onSubmit, itemToEdit }) => {
   const handleOptionClick = (option) => {
     setFormData({ ...formData, IdDiaDiem: option.value });
     setSearchQuery(option.label);
+    console.log(1);
     setIsDropdownVisible(false);
   };
 
@@ -77,7 +93,7 @@ const EditDiemDenFormModal = ({ show, onClose, onSubmit, itemToEdit }) => {
               onChange={handleSearchChange}
               value={searchQuery}
             />
-            {isDropdownVisible && filteredOptions.length > 0 && (
+            {isDropdownVisible && (
               <div className="custom-dropdown">
                 <ul>
                   {filteredOptions.map((option) => (

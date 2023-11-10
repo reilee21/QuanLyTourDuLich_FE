@@ -20,6 +20,11 @@ import {
   TaiKhoanKH,
   DiemDen,
   DanhGia,
+  HoiDap,
+  Voucher,
+  BaiViet,
+  EditBaiViet,
+  AddBaiViet,
 } from "../page/quanly/export";
 
 const defaultRoute = [
@@ -43,6 +48,12 @@ const quanlyRoute = [
   { path: "more/doitac", component: DoiTac },
   { path: "more/nhanvien", component: NhanVien },
   { path: "more/nhanvien/taikhoannv", component: TaiKhoanNV },
+  { path: "more/hoidap", component: HoiDap },
+  { path: "more/voucher", component: Voucher },
+  { path: "more/baiviet", component: BaiViet },
+  { path: "more/baiviet/:id", component: EditBaiViet },
+  { path: "more/baiviet/them", component: AddBaiViet },
+
   { path: "cskh/thanhvien", component: KhachHang },
   { path: "cskh/thanhvien/taikhoan", component: TaiKhoanKH },
   { path: "cskh/phanhoi", component: DanhGia },

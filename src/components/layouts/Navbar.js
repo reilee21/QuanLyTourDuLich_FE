@@ -27,8 +27,6 @@ const NavBarQly = () => {
         >
           <div className="title">
             <NavLink
-              as={Link}
-              to="/admin"
               className="d-flex align-items-center pb-3 mb-md-0 me-md-auto  text-decoration-none"
               onClick={back}
             >
