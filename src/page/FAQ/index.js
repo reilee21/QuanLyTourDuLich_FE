@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import './FaqPage.css';
 
 const FaqPage = () => {
+
+    
     const faqData = [
         {
             question: 'Làm thế nào để tìm kiếm các tour du lịch phù hợp với mong muốn?',
