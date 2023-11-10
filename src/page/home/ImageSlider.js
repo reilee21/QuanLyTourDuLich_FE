@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-
+import { Link } from 'react-router-dom';
 //import vào nha
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
@@ -142,18 +142,22 @@ const ImageSlider = () => {
             </div>
             <div className="home-features">
                 <div className="feature-container">
-                    <div className="feature">
-                        <div className="feature-icon">
-                            <FontAwesomeIcon icon={faPlane} size="3x" />
+                    <Link to="/booktour" style={{ textDecoration: 'none' }}>
+                        <div className="feature">
+                            <div className="feature-icon">
+                                <FontAwesomeIcon icon={faPlane} size="3x" />
+                            </div>
+                            <p>Đặt Tour</p>
                         </div>
-                        <p>Đặt Tour</p>
-                    </div>
-                    <div className="feature">
-                        <div className="feature-icon">
-                            <FontAwesomeIcon icon={faHotel} size="3x" />
+                    </Link>
+                    <Link to="/orderhotel" style={{ textDecoration: 'none' }}>
+                        <div className="feature">
+                            <div className="feature-icon">
+                                <FontAwesomeIcon icon={faHotel} size="3x" />
+                            </div>
+                            <p>Đặt Khách Sạn</p>
                         </div>
-                        <p>Đặt Khách Sạn</p>
-                    </div>
+                    </Link>
                     <div className="feature" onClick={toggleSearch}>
                         <div className="feature-icon">
                             <FontAwesomeIcon icon={faSearch} size="3x" />

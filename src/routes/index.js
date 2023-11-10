@@ -8,6 +8,8 @@ import Histour from "../page/histour"
 import Repass from "../page/repass"
 import Contact from "../page/contact"
 import FAQ from "../page/FAQ"
+import OrderHotel from "../page/orderhotel"
+import BookTour from "../page/booktour"
 const defaultRoute = [
     { path: '/', component: HomePage },
     { path: '/login', component: LoginPage },
@@ -19,5 +21,8 @@ const defaultRoute = [
     { path: '/repass', component: Repass },
     { path: '/contact', component: Contact },
     { path: '/FAQ', component: FAQ },
+    { path: '/orderhotel', component: OrderHotel },
+    { path: '/booktour', component: BookTour },
+
 ]
 export { defaultRoute }

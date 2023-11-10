@@ -41,6 +41,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
+
     gap: 20px;
 }
 
@@ -57,6 +58,11 @@
     flex-direction: column;
     font-size: 20px;
     color: #F7D716;
+
+}
+
+.home-features {
+    text-decoration: none;
 }
 
 .search-bar {
