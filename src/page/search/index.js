@@ -2,8 +2,8 @@
 
 
 
-const SearchPage = () =>{
-    return(
+const SearchALL = () => {
+    return (
         <>
             <h1>SearchPage</h1>
         </>
@@ -12,4 +12,4 @@ const SearchPage = () =>{
 
 
 
-export default SearchPage
+export default SearchAll

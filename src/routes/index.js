@@ -10,6 +10,7 @@ import Contact from "../page/contact"
 import FAQ from "../page/FAQ"
 import OrderHotel from "../page/orderhotel"
 import OrderTour from "../page/ordertour"
+
 const defaultRoute = [
     { path: '/', component: HomePage },
     { path: '/login', component: LoginPage },
@@ -23,6 +24,5 @@ const defaultRoute = [
     { path: '/FAQ', component: FAQ },
     { path: '/orderhotel', component: OrderHotel },
     { path: '/ordertour', component: OrderTour },
-
 ]
 export { defaultRoute }

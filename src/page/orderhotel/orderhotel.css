@@ -61,3 +61,20 @@
     margin-bottom: 50px;
     text-align: center;
 }
+
+.imghotel {
+    display: flex;
+    width: 50%;
+    /* Set the width as needed */
+    height: 50%;
+    /* Set the height as needed */
+    object-fit: cover;
+    /* This property ensures the image retains its aspect ratio */
+}
+
+.imghotel {
+    height: 200px;
+    object-fit: cover;
+    border: 2px solid #000;
+    border-radius: 10px;
+}

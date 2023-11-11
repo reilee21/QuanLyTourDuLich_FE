@@ -1,53 +1,47 @@
-// Import các module cần thiết
+// Index.js
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';  // Change this line
+import { useNavigate, Routes, Route } from 'react-router-dom';
 import DatePicker from 'react-datepicker';
+import HotelDetail from './hoteldetail';
+
+// Ensure the correct path to the CSS file
 import 'react-datepicker/dist/react-datepicker.css';
 import './orderhotel.css';
+import khachsanImage from '../../assets/image/khachsan1.jpg';
 
 const SearchPage = () => {
-    // Các state cần thiết
     const [startDate, setStartDate] = useState(null);
     const [endDate, setEndDate] = useState(null);
     const [searchTerm, setSearchTerm] = useState('');
     const [searchResults, setSearchResults] = useState([]);
-    const navigate = useNavigate();  // Change this line
+    const navigate = useNavigate();
 
-    // Hàm xử lý khi nhấn nút tìm kiếm
     const handleSearch = () => {
         if (!searchTerm) {
             alert('Vui lòng nhập thông tin để tìm kiếm.');
             return;
         }
 
-        // Giả mạo việc lấy dữ liệu từ server
         const fakeData = [
-            { id: 1, name: 'Khách sạn A', destination: 'Đà Nẵng', description: 'Mô tả khách sạn A.' },
-            { id: 2, name: 'Khách sạn B', destination: 'Hội An', description: 'Mô tả khách sạn B.' },
-            { id: 3, name: 'Khách sạn C', destination: 'Huế', description: 'Mô tả khách sạn C.' },
-            // Thêm dữ liệu nếu cần
+            { id: 1, name: 'Khách sạn A', destination: 'Đà Nẵng', description: 'Mô tả khách sạn A.', imageUrl: khachsanImage },
+            { id: 2, name: 'Khách sạn B', destination: 'Hội An', description: 'Mô tả khách sạn B.', imageUrl: khachsanImage },
+            { id: 3, name: 'Khách sạn C', destination: 'Huế', description: 'Mô tả khách sạn C.', imageUrl: khachsanImage },
+            // Add more data if needed
         ];
 
-        // Lọc dữ liệu dựa trên searchTerm
         const results = fakeData.filter((hotel) =>
             hotel.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
             hotel.destination.toLowerCase().includes(searchTerm.toLowerCase()) ||
             hotel.description.toLowerCase().includes(searchTerm.toLowerCase())
         );
 
-        // Cập nhật state searchResults
         setSearchResults(results);
-
-        // Log kết quả tìm kiếm
         console.log('Searching...', startDate, endDate, searchTerm, results);
     };
 
-    // Hàm xử lý khi nhấn vào một khách sạn trong kết quả tìm kiếm
     const handleHotelClick = (hotelId) => {
-        // Chuyển hướng đến trang chi tiết với ID của khách sạn được chọn
-        navigate(`/hotel/${hotelId}`);  // Change this line
+        navigate(`/hoteldetail/${hotelId}`);
     };
-
 
     return (
         <>
@@ -93,13 +87,25 @@ const SearchPage = () => {
                         <ul>
                             {searchResults.map((hotel) => (
                                 <li key={hotel.id} onClick={() => handleHotelClick(hotel.id)}>
-                                    <strong>{hotel.name}</strong> - Điểm đến: {hotel.destination}
-                                    <p>{hotel.description}</p>
+                                    <div className='thongtinkhachsan'>
+                                        <div>
+                                            <img className="imghotel" src={hotel.imageUrl} alt={`Image of ${hotel.name}`} />
+                                        </div>
+                                        <h3>{hotel.name}</h3>
+                                        <p>Địa chỉ: {hotel.destination}</p>
+                                        <p>{hotel.description}</p>
+                                    </div>
                                 </li>
                             ))}
                         </ul>
+
                     </div>
                 )}
+            </div>
+            <div>
+                <Routes>
+                    <Route path="/hoteldetail/:hotelId" element={<HotelDetail />} />
+                </Routes>
             </div>
         </>
     );

@@ -1,22 +1,24 @@
-import { Route, Router,Routes } from 'react-router-dom';
+import React from 'react';
+import { Routes, Route } from 'react-router-dom';
 import './App.css';
 import { defaultRoute } from './routes';
 import DefaultLayout from './components/layouts/Layout';
+import HotelDetail from './page/orderhotel/hoteldetail'; // Import trang HotelDetail
 
-function App() { 
+function App() {
   return (
-  
-      <div className="App">
-        <Routes>
-          <Route element={<DefaultLayout />}>
-            {defaultRoute.map((route, index) => {
-              const Page = route.component;
-              return <Route key={index} path={route.path} element={<Page />} />;
-            })}
-          </Route>
-          </Routes>
-       </div>
-
+    <div className="App">
+      <Routes>
+        <Route path="/" element={<DefaultLayout />}>
+          {defaultRoute.map((route, index) => {
+            const Page = route.component;
+            return <Route key={index} path={route.path} element={<Page />} />;
+          })}
+          {/* Thêm route cho HotelDetail */}
+          <Route path="/hoteldetail/:hotelId" element={<HotelDetail />} />
+        </Route>
+      </Routes>
+    </div>
   );
 }
 
