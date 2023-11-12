@@ -10,6 +10,7 @@ import Contact from "../page/contact"
 import FAQ from "../page/FAQ"
 import OrderHotel from "../page/orderhotel"
 import OrderTour from "../page/ordertour"
+import News from "../page/News/NewsPage"
 
 const defaultRoute = [
     { path: '/', component: HomePage },
@@ -24,5 +25,6 @@ const defaultRoute = [
     { path: '/FAQ', component: FAQ },
     { path: '/orderhotel', component: OrderHotel },
     { path: '/ordertour', component: OrderTour },
+    { path: '/new', component: News },
 ]
 export { defaultRoute }

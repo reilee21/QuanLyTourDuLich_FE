@@ -1,9 +1,11 @@
+//App.js
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import './App.css';
 import { defaultRoute } from './routes';
 import DefaultLayout from './components/layouts/Layout';
 import HotelDetail from './page/orderhotel/hoteldetail'; // Import trang HotelDetail
+import NewsPage from './page/News/NewsPage';
 
 function App() {
   return (
@@ -16,6 +18,7 @@ function App() {
           })}
           {/* Thêm route cho HotelDetail */}
           <Route path="/hoteldetail/:hotelId" element={<HotelDetail />} />
+          <Route path="/news" component={NewsPage} />
         </Route>
       </Routes>
     </div>

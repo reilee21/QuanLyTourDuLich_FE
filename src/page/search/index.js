@@ -1,7 +1,3 @@
-
-
-
-
 const SearchPage = () => {
     return (
         <>

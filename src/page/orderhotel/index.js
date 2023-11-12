@@ -1,8 +1,8 @@
-// Index.js
+// SearchPage.js
 import React, { useState } from 'react';
 import { useNavigate, Routes, Route } from 'react-router-dom';
 import DatePicker from 'react-datepicker';
-import HotelDetail from './hoteldetail';
+import HotelDetail from './hoteldetail'; // Make sure the import path is correct
 
 // Ensure the correct path to the CSS file
 import 'react-datepicker/dist/react-datepicker.css';
@@ -19,6 +19,12 @@ const SearchPage = () => {
     const handleSearch = () => {
         if (!searchTerm) {
             alert('Vui lòng nhập thông tin để tìm kiếm.');
+            return;
+        }
+
+        // Check if both startDate and endDate are selected
+        if (!startDate || !endDate) {
+            alert('Vui lòng chọn cả ngày đến và ngày đi.');
             return;
         }
 
@@ -98,7 +104,6 @@ const SearchPage = () => {
                                 </li>
                             ))}
                         </ul>
-
                     </div>
                 )}
             </div>

@@ -1,3 +1,4 @@
+// HotelDetail.js
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import khachsanImage from '../../assets/image/khachsan1.jpg';
@@ -102,7 +103,6 @@ const HotelDetail = () => {
         alert('Đặt phòng thành công');
     };
 
-
     return (
         <div className="hotel-details">
             {hotelDetails.roomTypes && hotelDetails.roomTypes.length > 0 ? (
@@ -143,7 +143,6 @@ const HotelDetail = () => {
                             <button className='xac-nhan' onClick={handleConfirmBooking} disabled={Object.values(selectedRooms).reduce((sum, quantity) => sum + quantity, 0) === 0}>
                                 Xác nhận
                             </button>
-
                         </div>
                     </div>
                 </div>
