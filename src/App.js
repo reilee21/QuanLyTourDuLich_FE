@@ -6,6 +6,7 @@ import { defaultRoute } from './routes';
 import DefaultLayout from './components/layouts/Layout';
 import HotelDetail from './page/orderhotel/hoteldetail'; // Import trang HotelDetail
 import NewsArticlePage from './page/News/NewsArticle';
+import TourDetail from './page/ordertour/tourdetail';
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
           })}
           {/* Thêm route cho HotelDetail */}
           <Route path="/hoteldetail/:hotelId" element={<HotelDetail />} />
+          <Route path="/tourdetail/:tourId" element={<TourDetail />} /> {/* Thêm route cho TourDetail */}
           <Route path="/news/:id" element={<NewsArticlePage />} />
         </Route>
       </Routes>
