@@ -5,7 +5,7 @@ import './App.css';
 import { defaultRoute } from './routes';
 import DefaultLayout from './components/layouts/Layout';
 import HotelDetail from './page/orderhotel/hoteldetail'; // Import trang HotelDetail
-import NewsPage from './page/News/NewsPage';
+import NewsArticlePage from './page/News/NewsArticle';
 
 function App() {
   return (
@@ -18,7 +18,7 @@ function App() {
           })}
           {/* Thêm route cho HotelDetail */}
           <Route path="/hoteldetail/:hotelId" element={<HotelDetail />} />
-          <Route path="/news" component={NewsPage} />
+          <Route path="/news/:id" element={<NewsArticlePage />} />
         </Route>
       </Routes>
     </div>
