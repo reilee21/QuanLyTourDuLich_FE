@@ -1,0 +1,33 @@
+.diemdentr:hover {
+  background-color: rgb(247, 247, 247);
+  cursor: pointer;
+}
+/* customDropdown.css */
+
+.custom-dropdown {
+  position: relative;
+}
+
+.custom-dropdown ul {
+  list-style: none;
+  padding: 0;
+  margin: 2px 0;
+  background: white;
+  border: 1px solid #ccc;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  z-index: 1;
+  border-radius: 10px;
+}
+
+.custom-dropdown li {
+  padding: 10px;
+  cursor: pointer;
+  border-radius: 10px;
+}
+
+.custom-dropdown li:hover {
+  background: #f0f0f0;
+}
