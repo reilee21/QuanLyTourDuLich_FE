@@ -1,0 +1,80 @@
+.container-orderhotel {
+    gap: 20px;
+    font-weight: 600;
+    display: flex;
+}
+
+.container-1 {
+    margin-top: 3%;
+    align-items: center;
+    display: flex;
+    gap: 10px;
+}
+
+.container-1 label {
+    margin-bottom: 2%;
+}
+
+.inputt {
+    width: 500px;
+    right: 0;
+    padding: 10px;
+    border-radius: 10px;
+
+}
+
+.inputt-ngaydi {
+    padding: 10px;
+    border-radius: 10px;
+}
+
+.buttoon {
+    width: 20%;
+    height: 100%;
+    background-color: #F7D716;
+    border: none;
+    border-radius: 10px;
+    color: #2d4271;
+    cursor: pointer;
+}
+
+.container-1 button:hover {
+    background-color: #293462;
+    color: #F7D716;
+}
+
+.search-results-main {
+    margin-top: 20px;
+    width: 100%;
+    font-size: 20px;
+    /* Set width to 100% to make sure it takes the full width of the container */
+}
+
+.search-results li {
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 20px;
+    margin-bottom: 20px;
+}
+
+.search-results h2 {
+    margin-top: 20px;
+    margin-bottom: 50px;
+    text-align: center;
+}
+
+.imghotel {
+    display: flex;
+    width: 50%;
+    /* Set the width as needed */
+    height: 50%;
+    /* Set the height as needed */
+    object-fit: cover;
+    /* This property ensures the image retains its aspect ratio */
+}
+
+.imghotel {
+    height: 200px;
+    object-fit: cover;
+    border: 2px solid #000;
+    border-radius: 10px;
+}
