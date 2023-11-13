@@ -1,14 +1,15 @@
-import HomePage from "../page/home";
-import LoginPage from "../page/login";
-import SearchPage from "../page/search";
-import RegisterPage from "../page/register";
 
-import Cus_Infro from "../page/cus_infor";
-import DoiThuong from "../page/doithuong";
-import Histour from "../page/histour";
-import Repass from "../page/repass";
-import Contact from "../page/contact";
-import FAQ from "../page/FAQ";
+import HomePage from "../page/home/ImageSlider"
+import LoginPage from "../page/login"
+import SearchPage from "../page/search"
+import RegisterPage from "../page/register"
+import Cus_Infro from "../page/cus_infor"
+import DoiThuong from "../page/doithuong"
+import Histour from "../page/histour"
+import Repass from "../page/repass"
+import Contact from "../page/contact"
+import FAQ from "../page/FAQ"
+
 import {
   PhuongTien,
   DiaDiem,

@@ -30,8 +30,9 @@
     display: flex;
     position: relative;
     justify-content: space-between;
-    padding-left: 200px;
+    padding-left: 100px;
     align-items: center;
+
 }
 
 .navbar-main {
@@ -39,6 +40,12 @@
     justify-content: space-between;
     padding-left: 200px;
     align-items: center;
+}
 
+.color {
+    background-color: #fff;
+}
 
+.brand-text {
+    font-size: 25px;
 }
