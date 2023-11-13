@@ -124,7 +124,12 @@ const Voucher = () => {
                 {filteredData.length > 0 &&
                   currentPageData.map((voucher, index) => {
                     return (
-                      <tr key={voucher.MaVoucher}>
+                      <tr
+                        key={voucher.MaVoucher}
+                        onClick={() => {
+                          openEditModal(voucher);
+                        }}
+                      >
                         <td className="stt">{index + 1}</td>
 
                         <td className="ten">{voucher.TenVoucher}</td>
@@ -135,7 +140,10 @@ const Voucher = () => {
                         <td className="edit">
                           <Button
                             variant="outline-warning"
-                            onClick={() => openEditModal(voucher)}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              openEditModal(voucher);
+                            }}
                           >
                             <AiFillEdit />
                           </Button>
@@ -143,7 +151,10 @@ const Voucher = () => {
                         <td className="del">
                           <Button
                             variant="outline-danger"
-                            onClick={() => handleDelete(voucher)}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleDelete(voucher);
+                            }}
                           >
                             <AiFillDelete />
                           </Button>

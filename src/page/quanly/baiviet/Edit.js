@@ -3,13 +3,13 @@ import { Modal, Button, Form, Row } from "react-bootstrap";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import EditorToolbar, { modules, formats } from "./EditorToolbar";
-import { useParams } from "react-router-dom";
-import baiVietData from "./data";
+import { useLocation, useNavigate } from "react-router-dom";
 const EditBaiViet = () => {
-  const { id } = useParams();
-  const articleId = parseInt(id, 10); // Convert id to a number
+  const location = useLocation();
+  const navigate = useNavigate();
 
-  const article = baiVietData.find((x) => x.IdBaiViet === articleId);
+  const article = location.state.article;
+
   const [value, setValue] = useState(article.Noidung);
   const [ngay, setNgay] = useState(article.NgayDang);
   const [tieuDe, setTieuDe] = useState(article ? article.TieuDe : "");
@@ -20,6 +20,11 @@ const EditBaiViet = () => {
 
   const handleClick = () => {
     console.log(JSON.stringify(tieuDe));
+  };
+  const handlePreview = () => {
+    navigate("preview", {
+      state: { article: article },
+    });
   };
   return (
     <div className="edit_baiviet">
@@ -54,8 +59,16 @@ const EditBaiViet = () => {
         >
           Xoá bài viết
         </button>
+
         <button type="submit" className="btn btn-success" onClick={handleClick}>
           Lưu chỉnh sửa
+        </button>
+        <button
+          type="submit"
+          className="btn btn-primary"
+          onClick={handlePreview}
+        >
+          Xem trước
         </button>
       </div>
     </div>

@@ -18,7 +18,7 @@ const BaiViet = () => {
 
   const handleCardClick = (baiViet) => {
     setSelectedArticle(baiViet);
-    navigate(`${baiViet.IdBaiViet}`);
+    navigate(`${baiViet.IdBaiViet}`, { state: { article: baiViet } });
   };
   const handleAdd = () => {
     navigate("them");

@@ -8,7 +8,6 @@ import DoiThuong from "../page/doithuong";
 import Histour from "../page/histour";
 import Repass from "../page/repass";
 import Contact from "../page/contact";
-
 import FAQ from "../page/FAQ";
 import {
   PhuongTien,
@@ -25,6 +24,16 @@ import {
   BaiViet,
   EditBaiViet,
   AddBaiViet,
+  PreviewBaiViet,
+  Tour,
+  AddTour,
+  EditTour,
+  KhachSan,
+  AddKhachSan,
+  EditKhachSan,
+  KhuyenMai,
+  AddKhuyenMai,
+  EditKhuyenMai,
 } from "../page/quanly/export";
 
 const defaultRoute = [
@@ -45,6 +54,16 @@ const quanlyRoute = [
   { path: "ptdv/phuongtien", component: PhuongTien },
   { path: "ptdv/diadiem", component: DiaDiem },
   { path: "ptdv/diemden", component: DiemDen },
+  { path: "ptdv/tour", component: Tour },
+  { path: "ptdv/tour/them", component: AddTour },
+  { path: "ptdv/tour/:id", component: EditTour },
+  { path: "ptdv/khachsan", component: KhachSan },
+  { path: "ptdv/khachsan/add", component: AddKhachSan },
+  { path: "ptdv/khachsan/:id", component: EditKhachSan },
+  { path: "ptdv/khuyenmai", component: KhuyenMai },
+  { path: "ptdv/khuyenmai/add", component: AddKhuyenMai },
+  { path: "ptdv/khuyenmai/:id", component: EditKhuyenMai },
+
   { path: "more/doitac", component: DoiTac },
   { path: "more/nhanvien", component: NhanVien },
   { path: "more/nhanvien/taikhoannv", component: TaiKhoanNV },
@@ -52,6 +71,7 @@ const quanlyRoute = [
   { path: "more/voucher", component: Voucher },
   { path: "more/baiviet", component: BaiViet },
   { path: "more/baiviet/:id", component: EditBaiViet },
+  { path: "more/baiviet/:id/preview", component: PreviewBaiViet },
   { path: "more/baiviet/them", component: AddBaiViet },
 
   { path: "cskh/thanhvien", component: KhachHang },
