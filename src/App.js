@@ -32,7 +32,7 @@ import LayoutQly from "./components/layouts/LayoutQly";
 import { useState } from "react";
 
 function App() {
-  const [role, setRole] = useState("qly");
+  const [role, setRole] = useState("client");
   return (
     <div className="App">
       <Routes>

@@ -1,18 +1,17 @@
+import HomePage from "../page/home/ImageSlider";
+import LoginPage from "../page/login";
+import SearchPage from "../page/search";
+import RegisterPage from "../page/register";
+import Cus_Infro from "../page/cus_infor";
+import DoiThuong from "../page/doithuong";
+import Histour from "../page/histour";
+import Repass from "../page/repass";
+import Contact from "../page/contact";
+import FAQ from "../page/FAQ";
 
-// import HomePage from "../page/home/ImageSlider"
-// import LoginPage from "../page/login"
-// import SearchPage from "../page/search"
-// import RegisterPage from "../page/register"
-// import Cus_Infro from "../page/cus_infor"
-// import DoiThuong from "../page/doithuong"
-// import Histour from "../page/histour"
-// import Repass from "../page/repass"
-// import Contact from "../page/contact"
-// import FAQ from "../page/FAQ"
-// <<<<<<< bookingtour
-// import OrderHotel from "../page/orderhotel"
-// import OrderTour from "../page/ordertour"
-// import News from "../page/News/NewsPage"
+import OrderHotel from "../page/orderhotel";
+import OrderTour from "../page/ordertour";
+import News from "../page/News/NewsPage";
 
 // const defaultRoute = [
 //     { path: '/', component: HomePage },
@@ -70,6 +69,9 @@ const defaultRoute = [
   { path: "/repass", component: Repass },
   { path: "/contact", component: Contact },
   { path: "/FAQ", component: FAQ },
+  { path: "/orderhotel", component: OrderHotel },
+  { path: "/ordertour", component: OrderTour },
+  { path: "/new", component: News },
 ];
 
 const quanlyRoute = [
