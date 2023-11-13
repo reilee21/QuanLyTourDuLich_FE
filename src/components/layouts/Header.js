@@ -8,13 +8,14 @@ const Header = () => {
             <div className='color'>
                 <Navbar className="navbar-main">
                     <div >
-                        <Navbar.Brand href="#home" style={{ display: 'inline-block' }}>
+                        <Navbar.Brand as={Link} to="/" style={{ display: 'inline-block' }}>
                             <span className="brand-text" style={{ color: '#293462', size: '50px' }}>Huflit</span><span className="brand-text" style={{ color: '#F7D716' }}>Travel</span>
                         </Navbar.Brand>
                         <Nav className="nav-home" style={{ display: 'inline-block' }} as={Link} to="/">Trang chủ</Nav >
                         <Nav className="nav-cus_info" style={{ display: 'inline-block' }} as={Link} to="/cus_info">Thông tin khách hàng</Nav >
                         <Nav className="nav-cus_info" style={{ display: 'inline-block' }} as={Link} to="/contact">Liên hệ</Nav >
                         <Nav className="nav-cus_info" style={{ display: 'inline-block' }} as={Link} to="/FAQ">FAQ</Nav >
+                        <Nav className="nav-cus_info" style={{ display: 'inline-block' }} as={Link} to="/new">Tin tức</Nav >
                     </div>
                     <Nav >
                         <div className="nav-main">
