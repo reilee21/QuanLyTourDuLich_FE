@@ -1,12 +1,13 @@
-//App.js
+// App.js
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import './App.css';
 import { defaultRoute } from './routes';
 import DefaultLayout from './components/layouts/Layout';
-import HotelDetail from './page/orderhotel/hoteldetail'; // Import trang HotelDetail
+import HotelDetail from './page/orderhotel/hoteldetail';
 import NewsArticlePage from './page/News/NewsArticle';
 import TourDetail from './page/ordertour/tourdetail';
+import HistoryPage from './page/histour'; // Import the HistoryPage component
 
 function App() {
   return (
@@ -17,10 +18,11 @@ function App() {
             const Page = route.component;
             return <Route key={index} path={route.path} element={<Page />} />;
           })}
-          {/* Thêm route cho HotelDetail */}
           <Route path="/hoteldetail/:hotelId" element={<HotelDetail />} />
-          <Route path="/tourdetail/:tourId" element={<TourDetail />} /> {/* Thêm route cho TourDetail */}
+          <Route path="/tourdetail/:tourId" element={<TourDetail />} />
           <Route path="/news/:id" element={<NewsArticlePage />} />
+          {/* Add a new route for the HistoryPage */}
+          <Route path="/history" element={<HistoryPage />} />
         </Route>
       </Routes>
     </div>

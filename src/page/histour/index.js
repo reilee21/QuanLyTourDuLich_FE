@@ -1,49 +1,41 @@
-import React, { useState, useEffect } from 'react';
-
-const TourList = ({ tours }) => {
-    return (
-        <div>
-            {tours.map((tour) => (
-                <TourItem key={tour.id} tour={tour} />
-            ))}
-        </div>
-    );
-};
-
-const TourItem = ({ tour }) => {
-    return (
-        <div>
-            <h2>{tour.name}</h2>
-            <p>{tour.details}</p>
-        </div>
-    );
-};
-
-const TourPage = () => {
-    const [tours, setTours] = useState([]); // Set initial value to an empty array
-    const [searchQuery, setSearchQuery] = useState('');
+import React, { useEffect, useState } from 'react';
+import "./histour.css"
+const HistoryPage = () => {
+    const [bookingHistory, setBookingHistory] = useState([]);
 
     useEffect(() => {
-        // Fetch tour data here and update the tours state
-        // For example: fetchTours().then(data => setTours(data));
-    }, []);
+        // Retrieve booking data from localStorage
+        const storedData = localStorage.getItem('bookingData');
 
-    const filteredTours = tours.filter((tour) =>
-        tour.name.toLowerCase().includes(searchQuery.toLowerCase())
-    );
+        if (storedData) {
+            // Parse the stored JSON data
+            const bookingData = JSON.parse(storedData);
+
+            // Update booking history state
+            setBookingHistory([bookingData, ...bookingHistory]);
+        }
+    }, []); // Run this effect only once on component mount
 
     return (
-        <div>
-            <h1>Tour Đã Đi</h1>
-            <input
-                type="text"
-                placeholder="Search tours..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-            />
-            <TourList tours={filteredTours} />
+        <div >
+            <h1 className='histour'>Tour Đã Đi</h1>
+            {bookingHistory.length === 0 ? (
+                <p>No booking history available.</p>
+            ) : (
+                <ul>
+                    {bookingHistory.map((booking, index) => (
+                        <li key={index}>
+                            <p>Mã tour: {booking.tourId}</p>
+                            <p>Số lượng người tham gia: {booking.participants}</p>
+                            <p>Ngày đi: {booking.departureDate}</p>
+                            <p>Giờ tập chung: {booking.gatheringTime}</p>
+                            <p>Giá tiền: {booking.totalPrice} VND</p>
+                        </li>
+                    ))}
+                </ul>
+            )}
         </div>
     );
 };
 
-export default TourPage;
+export default HistoryPage;
