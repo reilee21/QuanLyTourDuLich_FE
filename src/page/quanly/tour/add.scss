@@ -1,0 +1,100 @@
+.lichtrinh {
+  background-color: white;
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  padding: 4px 12px;
+  border-radius: 12px;
+  table {
+    h5 {
+      margin: 8px;
+    }
+    thead {
+      .ngay {
+        border-top-left-radius: 12px;
+      }
+      .mota {
+        border-top-right-radius: 12px;
+      }
+    }
+
+    .ngay {
+      width: 15%;
+    }
+    .diemden {
+      width: 25%;
+    }
+    .del {
+      width: 5%;
+      background-color: rgba(255, 255, 255, 0);
+    }
+  }
+}
+.head {
+  padding: 2% 0;
+  position: relative;
+  h2 {
+    width: fit-content;
+  }
+  #addt {
+    position: absolute;
+    top: 30px;
+    left: 10px;
+    padding-right: 20px;
+    padding-left: 20px;
+  }
+}
+.addlich {
+  margin: 0 8px;
+}
+.anhbia {
+  img {
+    width: 200px;
+    height: 200px;
+    min-width: 200px;
+    min-height: 200px;
+  }
+}
+.pt {
+  background-color: white;
+  margin-top: 8px;
+  overflow-y: scroll;
+  position: fixed;
+  width: 18%;
+  max-height: 150px;
+  .pt-item {
+    padding: 4px;
+  }
+}
+.selectedtransname {
+  margin-right: 8px;
+}
+
+#selecitem {
+  padding: 4px 0;
+}
+#dsphuongtien {
+  background-color: white;
+  padding: 2%;
+  border-radius: 12px;
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  .selectlist {
+    display: flex;
+    justify-content: flex-start;
+  }
+  .dspttitle {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    span {
+      font-weight: 500;
+    }
+  }
+}
+.tourinfo {
+  background-color: white;
+  padding: 12px 0;
+  border-radius: 12px;
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+}
+label {
+  font-weight: 500;
+}

@@ -1,0 +1,28 @@
+.article_preview {
+  background-color: white;
+  width: 100%;
+  min-height: 100vh;
+  border-radius: 8px;
+  padding: 2%;
+  position: relative;
+
+  .article_title {
+    color: black;
+    font-weight: bold;
+  }
+  .article_date {
+    text-align: right;
+    padding: 0 5%;
+  }
+  .article_content {
+    padding: 0 5%;
+    img {
+      width: 60%;
+      height: auto;
+      border-radius: 4px;
+    }
+  }
+  #exit {
+    position: absolute;
+  }
+}

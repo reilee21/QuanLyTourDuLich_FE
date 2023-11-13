@@ -21,7 +21,7 @@
 }
 
 .register-container {
-    background-image: url(../../../src/assets/image/login.png);
+    background-image: url(../../assets/image/login.png);
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;

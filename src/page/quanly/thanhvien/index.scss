@@ -1,0 +1,69 @@
+.dateakh {
+  margin: 14px 0;
+  .react-datepicker-wrapper {
+    margin-left: 20px;
+  }
+}
+
+#cskhtable,
+#bangkh {
+  width: 100%;
+  margin-bottom: 20px;
+  background-color: white;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  .stt {
+    width: 5%;
+    text-align: center;
+  }
+  tbody tr {
+    border-bottom: 1px solid #5e76c2;
+    height: 50px;
+  }
+  tbody tr:hover {
+    background-color: #e7e9e9;
+    cursor: pointer;
+  }
+  thead {
+    margin: 10px;
+    height: 50px;
+    background-color: #5e76c2;
+    color: white;
+    .edit,
+    .del {
+      width: 5%;
+      padding: 10px;
+    }
+    .stt,
+    .maKH {
+      border-top-left-radius: 20%;
+    }
+    .del {
+      border-top-right-radius: 20%;
+    }
+  }
+}
+
+form .row {
+  margin: 8px 0;
+}
+
+#ackh {
+  margin: 2% 0;
+  h4 {
+    padding: 10px;
+  }
+  table {
+    margin-top: 2%;
+  }
+  .hoTen {
+    width: 30%;
+  }
+  .maKH {
+    width: 6%;
+    text-align: center;
+  }
+}
+#search-acc {
+  margin: 0 20px;
+}

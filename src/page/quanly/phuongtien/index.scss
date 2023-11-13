@@ -1,0 +1,54 @@
+h4 {
+  color: black;
+  width: fit-content;
+  margin: 0 auto;
+  font-weight: bold;
+  margin-top: 8px;
+}
+.add {
+  margin: 20px 0;
+}
+.search {
+  width: 300px;
+}
+#mytable {
+  width: 100%;
+  margin-bottom: 20px;
+  background-color: white;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+
+  thead {
+    margin: 10px;
+    height: 50px;
+    background-color: #5e76c2;
+    color: white;
+    .stt {
+      border-top-left-radius: 20%;
+    }
+    .del {
+      border-top-right-radius: 20%;
+    }
+  }
+  .stt {
+    width: 5%;
+    text-align: center;
+  }
+  .edit,
+  .del {
+    width: 5%;
+    padding: 10px;
+  }
+  .doitac {
+    width: 15%;
+  }
+  .mota {
+    width: 30%;
+  }
+  .ten {
+    width: 30%;
+  }
+  tbody tr {
+    border-bottom: 1px solid #5e76c2;
+  }
+}

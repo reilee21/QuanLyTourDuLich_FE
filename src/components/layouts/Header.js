@@ -1,7 +1,7 @@
 // Header.js
-import { Link } from 'react-router-dom';
+import { Link } from "react-router-dom";
 import { Navbar, Nav } from "react-bootstrap";
-import "./Header.css"
+import "./Header.css";
 const Header = () => {
     return (
         <>
