@@ -2,57 +2,39 @@ import React, { useState } from "react";
 import { Button, Form } from "react-bootstrap";
 import { AiFillEdit, AiFillDelete } from "react-icons/ai";
 import ReactPaginate from "react-paginate";
-import AddDiaDiemFormModal from "./AddForm";
-import EditDiaDiemFormModal from "./EditForm";
+import { useNavigate } from "react-router-dom";
+import data from "./data";
+const KhachSan = () => {
+  const navigate = useNavigate();
 
-const DiaDiem = () => {
-  const [showAddFormModal, setShowAddFormModal] = useState(false);
-  const [showEditFormModal, setShowEditFormModal] = useState(false);
-  const [editData, setEditData] = useState({});
-  const [currentPage, setCurrentPage] = useState(0); // Current page number
-  const itemsPerPage = 10; // Number of items per page
+  const [currentPage, setCurrentPage] = useState(0);
 
-  const data = [
-    {
-      stt: 1,
-      ten: "Item 1",
-      loai: 0,
-    },
-    {
-      stt: 2,
-      ten: "Item 2",
-      loai: 1,
-    },
-    // Add more data as needed
-  ];
+  const itemsPerPage = 10;
 
-  // Calculate the total number of pages
   const pageCount = Math.ceil(data.length / itemsPerPage);
 
-  // Function to handle page change
   const handlePageClick = (selectedPage) => {
     setCurrentPage(selectedPage.selected);
   };
 
-  // Calculate the range of items to display on the current page
-  const startIndex = currentPage * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-  const itemsToDisplay = data.slice(startIndex, endIndex);
-
   const handleAddClick = () => {
-    setShowAddFormModal(true);
+    // Navigate to the add hotel page
+    navigate("add");
   };
 
   const handleEditClick = (item) => {
-    setEditData(item);
-    setShowEditFormModal(true);
+    navigate(`${item.IdKhachSan}`, { state: item });
   };
+
+  const startIndex = currentPage * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const itemsToDisplay = data.slice(startIndex, endIndex);
 
   return (
     <>
       <div className="row">
         <div className="title">
-          <h4>Danh sách địa điểm</h4>
+          <h4>Danh sách Khách Sạn</h4>
         </div>
         <div className="col-md-12 d-flex justify-content-between align-items-center mb-3">
           <Button className="add" variant="success" onClick={handleAddClick}>
@@ -61,33 +43,37 @@ const DiaDiem = () => {
           <Form.Group className="search">
             <Form.Control
               type="text"
-              placeholder="Tên địa điểm"
-              //value={searchQuery}
+              placeholder="Tên Khách Sạn"
+              // Add any search functionality if needed
             />
           </Form.Group>
         </div>
 
-        <div className="col-md-12"></div>
         <div className="col-md-12">
           <div className="table-responsive">
             <table id="mytable">
               <thead>
                 <tr>
                   <th className="stt">STT</th>
-                  <th className="ten">Tên địa điểm</th>
-                  <th className="loai">Loại</th>
+                  <th className="tenks">Tên Khách Sạn</th>
+                  <th className="diachi">Địa Chỉ</th>
+                  <th className="mota">Mô Tả</th>
+                  <th className="iddoitac"> Đối Tác</th>
                   <th className="edit"></th>
                   <th className="del"></th>
                 </tr>
               </thead>
               <tbody>
-                {itemsToDisplay.map((item) => (
-                  <tr key={item.stt} onClick={() => handleEditClick(item)}>
-                    <td className="stt">{item.stt}</td>
-                    <td className="ten">{item.ten}</td>
-                    <td className="loai">
-                      {item.loai === 0 ? "Trong nước" : "Nước ngoài"}
-                    </td>
+                {itemsToDisplay.map((item, index) => (
+                  <tr
+                    key={item.IdKhachSan}
+                    onClick={() => handleEditClick(item)}
+                  >
+                    <td className="stt">{index + 1}</td>
+                    <td className="tenks">{item.Ten}</td>
+                    <td className="diachi">{item.DiaChi}</td>
+                    <td className="mota">{item.MoTa}</td>
+                    <td className="iddoitac">{item.IdDoiTac}</td>
                     <td className="edit">
                       <Button
                         variant="outline-warning"
@@ -100,12 +86,7 @@ const DiaDiem = () => {
                       </Button>
                     </td>
                     <td className="del">
-                      <Button
-                        variant="outline-danger"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                        }}
-                      >
+                      <Button variant="outline-danger">
                         <AiFillDelete />
                       </Button>
                     </td>
@@ -132,17 +113,8 @@ const DiaDiem = () => {
         breakClassName={"page-item"}
         breakLinkClassName={"page-link"}
       />
-      <AddDiaDiemFormModal
-        show={showAddFormModal}
-        onClose={() => setShowAddFormModal(false)}
-      />
-      <EditDiaDiemFormModal
-        show={showEditFormModal}
-        onClose={() => setShowEditFormModal(false)}
-        itemToEdit={editData}
-      />
     </>
   );
 };
 
-export default DiaDiem;
+export default KhachSan;

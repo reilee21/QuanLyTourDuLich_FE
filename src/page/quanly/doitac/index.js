@@ -83,7 +83,12 @@ const DoiTac = () => {
               </thead>
               <tbody>
                 {currentPageData.map((item) => (
-                  <tr key={item.stt}>
+                  <tr
+                    key={item.stt}
+                    onClick={() => {
+                      handleEditClick(item);
+                    }}
+                  >
                     <td className="stt">{item.stt}</td>
                     <td className="ten">{item.ten}</td>
                     <td className="email">{item.email}</td>
@@ -91,13 +96,21 @@ const DoiTac = () => {
                     <td className="edit">
                       <Button
                         variant="outline-warning"
-                        onClick={() => handleEditClick(item)}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleEditClick(item);
+                        }}
                       >
                         <AiFillEdit />
                       </Button>
                     </td>
                     <td className="del">
-                      <Button variant="outline-danger">
+                      <Button
+                        variant="outline-danger"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                        }}
+                      >
                         <AiFillDelete />
                       </Button>
                     </td>

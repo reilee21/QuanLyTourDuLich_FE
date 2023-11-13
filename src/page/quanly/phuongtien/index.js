@@ -101,7 +101,7 @@ const PhuongTien = () => {
                 {filteredData.length > 0 &&
                   currentPageData.map((item, index) => {
                     return (
-                      <tr key={item.stt}>
+                      <tr key={item.stt} onClick={() => openEditModal(item)}>
                         <td className="stt">{item.stt}</td>
                         <td className="ten">{item.tenPhuongTien}</td>
                         <td className="mota">{item.moTa}</td>
@@ -109,7 +109,10 @@ const PhuongTien = () => {
                         <td className="edit">
                           <Button
                             variant="outline-warning"
-                            onClick={() => openEditModal(item)}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              openEditModal(item);
+                            }}
                           >
                             <AiFillEdit />
                           </Button>
@@ -117,7 +120,10 @@ const PhuongTien = () => {
                         <td className="del">
                           <Button
                             variant="outline-danger"
-                            onClick={() => handleDelete(item)}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleDelete(item);
+                            }}
                           >
                             <AiFillDelete />
                           </Button>

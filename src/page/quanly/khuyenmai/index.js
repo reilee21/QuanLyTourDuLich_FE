@@ -2,57 +2,62 @@ import React, { useState } from "react";
 import { Button, Form } from "react-bootstrap";
 import { AiFillEdit, AiFillDelete } from "react-icons/ai";
 import ReactPaginate from "react-paginate";
-import AddDiaDiemFormModal from "./AddForm";
-import EditDiaDiemFormModal from "./EditForm";
+import { useNavigate } from "react-router-dom";
 
-const DiaDiem = () => {
-  const [showAddFormModal, setShowAddFormModal] = useState(false);
-  const [showEditFormModal, setShowEditFormModal] = useState(false);
-  const [editData, setEditData] = useState({});
-  const [currentPage, setCurrentPage] = useState(0); // Current page number
-  const itemsPerPage = 10; // Number of items per page
-
-  const data = [
+const KhuyenMai = () => {
+  const khuyenMaiData = [
     {
-      stt: 1,
-      ten: "Item 1",
-      loai: 0,
+      MaKM: 1,
+      TenKM: "Khuyến mãi 1",
+      PhanTramKM: 0.1,
+      ThoiGianBatDau: new Date("2023-11-12"),
+      ThoiGianKetThuc: new Date("2023-11-15"),
     },
     {
-      stt: 2,
-      ten: "Item 2",
-      loai: 1,
+      MaKM: 2,
+      TenKM: "Khuyến mãi 2",
+      PhanTramKM: 0.2,
+      ThoiGianBatDau: new Date("2023-11-13"),
+      ThoiGianKetThuc: new Date("2023-11-16"),
     },
-    // Add more data as needed
+    {
+      MaKM: 3,
+      TenKM: "Khuyến mãi 3",
+      PhanTramKM: 0.3,
+      ThoiGianBatDau: new Date("2023-11-14"),
+      ThoiGianKetThuc: new Date("2023-11-17"),
+    },
   ];
+  const navigate = useNavigate();
 
-  // Calculate the total number of pages
-  const pageCount = Math.ceil(data.length / itemsPerPage);
+  const [currentPage, setCurrentPage] = useState(0);
 
-  // Function to handle page change
+  const itemsPerPage = 10;
+
+  const pageCount = Math.ceil(khuyenMaiData.length / itemsPerPage);
+
   const handlePageClick = (selectedPage) => {
     setCurrentPage(selectedPage.selected);
   };
 
-  // Calculate the range of items to display on the current page
-  const startIndex = currentPage * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-  const itemsToDisplay = data.slice(startIndex, endIndex);
-
   const handleAddClick = () => {
-    setShowAddFormModal(true);
+    // Navigate to the add promotion page
+    navigate("add");
   };
 
   const handleEditClick = (item) => {
-    setEditData(item);
-    setShowEditFormModal(true);
+    navigate(`${item.MaKM}`, { state: item });
   };
+
+  const startIndex = currentPage * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const itemsToDisplay = khuyenMaiData.slice(startIndex, endIndex);
 
   return (
     <>
       <div className="row">
         <div className="title">
-          <h4>Danh sách địa điểm</h4>
+          <h4>Danh sách Khuyến Mãi</h4>
         </div>
         <div className="col-md-12 d-flex justify-content-between align-items-center mb-3">
           <Button className="add" variant="success" onClick={handleAddClick}>
@@ -61,32 +66,37 @@ const DiaDiem = () => {
           <Form.Group className="search">
             <Form.Control
               type="text"
-              placeholder="Tên địa điểm"
-              //value={searchQuery}
+              placeholder="Tên Khuyến Mãi"
+              // Add any search functionality if needed
             />
           </Form.Group>
         </div>
 
-        <div className="col-md-12"></div>
         <div className="col-md-12">
           <div className="table-responsive">
             <table id="mytable">
               <thead>
                 <tr>
                   <th className="stt">STT</th>
-                  <th className="ten">Tên địa điểm</th>
-                  <th className="loai">Loại</th>
+                  <th className="tenkm">Tên Khuyến Mãi</th>
+                  <th className="phantram">Phần Trăm KM</th>
+                  <th className="thoigianbd">Thời Gian Bắt Đầu</th>
+                  <th className="thoigiankt">Thời Gian Kết Thúc</th>
                   <th className="edit"></th>
                   <th className="del"></th>
                 </tr>
               </thead>
               <tbody>
-                {itemsToDisplay.map((item) => (
-                  <tr key={item.stt} onClick={() => handleEditClick(item)}>
-                    <td className="stt">{item.stt}</td>
-                    <td className="ten">{item.ten}</td>
-                    <td className="loai">
-                      {item.loai === 0 ? "Trong nước" : "Nước ngoài"}
+                {itemsToDisplay.map((item, index) => (
+                  <tr key={item.MaKM} onClick={() => handleEditClick(item)}>
+                    <td className="stt">{index + 1}</td>
+                    <td className="tenkm">{item.TenKM}</td>
+                    <td className="phantram">{item.PhanTramKM}</td>
+                    <td className="thoigianbd">
+                      {item.ThoiGianBatDau.toLocaleDateString()}
+                    </td>
+                    <td className="thoigiankt">
+                      {item.ThoiGianKetThuc.toLocaleDateString()}
                     </td>
                     <td className="edit">
                       <Button
@@ -132,17 +142,8 @@ const DiaDiem = () => {
         breakClassName={"page-item"}
         breakLinkClassName={"page-link"}
       />
-      <AddDiaDiemFormModal
-        show={showAddFormModal}
-        onClose={() => setShowAddFormModal(false)}
-      />
-      <EditDiaDiemFormModal
-        show={showEditFormModal}
-        onClose={() => setShowEditFormModal(false)}
-        itemToEdit={editData}
-      />
     </>
   );
 };
 
-export default DiaDiem;
+export default KhuyenMai;

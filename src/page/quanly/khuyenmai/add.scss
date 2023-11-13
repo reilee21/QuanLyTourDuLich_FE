@@ -1,0 +1,42 @@
+.km-selected-tour {
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  border-radius: 8px;
+  background-color: white;
+  .header {
+    font-weight: 500;
+  }
+}
+.searchlist {
+  background-color: white;
+  margin: 4px 0;
+  border-radius: 8px;
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  overflow-y: scroll;
+  position: absolute;
+  width: 25%;
+  max-height: 160px;
+  .row {
+    border-radius: 8px;
+    padding: 4px;
+  }
+  .row:hover {
+    background-color: aliceblue;
+  }
+}
+.title-selected-list {
+  margin: 8px 0;
+}
+.title-km {
+  margin: 3% 0;
+}
+.addkm {
+  position: absolute;
+  top: 5%;
+  left: 20%;
+}
+@media (max-width: 1440px) {
+  .addkm {
+    position: sticky;
+    top: 0;
+  }
+}

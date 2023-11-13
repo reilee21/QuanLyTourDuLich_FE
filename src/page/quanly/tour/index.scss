@@ -1,0 +1,35 @@
+.matour {
+  width: 15%;
+  padding-left: 8px;
+}
+.gio {
+  width: 10%;
+}
+.noi {
+  width: 15%;
+}
+.ngay {
+  width: 15%;
+}
+.gia {
+  width: 15%;
+  text-align: center;
+}
+#mytable {
+  thead {
+    margin: 10px;
+    height: 50px;
+    background-color: #5e76c2;
+    color: white;
+    .matour {
+      border-top-left-radius: 8px;
+    }
+    .del {
+      border-top-right-radius: 8px;
+    }
+  }
+  tbody tr:hover {
+    background-color: rgb(252, 252, 252);
+    cursor: pointer;
+  }
+}
