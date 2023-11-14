@@ -1,89 +1,141 @@
+import React, { createContext, useContext, useState, useEffect } from "react";
+import axios from "../api/axios";
+import { jwtDecode } from "jwt-decode";
 
-import React, { createContext, useContext, useState,useEffect } from 'react';
-import Cookies from 'universal-cookie';
-import { jwtDecode } from 'jwt-decode';
-import axios from '../api/axios';
-import { googleLogout } from '@react-oauth/google';
 const AuthContext = createContext();
 
-export function useAuth() {    
+export function useAuth() {
   return useContext(AuthContext);
 }
 
 export function AuthProvider({ children }) {
   const [isLogin, setIsLogin] = useState();
-  const [phuongthuc, setPhuongthuc] = useState('');
+  const [phuongthuc, setPhuongthuc] = useState("");
+  const [role, setRole] = useState("");
 
-  const cookie = new Cookies();
+  const setupLogin = (jwtAuthCookie) => {
+    setIsLogin(true);
+    if (phuongthuc === "gg-Auth") {
+      setRole("client");
+      return;
+    }
+    if (jwtAuthCookie == null) return;
+    const temp = jwtDecode(jwtAuthCookie).role;
+    setRole(temp);
+  };
 
-  const googlelogin = () =>{
-    console.log("gglogin");
+  useEffect(() => {
+    const jwtAuthCookie = document.cookie
+      .split("; ")
+      .find((cookie) => cookie.startsWith("jwt-Auth"));
 
-  }
+    if (jwtAuthCookie) {
+      const jwtToken = jwtAuthCookie.split("=")[1];
+      const decodedToken = jwtDecode(jwtToken);
+      const currentTime = Math.floor(Date.now() / 1000);
+      if (decodedToken.exp > currentTime) {
+        setPhuongthuc("jwt-Auth");
+        setupLogin(jwtAuthCookie);
+        console.log("Updated phuongthuc in useEffect:", phuongthuc); // Log the updated value
+      } else {
+        checkTokenExpiration();
+      }
+    } else {
+      const ggAuthCookie = document.cookie
+        .split("; ")
+        .find((cookie) => cookie.startsWith("gg-Auth"));
+      if (ggAuthCookie) {
+        const jwtToken = ggAuthCookie.split("=")[1];
+        const decodedToken = jwtDecode(jwtToken);
+        const currentTime = Math.floor(Date.now() / 1000);
+
+        if (decodedToken.exp > currentTime) {
+          setPhuongthuc("gg-Auth");
+          setupLogin(null);
+        }
+      }
+    }
+  }, [phuongthuc]);
+  useEffect(() => {
+    setupLogin(null);
+  }, [phuongthuc]);
+  const googlelogin = (token) => {
+    const expires = new Date();
+    expires.setSeconds(expires.getSeconds() + token.exp);
+    const cookieValue = encodeURIComponent(JSON.stringify(token));
+    document.cookie = `gg-Auth=${cookieValue}; expires=${expires.toUTCString()}; path=/`;
+    setPhuongthuc("gg-Auth");
+    setupLogin(null);
+  };
 
   const login = async (username, password) => {
     try {
-      const response = await axios.post(`/api/DangNhap?username=${username}&password=${password}`);
-      const decoded = jwtDecode(response.token);
-      cookie.set("jwt-auth", response, {
-        expires: new Date(decoded.exp * 1000),
-      });
-      setPhuongthuc("jwt-auth");
-      setIsLogin(true);
+      const response = await axios.post(
+        `/api/DangNhap?username=${username}&password=${password}`
+      );
+      const expires = new Date();
+      expires.setSeconds(expires.getSeconds() + response.exp);
+      const cookieValue = encodeURIComponent(JSON.stringify(response));
+      document.cookie = `jwt-Auth=${cookieValue}; expires=${expires.toUTCString()}; path=/`;
+      setPhuongthuc("jwt-Auth");
+      setupLogin(cookieValue);
     } catch (error) {
-      console.error('Login error:', error);
+      console.error("Login error:", error);
     }
   };
 
   const logout = () => {
-    if(phuongthuc === "jwt-auth"){
-      cookie.remove("jwt-auth");
-    }
-    else{
-      console.log("gg");
-        
-      googleLogout();
-    }
-    console.log("out");
+    const expires = new Date(0);
+    document.cookie = `jwt-Auth=; expires=${expires.toUTCString()}; path=/`;
+    document.cookie = `gg-Auth=; expires=${expires.toUTCString()}; path=/`;
     setPhuongthuc("");
     setIsLogin(false);
+    setRole("");
+    console.log("Logged out.", isLogin); // Add this line
   };
-  const checkTokenExpiration = async () => {
-    const oldTokenData = cookie.get("jwt-auth");
-    if (oldTokenData) {
-      const oldToken = oldTokenData.token;
-      console.log(oldToken);
-      const decoded = jwtDecode(oldToken);
-      const currentTime = Math.floor(Date.now() / 1000);
 
-      if (decoded.exp - currentTime <= 1800) {
-        await refreshToken();
+  const checkTokenExpiration = async () => {
+    console.log("checktoke");
+    const cookies = document.cookie;
+    const cookieArray = cookies.split("; ");
+    for (const cookie of cookieArray) {
+      const [name, value] = cookie.trim().split("=");
+      if (name === "jwt-Auth") {
+        const tokenData = JSON.parse(decodeURIComponent(value));
+        const currentTime = Math.floor(Date.now() / 1000);
+        if (tokenData.exp - currentTime <= 1800) {
+          await refreshToken(tokenData);
+        }
       }
     }
   };
+
   useEffect(() => {
-    if(phuongthuc === "jwt-auth")
-    {
-      if(isLogin){
-        checkTokenExpiration();    
-        const intervalId = setInterval(checkTokenExpiration, 600000);
+    if (phuongthuc === "jwt-Auth") {
+      if (isLogin) {
+        checkTokenExpiration();
+        const intervalId = setInterval(checkTokenExpiration, 60000);
         return () => clearInterval(intervalId);
-    }
+      }
     }
   }, [isLogin, phuongthuc]);
-  const refreshToken = async () => {
-    const oldTokenData = cookie.get("jwt-auth");
-    if (oldTokenData) {
-      const oldToken = oldTokenData.token;
-      const response = await axios.post(`api/DangNhap/RefreshToken?oldtoken=${oldToken}`);
-      const decoded = jwtDecode(response.token);
-      cookie.set("jwt-auth", response, {
-        expires: new Date(decoded.exp * 1000),
-      });
+
+  const refreshToken = async (tokenData) => {
+    try {
+      const response = await axios.post(
+        `api/DangNhap/RefreshToken?oldtoken=${tokenData.token}`
+      );
+      const expires = new Date();
+      expires.setSeconds(expires.getSeconds() + response.exp);
+      const cookieValue = encodeURIComponent(JSON.stringify(response));
+      document.cookie = `jwt-Auth=${cookieValue}; expires=${expires.toUTCString()}; path=/`;
+    } catch (error) {
+      console.error("Refresh token error:", error);
     }
   };
+
   return (
-    <AuthContext.Provider value={{ isLogin, login, logout, googlelogin }}>
+    <AuthContext.Provider value={{ isLogin, login, logout, googlelogin, role }}>
       {children}
     </AuthContext.Provider>
   );

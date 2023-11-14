@@ -12,7 +12,9 @@ import FAQ from "../page/FAQ";
 import OrderHotel from "../page/orderhotel";
 import OrderTour from "../page/ordertour";
 import News from "../page/News/NewsPage";
-
+import NewsArticlePage from "../page/News/NewsArticle";
+import TourDetail from "../page/ordertour/tourdetail";
+import HotelDetail from "../page/orderhotel/hoteldetail";
 // const defaultRoute = [
 //     { path: '/', component: HomePage },
 //     { path: '/login', component: LoginPage },
@@ -60,22 +62,31 @@ import {
 
 const defaultRoute = [
   { path: "/", component: HomePage },
-  { path: "/login", component: LoginPage },
   { path: "/search", component: SearchPage },
-  { path: "/register", component: RegisterPage },
+  { path: "/contact", component: Contact },
+  { path: "/FAQ", component: FAQ },
+  { path: "/orderhotel", component: OrderHotel },
+  { path: "/hoteldetail/:hotelId", component: HotelDetail },
+
+  { path: "/ordertour", component: OrderTour },
+  { path: "/tourdetail/:tourId", component: TourDetail },
+
+  { path: "/news", component: News },
+  { path: "/news/:id", component: NewsArticlePage },
+];
+const NotLogInRoute = [
+  { path: "login", component: LoginPage },
+  { path: "/", component: HomePage },
+  { path: "register", component: RegisterPage },
+];
+const IsLoginRoute = [
   { path: "/cus_info", component: Cus_Infro },
   { path: "/doithuong", component: DoiThuong },
   { path: "/histour", component: Histour },
   { path: "/repass", component: Repass },
-  { path: "/contact", component: Contact },
-  { path: "/FAQ", component: FAQ },
-  { path: "/orderhotel", component: OrderHotel },
-  { path: "/ordertour", component: OrderTour },
-  { path: "/new", component: News },
 ];
-
 const quanlyRoute = [
-  { path: "/admin", component: HomePage },
+  { path: "/admin", component: PhuongTien },
   { path: "ptdv/phuongtien", component: PhuongTien },
   { path: "ptdv/diadiem", component: DiaDiem },
   { path: "ptdv/diemden", component: DiemDen },
@@ -103,4 +114,4 @@ const quanlyRoute = [
   { path: "cskh/thanhvien/taikhoan", component: TaiKhoanKH },
   { path: "cskh/phanhoi", component: DanhGia },
 ];
-export { defaultRoute, quanlyRoute };
+export { defaultRoute, quanlyRoute, NotLogInRoute, IsLoginRoute };

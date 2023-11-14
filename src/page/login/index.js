@@ -1,16 +1,12 @@
-import axios from '../../api/axios';
-import React, { useState } from 'react';
-import Cookies from 'universal-cookie';
-import { jwtDecode } from 'jwt-decode';
+import React, { useState } from "react";
 import { useAuth } from "../../context/AuthContext";
-import { GoogleOAuthProvider, GoogleLogin } from "@react-oauth/google";
 import { Button } from "react-bootstrap";
-import './Formlogin.css';
-import { Link } from 'react-router-dom';
-// Formlogin.js
+import "./Formlogin.css";
+import { Link } from "react-router-dom";
+import { GoogleLogin } from "@react-oauth/google";
 const FormLogin = () => {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
   const { login } = useAuth();
   const { googlelogin } = useAuth();
   const handleSubmit = (e) => {
@@ -22,7 +18,7 @@ const FormLogin = () => {
     <>
       <div className="login-container">
         <div className="trum">
-          <div className="login-form"> {/* Thêm class "login-form" */}
+          <div className="login-form">
             <h1 className="page-title">Đăng Nhập</h1>
             <form onSubmit={handleSubmit}>
               <div>
@@ -43,25 +39,30 @@ const FormLogin = () => {
                   required
                 />
               </div>
-              <button type="submit" className="login-button">Đăng nhập</button>
-              <Button as={Link} to="/register" variant="primary" className="register"> Đăng ký</Button>
-              <div className="google" >
-                <GoogleOAuthProvider clientId="958123963258-tl9ffg26r7ioopmh519m2q22o681ggi9.apps.googleusercontent.com">
-                  <GoogleLogin
-                    onSuccess={credentialResponse => {
-                      const decoded = jwtDecode(credentialResponse.credential)
-                      googlelogin()
-                    }}
-                    onError={() => {
-                      console.log('Login Failed');
-                    }}
-                    className="custom-google-login-button"
-                  />
-                </GoogleOAuthProvider>
+              <button type="submit" className="login-button">
+                Đăng nhập
+              </button>
+              <Button
+                as={Link}
+                to="/register"
+                variant="primary"
+                className="register"
+              >
+                Đăng ký
+              </Button>
+              <div className="google">
+                <GoogleLogin
+                  onSuccess={(credentialResponse) => {
+                    googlelogin(credentialResponse.credential);
+                  }}
+                  onError={() => {
+                    console.log("Login Failed");
+                  }}
+                />
               </div>
             </form>
-          </div >
-        </div >
+          </div>
+        </div>
       </div>
     </>
   );
