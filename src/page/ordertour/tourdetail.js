@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import './TourDetail.css';
 import HanoiImage from '../../assets/image/hanoi.png';
+
 const TourDetail = () => {
     const { tourId } = useParams();
     const [tourDetails, setTourDetails] = useState(null);
     const [selectedParticipants, setSelectedParticipants] = useState(1);
     const [isMounted, setIsMounted] = useState(true);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchTourDetails = async () => {
@@ -85,21 +87,34 @@ const TourDetail = () => {
         return selectedParticipants * (tourDetails ? tourDetails.Gia : 0);
     };
 
-    if (!tourDetails) {
-        return <p>Loading...</p>;
-    }
-
-    const totalPrice = calculateTotalPrice();
-
     const handleConfirmBooking = () => {
         if (selectedParticipants === 0) {
             alert('Vui lòng chọn số người tham gia trước khi xác nhận đặt tour.');
             return; // Do not proceed with the confirmation
         }
 
+        // Lưu thông tin đặt tour vào localStorage
+        const bookingData = {
+            tourId: tourDetails.MaTour,
+            participants: selectedParticipants,
+            totalPrice: calculateTotalPrice(),
+            departureDate: tourDetails.NgayKhoiHanh,
+            gatheringTime: tourDetails.GioTapTrung,
+        };
+        localStorage.setItem('bookingData', JSON.stringify(bookingData));
+
         // Perform actions to confirm the booking, e.g., send data to the server
         alert('Đặt tour thành công');
+
+        // Điều hướng sang trang lịch sử đặt tour
+        navigate('/history');
     };
+
+    if (!tourDetails) {
+        return <p>Loading...</p>;
+    }
+
+    const totalPrice = calculateTotalPrice();
 
     return (
         <>
@@ -136,9 +151,7 @@ const TourDetail = () => {
                         </button>
                     </div>
                 </div>
-
             </div>
-
         </>
     );
 };

@@ -1,3 +1,14 @@
+// App.js
+import React from 'react';
+import { Routes, Route } from 'react-router-dom';
+import './App.css';
+import { defaultRoute } from './routes';
+import DefaultLayout from './components/layouts/Layout';
+import HotelDetail from './page/orderhotel/hoteldetail';
+import NewsArticlePage from './page/News/NewsArticle';
+import TourDetail from './page/ordertour/tourdetail';
+import HistoryPage from './page/histour'; // Import the HistoryPage component
+
 // <<<<<<< bookingtour
 // //App.js
 // import React from 'react';
@@ -24,18 +35,32 @@
 //           <Route path="/news/:id" element={<NewsArticlePage />} />
 //         </Route>
 // =======
-import { Route, Router, Routes } from "react-router-dom";
-import "./App.css";
-import { defaultRoute, quanlyRoute } from "./routes";
-import DefaultLayout from "./components/layouts/Layout";
-import LayoutQly from "./components/layouts/LayoutQly";
-import { useState } from "react";
+// import { Route, Router, Routes } from "react-router-dom";
+// import "./App.css";
+// import { defaultRoute, quanlyRoute } from "./routes";
+// import DefaultLayout from "./components/layouts/Layout";
+// import LayoutQly from "./components/layouts/LayoutQly";
+// import { useState } from "react";
+// >>>>>>> submain
 
 function App() {
   const [role, setRole] = useState("client");
   return (
     <div className="App">
       <Routes>
+// <<<<<<< bookingtour
+//         <Route path="/" element={<DefaultLayout />}>
+//           {defaultRoute.map((route, index) => {
+//             const Page = route.component;
+//             return <Route key={index} path={route.path} element={<Page />} />;
+//           })}
+//           <Route path="/hoteldetail/:hotelId" element={<HotelDetail />} />
+//           <Route path="/tourdetail/:tourId" element={<TourDetail />} />
+//           <Route path="/news/:id" element={<NewsArticlePage />} />
+//           {/* Add a new route for the HistoryPage */}
+//           <Route path="/history" element={<HistoryPage />} />
+//         </Route>
+// =======
         {role && role !== "client" ? (
           <Route path="/admin" element={<LayoutQly />}>
             {quanlyRoute.map((route, index) => {
