@@ -1,0 +1,36 @@
+.btaddks {
+  position: absolute;
+  top: 20px;
+}
+.kstitle {
+  margin: 10px auto;
+  background-color: #fff;
+  padding: 10px 20px;
+  border-radius: 20px;
+}
+.addf {
+  background-color: white;
+  padding: 12px;
+  border-radius: 12px;
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+}
+.contain {
+  padding: 0 1%;
+  min-height: 90%;
+}
+.doitac-dropdown-list {
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  margin: 4px 0;
+  position: fixed;
+  background-color: white;
+  border-radius: 12px;
+  width: 32%;
+  overflow-y: scroll;
+  max-height: 150px;
+  .dropdown-item {
+    padding: 8px;
+  }
+  .dropdown-item:hover {
+    background-color: aliceblue;
+  }
+}
