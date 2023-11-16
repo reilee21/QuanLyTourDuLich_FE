@@ -1,0 +1,93 @@
+/* CSS cho FormLogin */
+.login-form {
+    max-width: 450px;
+    margin: 0 auto;
+    padding: 20px;
+    background: #ffffff;
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    margin-top: 150px;
+}
+
+
+.page-title {
+    text-align: center;
+    color: #007bff;
+    margin-bottom: 10px;
+    font-size: 30px;
+}
+
+.login-form label {
+    font-weight: bold;
+    display: block;
+    text-align: left;
+    margin-bottom: 10px;
+}
+
+.login-form input {
+    width: 100%;
+    padding: 10px;
+    margin: 5px 0;
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
+    outline: none;
+}
+
+.login-button {
+    width: 100%;
+    padding: 10px;
+    background: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    margin: 15px 0;
+    transition: background-color 0.3s;
+}
+
+.login-button:hover {
+    background: #e71515;
+    /* Màu đỏ khi hover */
+}
+
+.register {
+    width: 100%;
+    padding: 10px;
+    background: #e71515;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    margin-bottom: 10px;
+
+}
+
+.google {
+    width: 300px !important;
+    color: #fff;
+    border: none;
+    padding-left: 92px;
+    cursor: pointer;
+    text-align: center;
+}
+
+.login-container {
+    background-image: url(../../assets/image/login.png);
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    /* Other styling for the login container */
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 65px;
+    bottom: 0;
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+    /* Set the height to the full viewport height */
+}
+
+
+/* Thêm CSS cho các thành phần khác nếu cần */
