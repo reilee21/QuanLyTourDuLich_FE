@@ -1,11 +1,13 @@
 import React, { useState } from "react";
 import { Modal, Button, Form } from "react-bootstrap";
+import axios from "../../../api/axios";
 import data from "./data";
+import { useEffect } from "react";
 const AddFormModal = ({ show, onClose, onSubmit }) => {
   const [formData, setFormData] = useState({
     tenPhuongTien: "",
     moTa: "",
-    doiTac: "",
+    idDoiTac: "",
   });
 
   const handleChange = (e) => {
@@ -13,16 +15,25 @@ const AddFormModal = ({ show, onClose, onSubmit }) => {
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleSubmit = () => {
-    const newItem = {
-      stt: data.length + 1,
-      tenPhuongTien: formData.tenPhuongTien,
-      moTa: formData.moTa,
-      doiTac: formData.doiTac,
-    };
-    data.push(newItem);
-    onClose();
-    onSubmit(newItem);
+  const handleSubmit = async () => {
+    if (formData.idDoiTac == null || formData.idDoiTac.length < 2) {
+      const { idDoiTac, ...dataWithoutId } = formData;
+
+      try {
+        await axios.post("api/PhuongTiens", dataWithoutId);
+        onClose();
+      } catch (e) {
+        console.error(e);
+      }
+      return;
+    }
+
+    try {
+      await axios.post("api/PhuongTiens", formData);
+      onClose();
+    } catch (e) {
+      console.error(e);
+    }
   };
 
   return (
@@ -47,11 +58,11 @@ const AddFormModal = ({ show, onClose, onSubmit }) => {
               value={formData.moTa}
               onChange={handleChange}
             />
-            <Form.Label>Đối tác</Form.Label>
+            <Form.Label>Mã Đối tác</Form.Label>
             <Form.Control
               type="text"
-              name="doiTac" // Corrected to "doiTac"
-              value={formData.doiTac}
+              name="IdDoiTac"
+              value={formData.IdDoiTac}
               onChange={handleChange}
             />
           </Form.Group>

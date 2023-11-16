@@ -51,11 +51,10 @@ import HistoryPage from "./page/histour"; // Import the HistoryPage component
 
 function App() {
   const [role, setRole] = useState("qly");
-  const { isLogin } = useAuth();
-
+  const { isLogin, setupLogin2 } = useAuth();
   useEffect(() => {
-    console.log("Updated isLogin in App:", isLogin);
-  });
+    setupLogin2();
+  }, []);
   return (
     <div className="App">
       <Routes>

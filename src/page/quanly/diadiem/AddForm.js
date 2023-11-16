@@ -4,13 +4,18 @@ import { Modal, Button, Form } from "react-bootstrap";
 const AddDiaDiemFormModal = ({ show, onClose, onSubmit }) => {
   const [formData, setFormData] = useState({
     tenDiaDiem: "",
-    loaiDiaDiem: 0, // Default to "Trong nước" represented by 0
+    loai: false,
   });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    console.log(value);
-    setFormData({ ...formData, [name]: value });
+
+    if (name === "loai") {
+      const isChecked = value === "true";
+      setFormData({ ...formData, [name]: isChecked });
+    } else {
+      setFormData({ ...formData, [name]: value });
+    }
   };
 
   const handleSubmit = () => {
@@ -40,10 +45,10 @@ const AddDiaDiemFormModal = ({ show, onClose, onSubmit }) => {
                 <input
                   className="form-check-input"
                   type="radio"
-                  name="loaiDiaDiem"
+                  name="loai"
                   id="trongNuoc"
-                  value={0} // Numeric value representing "Trong nước"
-                  checked={formData.loaiDiaDiem == 0}
+                  value="true"
+                  checked={formData.loai === true}
                   onChange={handleChange}
                 />
                 <label className="form-check-label" htmlFor="trongNuoc">
@@ -54,10 +59,10 @@ const AddDiaDiemFormModal = ({ show, onClose, onSubmit }) => {
                 <input
                   className="form-check-input"
                   type="radio"
-                  name="loaiDiaDiem"
+                  name="loai"
                   id="nuocNgoai"
-                  value={1} // Numeric value representing "Nước ngoài"
-                  checked={formData.loaiDiaDiem == 1}
+                  value="false"
+                  checked={formData.loai === false}
                   onChange={handleChange}
                 />
                 <label className="form-check-label" htmlFor="nuocNgoai">

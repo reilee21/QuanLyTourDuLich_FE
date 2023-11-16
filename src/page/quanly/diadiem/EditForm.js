@@ -1,29 +1,42 @@
 import React, { useState, useEffect } from "react";
 import { Modal, Button, Form } from "react-bootstrap";
-const EditDiaDiemFormModal = ({ show, onClose, onSubmit, itemToEdit }) => {
-  const [formData, setFormData] = useState({
-    tenDiaDiem: "",
-    loaiDiaDiem: 0, // Initialize with the numeric value (0 for "Trong nước" and 1 for "Nước ngoài")
-  });
+import axios from "../../../api/axios";
 
+const EditDiaDiemFormModal = ({ show, onClose, itemToEdit }) => {
+  const [formData, setFormData] = useState({
+    idDiaDiem: "",
+    tenDiaDiem: "",
+    loai: false,
+  });
   useEffect(() => {
     if (itemToEdit) {
       setFormData({
-        tenDiaDiem: itemToEdit.ten,
-        loaiDiaDiem: itemToEdit.loai,
+        idDiaDiem: itemToEdit.idDiaDiem,
+        tenDiaDiem: itemToEdit.tenDiaDiem,
+        loai: itemToEdit.loai,
       });
     }
   }, [itemToEdit]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+
+    if (name === "loai") {
+      const isChecked = value === "true";
+      setFormData({ ...formData, [name]: isChecked });
+    } else {
+      setFormData({ ...formData, [name]: value });
+    }
   };
 
   const handleSubmit = () => {
-    // You can submit the updated data using the `onSubmit` callback
-    onSubmit(formData);
-    onClose();
+    try {
+      axios.put(`api/DiaDiems/${formData.idDiaDiem}`, formData);
+
+      onClose();
+    } catch (e) {
+      console.error(e);
+    }
   };
 
   return (
@@ -47,10 +60,10 @@ const EditDiaDiemFormModal = ({ show, onClose, onSubmit, itemToEdit }) => {
                 <input
                   className="form-check-input"
                   type="radio"
-                  name="loaiDiaDiem"
+                  name="loai"
                   id="trongNuoc"
-                  value={0} // Use numeric values
-                  checked={formData.loaiDiaDiem == 0}
+                  value="true"
+                  checked={formData.loai === true}
                   onChange={handleChange}
                 />
                 <label className="form-check-label" htmlFor="trongNuoc">
@@ -61,10 +74,10 @@ const EditDiaDiemFormModal = ({ show, onClose, onSubmit, itemToEdit }) => {
                 <input
                   className="form-check-input"
                   type="radio"
-                  name="loaiDiaDiem"
+                  name="loai"
                   id="nuocNgoai"
-                  value={1} // Use numeric values
-                  checked={formData.loaiDiaDiem == 1}
+                  value="false"
+                  checked={formData.loai === false}
                   onChange={handleChange}
                 />
                 <label className="form-check-label" htmlFor="nuocNgoai">

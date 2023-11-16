@@ -4,26 +4,17 @@ import { AiFillEdit, AiFillDelete } from "react-icons/ai";
 import AddDoiTacFormModal from "./AddForm";
 import EditDoiTacFormModal from "./EditForm";
 import ReactPaginate from "react-paginate";
+import axios from "../../../api/axios";
+import { DeleteConfirmationModal } from "../../../components/exportcom";
 const DoiTac = () => {
-  // Example data for Doi Tac
-  const data = [
-    {
-      stt: 1,
-      ten: "Doi Tac 1",
-      email: "doitac1@example.com",
-      sdt: "1234567890",
-    },
-    {
-      stt: 2,
-      ten: "Doi Tac 2",
-      email: "doitac2@example.com",
-      sdt: "9876543210",
-    },
-  ];
-
   const [showAddFormModal, setShowAddFormModal] = useState(false);
   const [showEditFormModal, setShowEditFormModal] = useState(false);
+  const [showdelModal, setShowdelModal] = useState(false);
+
   const [editData, setEditData] = useState({});
+  const [searchQuery, setSearchQuery] = useState("");
+  const [filteredData, setFilteredData] = useState([]);
+  const [refreshFlag, setRefreshFlag] = useState(false);
 
   const [listdata, setListdata] = useState([]);
   const [pageNumber, setPageNumber] = useState(0);
@@ -34,11 +25,39 @@ const DoiTac = () => {
     const selectedPage = data.selected;
     setPageNumber(selectedPage);
   };
-  const currentPageData = listdata.slice(offset, offset + itemsPerPage);
+  const currentPageData = filteredData.slice(offset, offset + itemsPerPage);
+  const fetchdata = async () => {
+    try {
+      const res = await axios.get("api/DoiTacs");
+      setFilteredData(res);
+      setListdata(res);
+    } catch (e) {
+      console.error(e);
+    }
+  };
+  useEffect(() => {
+    fetchdata();
+  }, [refreshFlag]);
 
   useEffect(() => {
-    setListdata(data);
-  }, []);
+    if (searchQuery.length < 2 || searchQuery === "") setFilteredData(listdata);
+  }, [searchQuery]);
+  const handleSearchChange = (e) => {
+    setSearchQuery(e.target.value);
+    if (searchQuery.length < 2 || searchQuery === "") {
+      return;
+    }
+    const filteredResult = listdata.filter((item) => {
+      const searchString = searchQuery.toLowerCase();
+      return (
+        item.ten.toLowerCase().includes(searchString) ||
+        item.email.toLowerCase().includes(searchString)
+      );
+    });
+    setFilteredData(filteredResult);
+    setPageNumber(0);
+  };
+
   const handleAddClick = () => {
     setShowAddFormModal(true);
   };
@@ -46,6 +65,22 @@ const DoiTac = () => {
   const handleEditClick = (item) => {
     setEditData(item);
     setShowEditFormModal(true);
+  };
+  const closeModal = async () => {
+    setShowAddFormModal(false);
+    setShowEditFormModal(false);
+    setShowdelModal(false);
+
+    setRefreshFlag((prev) => !prev);
+  };
+  const handleDelete = async () => {
+    try {
+      await axios.delete(`api/DoiTacs/${editData.idDoiTac}`);
+
+      closeModal();
+    } catch (e) {
+      console.error(e);
+    }
   };
 
   return (
@@ -62,7 +97,8 @@ const DoiTac = () => {
             <Form.Control
               type="text"
               placeholder="Tên Đối Tác hoặc Email"
-              // value={searchQuery}
+              value={searchQuery}
+              onChange={handleSearchChange}
             />
           </Form.Group>
         </div>
@@ -82,17 +118,17 @@ const DoiTac = () => {
                 </tr>
               </thead>
               <tbody>
-                {currentPageData.map((item) => (
+                {currentPageData.map((item, index) => (
                   <tr
-                    key={item.stt}
+                    key={item.idDoiTac}
                     onClick={() => {
                       handleEditClick(item);
                     }}
                   >
-                    <td className="stt">{item.stt}</td>
+                    <td className="stt">{index + 1}</td>
                     <td className="ten">{item.ten}</td>
                     <td className="email">{item.email}</td>
-                    <td className="sdt">{item.sdt}</td>
+                    <td className="sdt">{item.soDienThoaiDt}</td>
                     <td className="edit">
                       <Button
                         variant="outline-warning"
@@ -109,6 +145,8 @@ const DoiTac = () => {
                         variant="outline-danger"
                         onClick={(e) => {
                           e.stopPropagation();
+                          setShowdelModal(true);
+                          setEditData(item);
                         }}
                       >
                         <AiFillDelete />
@@ -121,7 +159,7 @@ const DoiTac = () => {
           </div>
         </div>
         <ReactPaginate
-          pageCount={Math.ceil(listdata.length / itemsPerPage)} // Tổng số trang
+          pageCount={Math.ceil(filteredData.length / itemsPerPage)} // Tổng số trang
           pageRangeDisplayed={3} // Số trang hiển thị trước và sau trang hiện tại
           marginPagesDisplayed={2} // Số trang hiển thị ở hai bên
           onPageChange={handlePageClick} // Xử lý khi chuyển trang
@@ -137,15 +175,17 @@ const DoiTac = () => {
           breakLinkClassName={"page-link"} // Class cho liên kết "..."
         />
       </div>
-      <AddDoiTacFormModal
-        show={showAddFormModal}
-        onClose={() => setShowAddFormModal(false)}
-      />
+      <AddDoiTacFormModal show={showAddFormModal} onClose={closeModal} />
 
       <EditDoiTacFormModal
         show={showEditFormModal}
-        onClose={() => setShowEditFormModal(false)}
+        onClose={closeModal}
         itemToEdit={editData}
+      />
+      <DeleteConfirmationModal
+        show={showdelModal}
+        onCancel={closeModal}
+        onDelete={handleDelete}
       />
     </>
   );

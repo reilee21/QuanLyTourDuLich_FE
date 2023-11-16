@@ -1,18 +1,24 @@
 import React, { useState, useEffect } from "react";
 import { Button, Form } from "react-bootstrap";
 import { AiFillEdit, AiFillDelete } from "react-icons/ai";
-import data from "./data";
 import ReactPaginate from "react-paginate";
 import AddFormModal from "./AddForm";
 import EditFormModal from "./EditForm";
 import "./index.scss";
+import axios from "../../../api/axios";
+import { DeleteConfirmationModal } from "../../../components/exportcom";
+
 const PhuongTien = () => {
   const [listdata, setListdata] = useState([]);
-  const [showAddModal, setShowAddModal] = useState(false);
-  const [showEditModal, setShowEditModal] = useState(false);
+  const [showAddFormModal, setShowAddFormModal] = useState(false);
+  const [showEditFormModal, setShowEditFormModal] = useState(false);
+  const [showdelModal, setShowdelModal] = useState(false);
+
   const [editData, setEditData] = useState({});
   const [pageNumber, setPageNumber] = useState(0);
   const [searchQuery, setSearchQuery] = useState("");
+  const [refreshFlag, setRefreshFlag] = useState(false);
+  const [filteredData, setFilteredData] = useState([]);
 
   const itemsPerPage = 10;
   const offset = pageNumber * itemsPerPage;
@@ -21,49 +27,61 @@ const PhuongTien = () => {
     const selectedPage = data.selected;
     setPageNumber(selectedPage);
   };
-
-  useEffect(() => {
-    setListdata(data);
-  }, []);
-
-  const handleAddSubmit = () => {
-    setShowAddModal(false);
-  };
-
-  const openAddModal = () => {
-    setShowAddModal(true);
-  };
-
-  const openEditModal = (item) => {
-    setEditData(item);
-    setShowEditModal(true);
-  };
-
-  const closeEditModal = () => {
-    setShowEditModal(false);
-  };
-
-  const handleEditSubmit = (formData) => {
-    const updatedData = listdata.map((item) =>
-      item.stt === formData.stt ? formData : item
-    );
-    setListdata(updatedData);
-    closeEditModal();
-  };
-
-  const handleDelete = (item) => {
-    // Implement delete logic if needed
-  };
-
-  // Filter the data based on the search query
-  const filteredData = listdata.filter(
-    (item) =>
-      item.tenPhuongTien.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      item.doiTac.toLowerCase().includes(searchQuery.toLowerCase())
-  );
-
   const currentPageData = filteredData.slice(offset, offset + itemsPerPage);
 
+  const fetchdata = async () => {
+    try {
+      const res = await axios.get("api/PhuongTiens");
+      setFilteredData(res);
+      setListdata(res);
+    } catch (e) {
+      console.error(e);
+    }
+  };
+  useEffect(() => {
+    fetchdata();
+  }, [refreshFlag]);
+
+  useEffect(() => {
+    if (searchQuery.length < 2 || searchQuery === "") setFilteredData(listdata);
+  }, [searchQuery]);
+
+  const handleSearchChange = (e) => {
+    setSearchQuery(e.target.value);
+    if (searchQuery.length < 2 || searchQuery === "") {
+      return;
+    }
+    const filteredResult = listdata.filter((item) => {
+      const searchString = searchQuery.toLowerCase();
+      return item.tenPhuongTien.toLowerCase().includes(searchString);
+    });
+    setFilteredData(filteredResult);
+    setPageNumber(0);
+  };
+
+  const handleAddClick = () => {
+    setShowAddFormModal(true);
+  };
+
+  const handleEditClick = (item) => {
+    setEditData(item);
+    setShowEditFormModal(true);
+  };
+  const closeModal = async () => {
+    setShowAddFormModal(false);
+    setShowEditFormModal(false);
+    setShowdelModal(false);
+
+    setRefreshFlag((prev) => !prev);
+  };
+  const handleDelete = async () => {
+    try {
+      await axios.delete(`api/PhuongTiens/${editData.idPhuongTien}`);
+      closeModal();
+    } catch (e) {
+      console.error(e);
+    }
+  };
   return (
     <>
       <div className="row">
@@ -71,7 +89,7 @@ const PhuongTien = () => {
           <h4>Danh sách phương tiện</h4>
         </div>
         <div className="col-md-12 d-flex justify-content-between align-items-center mb-3">
-          <Button className="add" variant="success" onClick={openAddModal}>
+          <Button className="add" variant="success" onClick={handleAddClick}>
             Thêm mới
           </Button>
           <Form.Group className="search">
@@ -79,7 +97,7 @@ const PhuongTien = () => {
               type="text"
               placeholder="Tên phương tiện hoặc tên đối tác"
               value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
+              onChange={handleSearchChange}
             />
           </Form.Group>
         </div>
@@ -98,45 +116,47 @@ const PhuongTien = () => {
                 </tr>
               </thead>
               <tbody>
-                {filteredData.length > 0 &&
-                  currentPageData.map((item, index) => {
-                    return (
-                      <tr key={item.stt} onClick={() => openEditModal(item)}>
-                        <td className="stt">{item.stt}</td>
-                        <td className="ten">{item.tenPhuongTien}</td>
-                        <td className="mota">{item.moTa}</td>
-                        <td className="doitac">{item.doiTac}</td>
-                        <td className="edit">
-                          <Button
-                            variant="outline-warning"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              openEditModal(item);
-                            }}
-                          >
-                            <AiFillEdit />
-                          </Button>
-                        </td>
-                        <td className="del">
-                          <Button
-                            variant="outline-danger"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handleDelete(item);
-                            }}
-                          >
-                            <AiFillDelete />
-                          </Button>
-                        </td>
-                      </tr>
-                    );
-                  })}
+                {currentPageData.map((item, index) => {
+                  return (
+                    <tr
+                      key={item.idPhuongTien}
+                      onClick={() => handleEditClick(item)}
+                    >
+                      <td className="stt">{index + 1}</td>
+                      <td className="ten">{item.tenPhuongTien}</td>
+                      <td className="mota">{item.moTa}</td>
+                      <td className="doitac">{item.doiTac}</td>
+                      <td className="edit">
+                        <Button
+                          variant="outline-warning"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleEditClick(item);
+                          }}
+                        >
+                          <AiFillEdit />
+                        </Button>
+                      </td>
+                      <td className="del">
+                        <Button
+                          variant="outline-danger"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setShowdelModal(true);
+                            setEditData(item);
+                          }}
+                        >
+                          <AiFillDelete />
+                        </Button>
+                      </td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </div>
         </div>
       </div>
-      {/* Tạo phân trang */}
       <ReactPaginate
         pageCount={Math.ceil(filteredData.length / itemsPerPage)} // Tổng số trang
         pageRangeDisplayed={3} // Số trang hiển thị trước và sau trang hiện tại
@@ -153,17 +173,16 @@ const PhuongTien = () => {
         breakClassName={"page-item"} // Class cho nút "..."
         breakLinkClassName={"page-link"} // Class cho liên kết "..."
       />
-      <AddFormModal
-        show={showAddModal}
-        onClose={() => setShowAddModal(false)}
-        onSubmit={handleAddSubmit}
-      />
-
+      <AddFormModal show={showAddFormModal} onClose={closeModal} />
       <EditFormModal
-        show={showEditModal}
-        onClose={closeEditModal}
-        onSubmit={handleEditSubmit}
+        show={showEditFormModal}
+        onClose={closeModal}
         editData={editData}
+      />{" "}
+      <DeleteConfirmationModal
+        show={showdelModal}
+        onCancel={closeModal}
+        onDelete={handleDelete}
       />
     </>
   );

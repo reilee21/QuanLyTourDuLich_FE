@@ -1,19 +1,22 @@
 import React, { useState, useEffect } from "react";
 import { Modal, Button, Form } from "react-bootstrap";
+import axios from "../../../api/axios";
 
-const EditDoiTacModal = ({ show, onClose, onSubmit, itemToEdit }) => {
+const EditDoiTacModal = ({ show, onClose, itemToEdit }) => {
   const [formData, setFormData] = useState({
-    tenDoiTac: "",
+    idDoiTac: "",
+    ten: "",
     email: "",
-    sdt: "",
+    soDienThoaiDt: "",
   });
 
   useEffect(() => {
     if (itemToEdit) {
       setFormData({
-        tenDoiTac: itemToEdit.ten,
+        idDoiTac: itemToEdit.idDoiTac,
+        ten: itemToEdit.ten,
         email: itemToEdit.email,
-        sdt: itemToEdit.sdt,
+        soDienThoaiDt: itemToEdit.soDienThoaiDt,
       });
     }
   }, [itemToEdit]);
@@ -23,9 +26,14 @@ const EditDoiTacModal = ({ show, onClose, onSubmit, itemToEdit }) => {
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleSubmit = () => {
-    onSubmit(formData);
-    onClose();
+  const handleSubmit = async () => {
+    try {
+      axios.put(`api/DoiTacs/${formData.idDoiTac}`, formData);
+
+      onClose();
+    } catch (e) {
+      console.error(e);
+    }
   };
 
   return (
@@ -39,8 +47,8 @@ const EditDoiTacModal = ({ show, onClose, onSubmit, itemToEdit }) => {
             <Form.Label>Tên Đối Tác</Form.Label>
             <Form.Control
               type="text"
-              name="tenDoiTac"
-              value={formData.tenDoiTac}
+              name="ten"
+              value={formData.ten}
               onChange={handleChange}
             />
             <Form.Label>Email</Form.Label>
@@ -53,8 +61,8 @@ const EditDoiTacModal = ({ show, onClose, onSubmit, itemToEdit }) => {
             <Form.Label>Số Điện Thoại</Form.Label>
             <Form.Control
               type="text"
-              name="sdt"
-              value={formData.sdt}
+              name="soDienThoaiDt"
+              value={formData.soDienThoaiDt}
               onChange={handleChange}
             />
           </Form.Group>
