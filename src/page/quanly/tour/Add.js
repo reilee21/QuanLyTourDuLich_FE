@@ -1,23 +1,30 @@
 import React, { useState, useEffect } from "react";
-import data from "../phuongtien/data";
-import {
-  Table,
-  Button,
-  Form,
-  Row,
-  Col,
-  InputGroup,
-  FormControl,
-  Dropdown,
-} from "react-bootstrap";
+import { Table, Button, Form, Row, Col, FormControl } from "react-bootstrap";
 import { AiFillDelete } from "react-icons/ai";
-import { Fragment } from "react";
 import "./add.scss";
+import axios from "../../../api/axios";
+import LichTrinh from "./lictrinh";
+
 const AddTour = () => {
+  const [phuongtiens, setPhuongtiens] = useState([]);
+  const [selectedImage, setSelectedImage] = useState(null);
+
+  const fetchpt = async () => {
+    try {
+      const res = await axios.get("api/PhuongTiens");
+      setPhuongtiens(res);
+    } catch (e) {
+      console.error(e);
+    }
+  };
+  useEffect(() => {
+    fetchpt();
+  }, []);
+
   const [selectedTransportations, setSelectedTransportations] = useState([]);
-  const [selectedTrans, setSelectedTrans] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
-  const [filteredTransportations, setFilteredTransportations] = useState(data);
+  const [filteredTransportations, setFilteredTransportations] =
+    useState(phuongtiens);
   const [showdspt, setShowdspt] = useState(false);
   const [tourData, setTourData] = useState({
     TenTour: "",
@@ -40,12 +47,21 @@ const AddTour = () => {
       [name]: value,
     });
   };
-
   const handleAddItineraryEntry = () => {
-    setTourData({
-      ...tourData,
-      lichTrinh: [...tourData.lichTrinh, { Ngay: "", DiemDen: "", MoTa: "" }],
-    });
+    const imageInput = document.getElementById("imageInput");
+    const selectedFile = imageInput.files[0];
+    setSelectedImage(selectedFile);
+
+    // setTourData({
+    //   ...tourData,
+    //   image: selectedFile ? URL.createObjectURL(selectedFile) : "", // Set image to file or empty string
+    //   phuongtien: selectedTransportations,
+    // });
+    // console.log(tourData);
+    // setTourData({
+    //   ...tourData,
+    //   lichTrinh: [...tourData.lichTrinh, { Ngay: "", Diemden: "", MoTa: "" }],
+    // });
   };
 
   const handleItineraryEntryChange = (index, fieldName, fieldValue) => {
@@ -99,7 +115,7 @@ const AddTour = () => {
   useEffect(() => {
     // Filter transportation data based on the search term
     setFilteredTransportations(
-      data.filter((transportation) =>
+      phuongtiens.filter((transportation) =>
         transportation.tenPhuongTien
           .toLowerCase()
           .includes(searchTerm.toLowerCase())
@@ -109,18 +125,52 @@ const AddTour = () => {
   }, [searchTerm]);
 
   const handleAddTransportation = (trans) => {
-    if (!selectedTransportations.includes(trans)) {
-      setSelectedTransportations([...selectedTransportations, trans]);
-    }
-    setFilteredTransportations(data);
-  };
+    const updatedPhuongTien = {
+      idPhuongTien: trans.idPhuongTien,
+      tenPhuongTien: trans.tenPhuongTien,
+    };
 
+    if (!tourData.phuongtien) {
+      setTourData({
+        ...tourData,
+        phuongtien: [updatedPhuongTien],
+      });
+    } else if (!Array.isArray(tourData.phuongtien)) {
+      setTourData({
+        ...tourData,
+        phuongtien: [tourData.phuongtien, updatedPhuongTien],
+      });
+    } else {
+      const isAlreadySelected = tourData.phuongtien.some(
+        (selectedTrans) => selectedTrans.idPhuongTien === trans.idPhuongTien
+      );
+
+      if (!isAlreadySelected) {
+        setTourData({
+          ...tourData,
+          phuongtien: [...tourData.phuongtien, updatedPhuongTien],
+        });
+      }
+    }
+    setSelectedTransportations([...selectedTransportations, trans]);
+
+    setFilteredTransportations(phuongtiens);
+  };
   const handleRemoveTransportation = (index) => {
-    // Remove selected transportation from the list
     const updatedTransportations = [...selectedTransportations];
     updatedTransportations.splice(index, 1);
     setSelectedTransportations(updatedTransportations);
+
+    if (Array.isArray(tourData.phuongtien)) {
+      const updatedPhuongTien = [...tourData.phuongtien];
+      updatedPhuongTien.splice(index, 1);
+      setTourData({
+        ...tourData,
+        phuongtien: updatedPhuongTien,
+      });
+    }
   };
+
   const openlistPT = (s) => {
     if (s.length < 3) {
       setShowdspt(false);
@@ -128,6 +178,7 @@ const AddTour = () => {
       setShowdspt(true);
     }
   };
+
   return (
     <>
       <center>
@@ -250,10 +301,10 @@ const AddTour = () => {
           <Col lg={7}>
             <Form.Group controlId="selectedTransportations">
               <Row className="selectlist">
-                {selectedTransportations.map((transportation, index) => (
+                {tourData.phuongtien.map((transportation, index) => (
                   <React.Fragment key={index}>
                     <div
-                      className="row-col-2 col-2 col-lg-2 col-md-2 col-sm-2"
+                      className="row-col-3 col-3 col-lg-3 col-md-3 col-sm-3"
                       id="selecitem"
                     >
                       <span className="selectedtransname">
@@ -303,81 +354,13 @@ const AddTour = () => {
             </Form.Group>
           </Col>
         </div>
-        <Form.Group controlId="lichTrinh" className="lichtrinh row">
-          <center>
-            <h5 className="col-lg-12">Lịch trình </h5>
-          </center>
-          <Table striped bordered hover>
-            <thead>
-              <tr>
-                <th className="ngay">Ngày</th>
-                <th className="diemden">Điểm Đến</th>
-                <th className="mota">Mô Tả</th>
-                <th className="del"></th>
-              </tr>
-            </thead>
-            <tbody>
-              {tourData.lichTrinh.map((entry, index) => (
-                <tr key={index}>
-                  <td className="ngay">
-                    <Form.Control
-                      type="date"
-                      value={entry.Ngay}
-                      onChange={(e) =>
-                        handleItineraryEntryChange(
-                          index,
-                          "Ngay",
-                          e.target.value
-                        )
-                      }
-                    />
-                  </td>
-                  <td className="diemden">
-                    <Form.Control
-                      type="text"
-                      value={entry.DiemDen}
-                      onChange={(e) =>
-                        handleItineraryEntryChange(
-                          index,
-                          "DiemDen",
-                          e.target.value
-                        )
-                      }
-                    />
-                  </td>
-                  <td className="mota">
-                    <Form.Control
-                      type="text"
-                      value={entry.MoTa}
-                      onChange={(e) =>
-                        handleItineraryEntryChange(
-                          index,
-                          "MoTa",
-                          e.target.value
-                        )
-                      }
-                    />
-                  </td>
-                  <td className="del">
-                    <Button
-                      variant="outline-danger"
-                      onClick={() => delLichTrinh(index)}
-                    >
-                      <AiFillDelete />
-                    </Button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </Table>
-          <Button
-            variant="secondary"
-            className="addlich"
-            onClick={handleAddItineraryEntry}
-          >
-            Thêm Ngày
-          </Button>
-        </Form.Group>
+        <LichTrinh
+          tourData={tourData}
+          handleAddItineraryEntry={handleAddItineraryEntry}
+          handleItineraryEntryChange={handleItineraryEntryChange}
+          delLichTrinh={delLichTrinh}
+          setTourData={setTourData}
+        />
       </Form>
     </>
   );

@@ -1,38 +1,72 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Button, Form } from "react-bootstrap";
 import { AiFillEdit, AiFillDelete } from "react-icons/ai";
 import ReactPaginate from "react-paginate";
 import AddDiemDenFormModal from "./Add";
 import EditDiemDenFormModal from "./Edit";
-
+import axios from "../../../api/axios";
+import { DeleteConfirmationModal } from "../../../components/exportcom";
+import LichTrinh from "../tour/lictrinh";
 const DiemDen = () => {
+  const [diadiems, setDiadiems] = useState([]);
+  const [listdata, setListdata] = useState([]);
   const [showAddFormModal, setShowAddFormModal] = useState(false);
   const [showEditFormModal, setShowEditFormModal] = useState(false);
+  const [showdelModal, setShowdelModal] = useState(false);
+
   const [editData, setEditData] = useState({});
-  const [currentPage, setCurrentPage] = useState(0); // Current page number
-  const itemsPerPage = 10; // Number of items per page
+  const [pageNumber, setPageNumber] = useState(0);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [refreshFlag, setRefreshFlag] = useState(false);
+  const [filteredData, setFilteredData] = useState([]);
 
-  // Example data
-  const data = [
-    {
-      IdDiemDen: "DD1",
-      TenDiemDen: "DiemDen 1",
-      IdDiaDiem: 1,
-    },
-    {
-      IdDiemDen: "DD2",
-      TenDiemDen: "DiemDen 2",
-      IdDiaDiem: 2,
-    },
-    // Add more data as needed
-  ];
+  const itemsPerPage = 10;
+  const offset = pageNumber * itemsPerPage;
 
-  // Calculate the total number of pages
-  const pageCount = Math.ceil(data.length / itemsPerPage);
+  const handlePageClick = (data) => {
+    const selectedPage = data.selected;
+    setPageNumber(selectedPage);
+  };
+  const currentPageData = filteredData.slice(offset, offset + itemsPerPage);
 
-  // Function to handle page change
-  const handlePageClick = (selectedPage) => {
-    setCurrentPage(selectedPage.selected);
+  const fetchdata = async () => {
+    try {
+      const res = await axios.get("api/DiemDens");
+      setFilteredData(res);
+      setListdata(res);
+    } catch (e) {
+      console.error(e);
+    }
+  };
+  useEffect(() => {
+    fetchdata();
+  }, [refreshFlag]);
+
+  useEffect(() => {
+    if (searchQuery.length < 2 || searchQuery === "") setFilteredData(listdata);
+  }, [searchQuery]);
+  useEffect(() => {
+    const diadiemsdata = async () => {
+      try {
+        const res = await axios.get("api/DiaDiems");
+        setDiadiems(res);
+      } catch (e) {
+        console.error(e);
+      }
+    };
+    diadiemsdata();
+  }, []);
+  const handleSearchChange = (e) => {
+    setSearchQuery(e.target.value);
+    if (searchQuery.length < 2 || searchQuery === "") {
+      return;
+    }
+    const filteredResult = listdata.filter((item) => {
+      const searchString = searchQuery.toLowerCase();
+      return item.TenDiemDen.toLowerCase().includes(searchString);
+    });
+    setFilteredData(filteredResult);
+    setPageNumber(0);
   };
 
   const handleAddClick = () => {
@@ -43,12 +77,22 @@ const DiemDen = () => {
     setEditData(item);
     setShowEditFormModal(true);
   };
+  const closeModal = async () => {
+    setShowAddFormModal(false);
+    setShowEditFormModal(false);
+    setShowdelModal(false);
 
-  // Calculate the range of items to display on the current page
-  const startIndex = currentPage * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-  const itemsToDisplay = data.slice(startIndex, endIndex);
-
+    setRefreshFlag((prev) => !prev);
+  };
+  const handleDelete = async () => {
+    console.log(diadiems);
+    // try {
+    //   await axios.delete(`api/DiemDens/${editData.idDiemDen}`);
+    //   closeModal();
+    // } catch (e) {
+    //   console.error(e);
+    // }
+  };
   return (
     <>
       <div className="row">
@@ -63,7 +107,7 @@ const DiemDen = () => {
             <Form.Control
               type="text"
               placeholder="Tên điểm đến"
-              //value={searchQuery}
+              value={searchQuery}
             />
           </Form.Group>
         </div>
@@ -76,21 +120,27 @@ const DiemDen = () => {
                 <tr>
                   <th className="stt">STT</th>
                   <th className="TenDiemDen">Tên điểm đến</th>
-                  <th className="IdDiaDiem">ID Địa Điểm</th>
+                  <th className="IdDiaDiem">Địa Điểm</th>
                   <th className="edit"></th>
                   <th className="del"></th>
                 </tr>
               </thead>
               <tbody>
-                {itemsToDisplay.map((item, index) => (
+                {currentPageData.map((item, index) => (
                   <tr
                     key={item.IdDiemDen}
                     className="diemdentr"
                     onClick={() => handleEditClick(item)}
                   >
                     <td className="stt">{index + 1}</td>
-                    <td className="TenDiemDen">{item.TenDiemDen}</td>
-                    <td className="IdDiaDiem">{item.IdDiaDiem}</td>
+                    <td className="TenDiemDen">{item.tenDiemDen}</td>
+                    <td className="IdDiaDiem">
+                      {
+                        diadiems.find(
+                          (diadiem) => diadiem.idDiaDiem === item.idDiaDiem
+                        )?.tenDiaDiem
+                      }
+                    </td>
                     <td className="edit">
                       <Button
                         variant="outline-warning"
@@ -103,7 +153,13 @@ const DiemDen = () => {
                       </Button>
                     </td>
                     <td className="del">
-                      <Button variant="outline-danger">
+                      <Button
+                        variant="outline-danger"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleDelete(item);
+                        }}
+                      >
                         <AiFillDelete />
                       </Button>
                     </td>
@@ -115,29 +171,31 @@ const DiemDen = () => {
         </div>
       </div>
       <ReactPaginate
-        pageCount={pageCount}
-        pageRangeDisplayed={3}
-        marginPagesDisplayed={2}
-        onPageChange={handlePageClick}
+        pageCount={Math.ceil(filteredData.length / itemsPerPage)} // Tổng số trang
+        pageRangeDisplayed={3} // Số trang hiển thị trước và sau trang hiện tại
+        marginPagesDisplayed={2} // Số trang hiển thị ở hai bên
+        onPageChange={handlePageClick} // Xử lý khi chuyển trang
         containerClassName={"pagination"}
         activeClassName={"active"}
         previousLabel={"Trước"}
         nextLabel={"Sau"}
-        previousLinkClassName={"page-link"}
-        nextLinkClassName={"page-link"}
-        pageClassName={"page-item"}
-        pageLinkClassName={"page-link"}
-        breakClassName={"page-item"}
-        breakLinkClassName={"page-link"}
+        previousLinkClassName={"page-link"} // Class cho nút "Trang trước"
+        nextLinkClassName={"page-link"} // Class cho nút "Trang sau"
+        pageClassName={"page-item"} // Class cho nút trang
+        pageLinkClassName={"page-link"} // Class cho liên kết trang
+        breakClassName={"page-item"} // Class cho nút "..."
+        breakLinkClassName={"page-link"} // Class cho liên kết "..."
       />
-      <AddDiemDenFormModal
-        show={showAddFormModal}
-        onClose={() => setShowAddFormModal(false)}
-      />
+      <AddDiemDenFormModal show={showAddFormModal} onClose={closeModal} />
       <EditDiemDenFormModal
         show={showEditFormModal}
-        onClose={() => setShowEditFormModal(false)}
+        onClose={closeModal}
         itemToEdit={editData}
+      />{" "}
+      <DeleteConfirmationModal
+        show={showdelModal}
+        onCancel={closeModal}
+        onDelete={handleDelete}
       />
     </>
   );

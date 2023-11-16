@@ -3,7 +3,6 @@ import axios from "../api/axios";
 import { jwtDecode } from "jwt-decode";
 
 const AuthContext = createContext();
-
 export function useAuth() {
   return useContext(AuthContext);
 }
@@ -12,16 +11,51 @@ export function AuthProvider({ children }) {
   const [isLogin, setIsLogin] = useState();
   const [phuongthuc, setPhuongthuc] = useState("");
   const [role, setRole] = useState("");
+  const [email, setEmail] = useState("");
+
+  const setupLogin2 = () => {
+    const ggAuthCookie = document.cookie
+      .split("; ")
+      .find((cookie) => cookie.startsWith("gg-Auth"));
+    const jwtAuthCookie = document.cookie
+      .split("; ")
+      .find((cookie) => cookie.startsWith("jwt-Auth"));
+    if (ggAuthCookie) {
+      const jwtToken = ggAuthCookie.split("=")[1];
+      const decodedToken = jwtDecode(jwtToken);
+
+      setRole("client");
+      setIsLogin(true);
+      setEmail(decodedToken.email);
+      return;
+    } else if (jwtAuthCookie) {
+      const token = jwtDecode(jwtAuthCookie);
+      setIsLogin(true);
+      setRole(token.role);
+      setEmail(token.email);
+    }
+  };
 
   const setupLogin = (jwtAuthCookie) => {
-    setIsLogin(true);
     if (phuongthuc === "gg-Auth") {
-      setRole("client");
-      return;
+      const ggAuthCookie = document.cookie
+        .split("; ")
+        .find((cookie) => cookie.startsWith("gg-Auth"));
+      if (ggAuthCookie) {
+        const jwtToken = ggAuthCookie.split("=")[1];
+        const decodedToken = jwtDecode(jwtToken);
+
+        setRole("client");
+        setIsLogin(true);
+        setEmail(decodedToken.email);
+        return;
+      }
     }
     if (jwtAuthCookie == null) return;
-    const temp = jwtDecode(jwtAuthCookie).role;
-    setRole(temp);
+    const token = jwtDecode(jwtAuthCookie);
+    setIsLogin(true);
+    setRole(token.role);
+    setEmail(token.email);
   };
 
   useEffect(() => {
@@ -36,7 +70,6 @@ export function AuthProvider({ children }) {
       if (decodedToken.exp > currentTime) {
         setPhuongthuc("jwt-Auth");
         setupLogin(jwtAuthCookie);
-        console.log("Updated phuongthuc in useEffect:", phuongthuc); // Log the updated value
       } else {
         checkTokenExpiration();
       }
@@ -66,6 +99,7 @@ export function AuthProvider({ children }) {
     document.cookie = `gg-Auth=${cookieValue}; expires=${expires.toUTCString()}; path=/`;
     setPhuongthuc("gg-Auth");
     setupLogin(null);
+    return true;
   };
 
   const login = async (username, password) => {
@@ -79,8 +113,10 @@ export function AuthProvider({ children }) {
       document.cookie = `jwt-Auth=${cookieValue}; expires=${expires.toUTCString()}; path=/`;
       setPhuongthuc("jwt-Auth");
       setupLogin(cookieValue);
+      return true;
     } catch (error) {
       console.error("Login error:", error);
+      return false;
     }
   };
 
@@ -89,13 +125,11 @@ export function AuthProvider({ children }) {
     document.cookie = `jwt-Auth=; expires=${expires.toUTCString()}; path=/`;
     document.cookie = `gg-Auth=; expires=${expires.toUTCString()}; path=/`;
     setPhuongthuc("");
-    setIsLogin(false);
+    setIsLogin((prevIsLogin) => !prevIsLogin); // Use callback function to update based on the current state
     setRole("");
-    console.log("Logged out.", isLogin); // Add this line
   };
 
   const checkTokenExpiration = async () => {
-    console.log("checktoke");
     const cookies = document.cookie;
     const cookieArray = cookies.split("; ");
     for (const cookie of cookieArray) {
@@ -135,7 +169,9 @@ export function AuthProvider({ children }) {
   };
 
   return (
-    <AuthContext.Provider value={{ isLogin, login, logout, googlelogin, role }}>
+    <AuthContext.Provider
+      value={{ isLogin, login, logout, googlelogin, role, email, setupLogin2 }}
+    >
       {children}
     </AuthContext.Provider>
   );

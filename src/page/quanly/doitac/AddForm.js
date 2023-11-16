@@ -1,11 +1,13 @@
 import React, { useState } from "react";
 import { Modal, Button, Form } from "react-bootstrap";
+import axios from "../../../api/axios";
 
-const AddDoiTacFormModal = ({ show, onClose, onSubmit }) => {
+const AddDoiTacFormModal = ({ show, onClose }) => {
   const [formData, setFormData] = useState({
-    tenDoiTac: "",
+    idDoiTac: "",
+    ten: "",
     email: "",
-    sdt: "",
+    soDienThoaiDt: "",
   });
 
   const handleChange = (e) => {
@@ -14,10 +16,13 @@ const AddDoiTacFormModal = ({ show, onClose, onSubmit }) => {
   };
 
   const handleSubmit = () => {
-    // Handle form submission here
-    console.log(formData);
-    onSubmit(formData); // Pass the form data to the parent component
-    onClose();
+    try {
+      axios.post("api/DoiTacs", formData);
+
+      onClose();
+    } catch (e) {
+      console.error(e);
+    }
   };
 
   return (
@@ -31,8 +36,8 @@ const AddDoiTacFormModal = ({ show, onClose, onSubmit }) => {
             <Form.Label>Tên Đối Tác</Form.Label>
             <Form.Control
               type="text"
-              name="tenDoiTac"
-              value={formData.tenDoiTac}
+              name="ten"
+              value={formData.ten}
               onChange={handleChange}
             />
             <Form.Label>Email</Form.Label>
@@ -45,8 +50,8 @@ const AddDoiTacFormModal = ({ show, onClose, onSubmit }) => {
             <Form.Label>Số Điện Thoại</Form.Label>
             <Form.Control
               type="text"
-              name="sdt"
-              value={formData.sdt}
+              name="soDienThoaiDt"
+              value={formData.soDienThoaiDt}
               onChange={handleChange}
             />
           </Form.Group>

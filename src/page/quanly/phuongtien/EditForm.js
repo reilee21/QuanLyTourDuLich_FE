@@ -1,11 +1,24 @@
 import React, { useState, useEffect } from "react";
 import { Modal, Form, Button } from "react-bootstrap";
+import axios from "../../../api/axios";
 
-const EditFormModal = ({ show, onClose, onSubmit, editData }) => {
-  const [formData, setFormData] = useState({}); // Initialize as an empty object
-
+const EditFormModal = ({ show, onClose, editData }) => {
+  const [formData, setFormData] = useState({
+    idPhuongTien: "",
+    tenPhuongTien: "",
+    moTa: "",
+    idDoiTac: null,
+  });
   useEffect(() => {
-    setFormData(editData); // Update formData when editData prop changes
+    if (editData) {
+      setFormData({
+        idPhuongTien: editData.idPhuongTien,
+
+        tenPhuongTien: editData.tenPhuongTien || "",
+        moTa: editData.moTa || "",
+        idDoiTac: editData.idDoiTac || null,
+      });
+    }
   }, [editData]);
 
   const handleChange = (e) => {
@@ -16,10 +29,14 @@ const EditFormModal = ({ show, onClose, onSubmit, editData }) => {
     });
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    onSubmit(formData);
-    onClose();
+  const handleSubmit = async (e) => {
+    try {
+      axios.put(`api/PhuongTiens/${formData.idPhuongTien}`, formData);
+
+      onClose();
+    } catch (e) {
+      console.error(e);
+    }
   };
 
   return (
@@ -53,8 +70,8 @@ const EditFormModal = ({ show, onClose, onSubmit, editData }) => {
             <Form.Label>Đối tác</Form.Label>
             <Form.Control
               type="text"
-              name="doiTac"
-              value={formData.doiTac || ""} // Set the value based on formData
+              name="idDoiTac"
+              value={formData.idDoiTac || ""} // Set the value based on formData
               onChange={handleChange}
             />
           </Form.Group>
