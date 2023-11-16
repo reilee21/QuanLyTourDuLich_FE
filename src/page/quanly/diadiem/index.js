@@ -1,43 +1,61 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Button, Form } from "react-bootstrap";
 import { AiFillEdit, AiFillDelete } from "react-icons/ai";
 import ReactPaginate from "react-paginate";
 import AddDiaDiemFormModal from "./AddForm";
 import EditDiaDiemFormModal from "./EditForm";
-
+import axios from "../../../api/axios";
+import { DeleteConfirmationModal } from "../../../components/exportcom";
 const DiaDiem = () => {
+  const [listdata, setListdata] = useState([]);
   const [showAddFormModal, setShowAddFormModal] = useState(false);
   const [showEditFormModal, setShowEditFormModal] = useState(false);
+  const [showdelModal, setShowdelModal] = useState(false);
+
   const [editData, setEditData] = useState({});
-  const [currentPage, setCurrentPage] = useState(0); // Current page number
-  const itemsPerPage = 10; // Number of items per page
+  const [pageNumber, setPageNumber] = useState(0);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [refreshFlag, setRefreshFlag] = useState(false);
+  const [filteredData, setFilteredData] = useState([]);
 
-  const data = [
-    {
-      stt: 1,
-      ten: "Item 1",
-      loai: 0,
-    },
-    {
-      stt: 2,
-      ten: "Item 2",
-      loai: 1,
-    },
-    // Add more data as needed
-  ];
+  const itemsPerPage = 10;
+  const offset = pageNumber * itemsPerPage;
 
-  // Calculate the total number of pages
-  const pageCount = Math.ceil(data.length / itemsPerPage);
-
-  // Function to handle page change
-  const handlePageClick = (selectedPage) => {
-    setCurrentPage(selectedPage.selected);
+  const handlePageClick = (data) => {
+    const selectedPage = data.selected;
+    setPageNumber(selectedPage);
   };
+  const currentPageData = filteredData.slice(offset, offset + itemsPerPage);
 
-  // Calculate the range of items to display on the current page
-  const startIndex = currentPage * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-  const itemsToDisplay = data.slice(startIndex, endIndex);
+  const fetchdata = async () => {
+    try {
+      const res = await axios.get("api/DiaDiems");
+      setFilteredData(res);
+      setListdata(res);
+    } catch (e) {
+      console.error(e);
+    }
+  };
+  useEffect(() => {
+    fetchdata();
+  }, [refreshFlag]);
+
+  useEffect(() => {
+    if (searchQuery.length < 2 || searchQuery === "") setFilteredData(listdata);
+  }, [searchQuery]);
+
+  const handleSearchChange = (e) => {
+    setSearchQuery(e.target.value);
+    if (searchQuery.length < 2 || searchQuery === "") {
+      return;
+    }
+    const filteredResult = listdata.filter((item) => {
+      const searchString = searchQuery.toLowerCase();
+      return item.tenPhuongTien.toLowerCase().includes(searchString);
+    });
+    setFilteredData(filteredResult);
+    setPageNumber(0);
+  };
 
   const handleAddClick = () => {
     setShowAddFormModal(true);
@@ -46,6 +64,21 @@ const DiaDiem = () => {
   const handleEditClick = (item) => {
     setEditData(item);
     setShowEditFormModal(true);
+  };
+  const closeModal = async () => {
+    setShowAddFormModal(false);
+    setShowEditFormModal(false);
+    setShowdelModal(false);
+
+    setRefreshFlag((prev) => !prev);
+  };
+  const handleDelete = async () => {
+    try {
+      await axios.delete(`api/DiaDiems/${editData.idDiaDiem}`);
+      closeModal();
+    } catch (e) {
+      console.error(e);
+    }
   };
 
   return (
@@ -62,7 +95,7 @@ const DiaDiem = () => {
             <Form.Control
               type="text"
               placeholder="Tên địa điểm"
-              //value={searchQuery}
+              value={searchQuery}
             />
           </Form.Group>
         </div>
@@ -81,12 +114,15 @@ const DiaDiem = () => {
                 </tr>
               </thead>
               <tbody>
-                {itemsToDisplay.map((item) => (
-                  <tr key={item.stt} onClick={() => handleEditClick(item)}>
-                    <td className="stt">{item.stt}</td>
-                    <td className="ten">{item.ten}</td>
+                {currentPageData.map((item, index) => (
+                  <tr
+                    key={item.idDiaDiem}
+                    onClick={() => handleEditClick(item)}
+                  >
+                    <td className="stt">{index + 1}</td>
+                    <td className="ten">{item.tenDiaDiem}</td>
                     <td className="loai">
-                      {item.loai === 0 ? "Trong nước" : "Nước ngoài"}
+                      {item.loai ? "Trong nước" : "Nước ngoài"}
                     </td>
                     <td className="edit">
                       <Button
@@ -117,29 +153,31 @@ const DiaDiem = () => {
         </div>
       </div>
       <ReactPaginate
-        pageCount={pageCount}
-        pageRangeDisplayed={3}
-        marginPagesDisplayed={2}
-        onPageChange={handlePageClick}
+        pageCount={Math.ceil(filteredData.length / itemsPerPage)} // Tổng số trang
+        pageRangeDisplayed={3} // Số trang hiển thị trước và sau trang hiện tại
+        marginPagesDisplayed={2} // Số trang hiển thị ở hai bên
+        onPageChange={handlePageClick} // Xử lý khi chuyển trang
         containerClassName={"pagination"}
         activeClassName={"active"}
         previousLabel={"Trước"}
         nextLabel={"Sau"}
-        previousLinkClassName={"page-link"}
-        nextLinkClassName={"page-link"}
-        pageClassName={"page-item"}
-        pageLinkClassName={"page-link"}
-        breakClassName={"page-item"}
-        breakLinkClassName={"page-link"}
+        previousLinkClassName={"page-link"} // Class cho nút "Trang trước"
+        nextLinkClassName={"page-link"} // Class cho nút "Trang sau"
+        pageClassName={"page-item"} // Class cho nút trang
+        pageLinkClassName={"page-link"} // Class cho liên kết trang
+        breakClassName={"page-item"} // Class cho nút "..."
+        breakLinkClassName={"page-link"} // Class cho liên kết "..."
       />
-      <AddDiaDiemFormModal
-        show={showAddFormModal}
-        onClose={() => setShowAddFormModal(false)}
-      />
+      <AddDiaDiemFormModal show={showAddFormModal} onClose={closeModal} />
       <EditDiaDiemFormModal
         show={showEditFormModal}
-        onClose={() => setShowEditFormModal(false)}
+        onClose={closeModal}
         itemToEdit={editData}
+      />{" "}
+      <DeleteConfirmationModal
+        show={showdelModal}
+        onCancel={closeModal}
+        onDelete={handleDelete}
       />
     </>
   );

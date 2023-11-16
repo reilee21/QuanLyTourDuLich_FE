@@ -3,6 +3,7 @@
   box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
   padding: 4px 12px;
   border-radius: 12px;
+  justify-content: flex-start !important;
   table {
     h5 {
       margin: 8px;
@@ -60,6 +61,7 @@
   position: fixed;
   width: 18%;
   max-height: 150px;
+
   .pt-item {
     padding: 4px;
   }
@@ -97,4 +99,31 @@
 }
 label {
   font-weight: 500;
+}
+.dd {
+  position: fixed;
+  max-height: 300px;
+  overflow-y: scroll;
+  width: 22%;
+  border-radius: 8px;
+  background-color: white;
+  .dd-item {
+    height: 50px;
+    border-radius: 8px;
+    span {
+      padding-left: 8px;
+      display: flex;
+      height: 100%;
+      align-items: center;
+    }
+  }
+  .dd-item:hover {
+    background-color: rgb(255, 251, 246);
+    cursor: pointer;
+  }
+}
+
+.search {
+  width: 30%;
+  margin: 20px 0;
 }
