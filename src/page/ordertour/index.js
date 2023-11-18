@@ -10,8 +10,8 @@ import { Button, Row } from "react-bootstrap";
 const SearchPage = () => {
   const sampleData = [
     {
-      MaTour: "T001",
-      TenTour: "Tour 1",
+      MaTour: "T-15112023-VJD8",
+      TenTour: "Hà Giang - Lũng Cú - Đồng Văn - Mã Pí Lèng",
       SoLuongNguoi: 10,
       NgayKhoiHanh: "2023-11-15",
       SoNgay: 5,
@@ -138,9 +138,12 @@ const SearchPage = () => {
                     Ngày khởi hành: <span>{tour.NgayKhoiHanh}</span>
                   </p>
                   <p>
-                    Điểm xuất phát: <span>{tour.NoiKhoiHanh}</span>
+                    Nơi khởi hành: <span>{tour.NoiKhoiHanh}</span>
                   </p>
                   <p className="price">{tour.Gia.toLocaleString()}đ</p>
+                  <p className="availa">
+                    Số chỗ còn lại : <span>2</span>
+                  </p>
                 </div>
               </div>
             ))}
