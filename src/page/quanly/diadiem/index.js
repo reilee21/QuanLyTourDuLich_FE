@@ -115,10 +115,7 @@ const DiaDiem = () => {
               </thead>
               <tbody>
                 {currentPageData.map((item, index) => (
-                  <tr
-                    key={item.idDiaDiem}
-                    onClick={() => handleEditClick(item)}
-                  >
+                  <tr key={index} onClick={() => handleEditClick(item)}>
                     <td className="stt">{index + 1}</td>
                     <td className="ten">{item.tenDiaDiem}</td>
                     <td className="loai">

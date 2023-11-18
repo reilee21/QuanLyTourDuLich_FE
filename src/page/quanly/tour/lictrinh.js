@@ -1,17 +1,15 @@
 import React, { useState, useEffect } from "react";
 import axios from "../../../api/axios";
 
-import { Table, Button, Form, Row, Col, FormControl } from "react-bootstrap";
+import { Table, Button, Form, FormControl } from "react-bootstrap";
 import { AiFillDelete } from "react-icons/ai";
 const LichTrinh = ({
   tourData,
-  handleAddItineraryEntry,
   handleItineraryEntryChange,
   delLichTrinh,
   setTourData,
 }) => {
   const [diemDens, setDiemDens] = useState([]);
-  const [selectedDiemDen, setSelectedDiemDen] = useState([]);
   const [searchTermDiemDen, setSearchTermDiemDen] = useState("");
   const [filteredDiemDens, setFilteredDiemDens] = useState([]);
   const [showDiemDenDropdown, setShowDiemDenDropdown] = useState(false);
@@ -40,30 +38,23 @@ const LichTrinh = ({
   }, [searchTermDiemDen]);
 
   const handleAddDiemDen = (diemDen) => {
-    const isAlreadySelected = tourData.lichTrinh.some(
+    const isAlreadySelected = tourData.lichTrinhs.some(
       (entry) => entry.diemDen.tenDiemDen === diemDen.tenDiemDen
     );
-
+    console.log(diemDen);
     if (!isAlreadySelected) {
       const updatedItinerary = [
-        ...tourData.lichTrinh,
+        ...tourData.lichTrinhs,
         { Ngay: "", diemDen: diemDen, MoTa: "" },
       ];
-      console.log(updatedItinerary);
 
       setTourData({
         ...tourData,
-        lichTrinh: updatedItinerary,
+        lichTrinhs: updatedItinerary,
       });
     }
     setShowDiemDenDropdown(false);
     setSearchTermDiemDen("");
-  };
-
-  const handleRemoveDiemDen = (index) => {
-    const updatedDiemDens = [...selectedDiemDen];
-    updatedDiemDens.splice(index, 1);
-    setSelectedDiemDen(updatedDiemDens);
   };
 
   const openDiemDenDropdown = (s) => {
@@ -99,7 +90,7 @@ const LichTrinh = ({
           />
           {showDiemDenDropdown && (
             <div className="dd">
-              {diemDens.map((diemDen, index) => (
+              {filteredDiemDens.map((diemDen, index) => (
                 <div
                   className="dd-item"
                   key={index}
@@ -126,12 +117,16 @@ const LichTrinh = ({
             </tr>
           </thead>
           <tbody>
-            {tourData.lichTrinh.map((entry, index) => (
+            {tourData.lichTrinhs.map((entry, index) => (
               <tr key={index}>
                 <td className="ngay">
                   <Form.Control
                     type="date"
-                    value={entry.Ngay}
+                    value={
+                      entry.Ngay
+                        ? new Date(entry.Ngay).toISOString().split("T")[0]
+                        : new Date()
+                    }
                     onChange={(e) =>
                       handleItineraryEntryChange(index, "Ngay", e.target.value)
                     }
@@ -163,13 +158,6 @@ const LichTrinh = ({
             <tr className="col-span-3"></tr>
           </tbody>
         </Table>
-        <Button
-          variant="secondary"
-          className="addlich"
-          onClick={handleAddItineraryEntry}
-        >
-          Thêm Ngày
-        </Button>
       </Form.Group>
     </>
   );

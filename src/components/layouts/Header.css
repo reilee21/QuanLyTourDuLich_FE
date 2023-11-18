@@ -70,15 +70,16 @@
 .dulich-item{
     position: absolute;
     background-color: white;
-    top:-300px;
+    top:-500px;
     width: 100%;
     box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
     padding:20px;
     transition: linear;
+    z-index: -100;
     
 }
 .dulich-item.active{
-    top:7%;
+    top:60px;
     z-index: 100;
 
 }
@@ -86,7 +87,9 @@
     justify-content: flex-start;
 }
 .dulich-item .detail p{
-    width: 200px;
+    width: 150px;
+    font-size: 10pt;
+    
 }
 .dulich-item .type{
     border-right: 2px solid rgb(68, 0, 255);

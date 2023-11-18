@@ -25,12 +25,17 @@ const NavBarQly = () => {
         id="navbarqly"
       >
         <div className="title">
-          <NavLink
-            className=" align-items-center pb-3 mb-md-0 me-md-auto  text-decoration-none"
-            onClick={back}
-          >
-            <span className="fs-5  d-sm-inline">Hufitravel</span>
-          </NavLink>
+          <Nav style={{ display: "inline-block" }} onClick={back}>
+            <span
+              className="brand-text"
+              style={{ color: "#293462", size: "50px" }}
+            >
+              Huflit
+            </span>
+            <span className="brand-text" style={{ color: "#F7D716" }}>
+              Travel
+            </span>
+          </Nav>
         </div>
         <div className="sidebar-menu">
           {selectedMenu === "main" && (
@@ -41,6 +46,9 @@ const NavBarQly = () => {
           {selectedMenu === "bk" && <BookingMenu />}
           {selectedMenu === "more" && <MoreMenu />}
         </div>
+      </div>
+      <div className="taikhoan">
+        <Button>Tài khoản</Button>
       </div>
     </>
   );

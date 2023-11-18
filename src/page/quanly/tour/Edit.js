@@ -1,70 +1,218 @@
 import React, { useState, useEffect } from "react";
-import data from "../phuongtien/data";
-import { Table, Button, Form, Row, Col, FormControl } from "react-bootstrap";
-import { AiFillDelete } from "react-icons/ai";
-import { useLocation } from "react-router-dom";
+import { Button, Form, Row, Col, FormControl } from "react-bootstrap";
 import "./add.scss";
+import axios from "../../../api/axios";
+import LichTrinh from "./lictrinh";
+import { useNavigate, useLocation } from "react-router-dom";
+
 const EditTour = () => {
+  const [phuongtiens, setPhuongtiens] = useState([]);
+  const [selectedImage, setSelectedImage] = useState(null);
   const location = useLocation();
-  const tour = location.state.tour;
-  console.log(tour);
+
+  const updateTourData = (res) => {
+    setTourData({
+      ...tourData,
+      maTour: res.maTour,
+      tenTour: res.tenTour,
+      soLuongNguoi: res.soLuongNguoi,
+      soLuongNguoiDaDat: res.soLuongNguoiDaDat,
+      ngayKhoiHanh: res.ngayKhoiHanh,
+      soNgay: res.soNgay,
+      soDem: res.soDem,
+      noiKhoiHanh: res.noiKhoiHanh,
+      gioTapTrung: res.gioTapTrung,
+      gia: res.gia,
+      image: res.image,
+      anhBia: res.anhBia,
+    });
+  };
+  async function fetchDataForLichTrinh(lichTrinh) {
+    try {
+      const diemDenRes = await axios.get(`api/DiemDens/${lichTrinh.idDiemDen}`);
+      return {
+        Ngay: lichTrinh.ngay,
+        diemDen: diemDenRes, // Access data from the response
+        MoTa: lichTrinh.moTa,
+      };
+    } catch (error) {
+      console.error(`Error fetching DiemDen ${lichTrinh.idDiemDen}:`, error);
+      throw error;
+    }
+  }
+
+  async function fetchDataForTransportation(phuongTien) {
+    try {
+      const phuongTienRes = await axios.get(
+        `api/PhuongTiens/${phuongTien.idPhuongTien}`
+      );
+      return {
+        idPhuongTien: phuongTienRes.idPhuongTien,
+        tenPhuongTien: phuongTienRes.tenPhuongTien,
+        moTa: phuongTienRes.moTa,
+      };
+    } catch (error) {
+      console.error(
+        `Error fetching PhuongTien ${phuongTien.idPhuongTien}:`,
+        error
+      );
+      throw error;
+    }
+  }
+  async function callimg(name) {
+    const imgrs = await axios.get(`api/Tours/getimg/${name}`, {
+      responseType: "blob",
+    });
+
+    return imgrs;
+  }
+  useEffect(() => {
+    const fetchtour = async () => {
+      try {
+        const res = await axios.get(`api/Tours/${location.state.tour.maTour}`);
+        updateTourData(res);
+
+        const updatedItineraries = await Promise.all(
+          res.lichTrinhs.map(
+            async (lichTrinh) => await fetchDataForLichTrinh(lichTrinh)
+          )
+        );
+        const updatedTransportations = await Promise.all(
+          res.tourPhuongTiens.map(
+            async (phuongTien) => await fetchDataForTransportation(phuongTien)
+          )
+        );
+        const imgRes = await callimg(res.anhBia);
+        setIr(imgRes);
+
+        setTourData((prevData) => ({
+          ...prevData,
+          lichTrinhs: [
+            ...new Set([
+              ...prevData.lichTrinhs,
+              ...updatedItineraries.filter(Boolean),
+            ]),
+          ],
+          idPhuongTiens: [
+            ...new Set([
+              ...prevData.idPhuongTiens,
+              ...updatedTransportations.filter(Boolean),
+            ]),
+          ],
+        }));
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    fetchtour();
+  }, []);
+  const [ir, setIr] = useState("");
+  useEffect(() => {
+    if (ir && tourData.anhBia) setImg(ir);
+  }, [ir]);
+  function setImg(imgRes) {
+    const imagePreview = document.getElementById("imagePreview");
+    const imageInput = document.getElementById("imageInput");
+
+    const fileReader = new FileReader();
+    fileReader.onload = () => {
+      const base64String = fileReader.result;
+      imagePreview.src = base64String;
+    };
+    fileReader.readAsDataURL(imgRes);
+
+    const fileList = new DataTransfer();
+    fileList.items.add(new File([imgRes], tourData.anhBia));
+
+    imageInput.files = fileList.files;
+  }
+  const fetchpt = async () => {
+    try {
+      const res = await axios.get("api/PhuongTiens");
+      setPhuongtiens(res);
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  useEffect(() => {
+    fetchpt();
+  }, []);
 
   const [selectedTransportations, setSelectedTransportations] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
-  const [filteredTransportations, setFilteredTransportations] = useState(data);
+  const [filteredTransportations, setFilteredTransportations] =
+    useState(phuongtiens);
   const [showdspt, setShowdspt] = useState(false);
   const [tourData, setTourData] = useState({
-    TenTour: "",
-    SoLuongNguoi: 0,
-    NgayKhoiHanh: "",
-    SoNgay: 0,
-    SoDem: 0,
-    NoiKhoiHanh: "",
-    GioTapTrung: "",
-    Gia: 0,
-    image: "",
-    lichTrinh: [],
-    phuongtien: [],
+    maTour: "demo",
+    tenTour: "",
+    soLuongNguoi: 0,
+    soLuongNguoiDaDat: 0,
+    ngayKhoiHanh: new Date().toISOString(),
+    soNgay: 0,
+    soDem: 0,
+    noiKhoiHanh: "",
+    gioTapTrung: new Date().toISOString(),
+    gia: 0,
+    image: null,
+    lichTrinhs: [],
+    idPhuongTiens: [],
+    anhBia: "x",
   });
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
+
     setTourData({
       ...tourData,
       [name]: value,
     });
   };
 
-  const handleAddItineraryEntry = () => {
-    setTourData({
-      ...tourData,
-      lichTrinh: [...tourData.lichTrinh, { Ngay: "", DiemDen: "", MoTa: "" }],
-    });
-  };
-
   const handleItineraryEntryChange = (index, fieldName, fieldValue) => {
-    const updatedItinerary = [...tourData.lichTrinh];
+    const updatedItinerary = [...tourData.lichTrinhs];
     updatedItinerary[index][fieldName] = fieldValue;
 
     setTourData({
       ...tourData,
-      lichTrinh: updatedItinerary,
+      lichTrinhs: updatedItinerary,
     });
   };
 
-  const handleEditTour = () => {
+  const handleEditTour = async () => {
+    const formData = new FormData();
+
+    const { lichTrinhs, idPhuongTiens, ...tourDataToSend } = tourData;
+
+    Object.keys(tourDataToSend).forEach((key) => {
+      formData.append(key, tourDataToSend[key]);
+    });
+    const formattedList = tourData.lichTrinhs.map((item) => ({
+      maTour: "demo",
+      ngay: new Date(item.Ngay),
+      moTa: item.MoTa,
+      idDiemDen: item.diemDen.idDiemDen,
+    }));
     const imageInput = document.getElementById("imageInput");
-    tourData.image = imageInput.files[0];
-    tourData.phuongtien = selectedTransportations;
-    console.log(tourData);
+    const selectedFile = imageInput.files[0];
+
+    formData.append("image", selectedFile);
+    formData.append("LichTrinhs", JSON.stringify(formattedList));
+    formData.append("TourPhuongTiens", JSON.stringify(tourData.idPhuongTiens));
+    try {
+      const res = await axios.put("/api/Tours", formData);
+    } catch (error) {
+      console.error("Error adding formattedList:", error.response);
+    }
   };
   const delLichTrinh = (index) => {
-    const updatedItinerary = [...tourData.lichTrinh];
+    const updatedItinerary = [...tourData.lichTrinhs];
     updatedItinerary.splice(index, 1);
 
     setTourData({
       ...tourData,
-      lichTrinh: updatedItinerary,
+      lichTrinhs: updatedItinerary,
     });
   };
 
@@ -74,13 +222,13 @@ const EditTour = () => {
 
     if (imageInput) {
       imageInput.addEventListener("change", function () {
-        // Xử lý khi input file thay đổi
         const selectedFile = imageInput.files[0];
 
         if (selectedFile) {
           const fileReader = new FileReader();
           fileReader.onload = function (e) {
             imagePreview.src = e.target.result;
+            setSelectedImage(e.target.result);
           };
           fileReader.readAsDataURL(selectedFile);
         } else {
@@ -91,9 +239,8 @@ const EditTour = () => {
   }, []);
 
   useEffect(() => {
-    // Filter transportation data based on the search term
     setFilteredTransportations(
-      data.filter((transportation) =>
+      phuongtiens.filter((transportation) =>
         transportation.tenPhuongTien
           .toLowerCase()
           .includes(searchTerm.toLowerCase())
@@ -103,18 +250,53 @@ const EditTour = () => {
   }, [searchTerm]);
 
   const handleAddTransportation = (trans) => {
-    if (!selectedTransportations.includes(trans)) {
-      setSelectedTransportations([...selectedTransportations, trans]);
-    }
-    setFilteredTransportations(data);
-  };
+    const updatedPhuongTien = {
+      idPhuongTien: trans.idPhuongTien,
+      tenPhuongTien: trans.tenPhuongTien,
+      moTa: trans.moTa,
+    };
 
+    if (!tourData.idPhuongTiens) {
+      setTourData({
+        ...tourData,
+        idPhuongTiens: [updatedPhuongTien],
+      });
+    } else if (!Array.isArray(tourData.idPhuongTiens)) {
+      setTourData({
+        ...tourData,
+        idPhuongTiens: [tourData.phuongtien, updatedPhuongTien],
+      });
+    } else {
+      const isAlreadySelected = tourData.idPhuongTiens.some(
+        (selectedTrans) => selectedTrans.idPhuongTien === trans.idPhuongTien
+      );
+
+      if (!isAlreadySelected) {
+        setTourData({
+          ...tourData,
+          idPhuongTiens: [...tourData.idPhuongTiens, updatedPhuongTien],
+        });
+      }
+    }
+    setSelectedTransportations([...selectedTransportations, trans]);
+
+    setFilteredTransportations(phuongtiens);
+  };
   const handleRemoveTransportation = (index) => {
-    // Remove selected transportation from the list
     const updatedTransportations = [...selectedTransportations];
     updatedTransportations.splice(index, 1);
     setSelectedTransportations(updatedTransportations);
+
+    if (Array.isArray(tourData.idPhuongTiens)) {
+      const updatedPhuongTien = [...tourData.idPhuongTiens];
+      updatedPhuongTien.splice(index, 1);
+      setTourData({
+        ...tourData,
+        idPhuongTiens: updatedPhuongTien,
+      });
+    }
   };
+
   const openlistPT = (s) => {
     if (s.length < 3) {
       setShowdspt(false);
@@ -122,13 +304,16 @@ const EditTour = () => {
       setShowdspt(true);
     }
   };
+  useEffect(() => {
+    setTourData({ ...tourData, image: selectedImage });
+  }, [selectedImage]);
   return (
     <>
       <center>
         <div className="head">
-          <h2> Thêm tour</h2>
+          <h2> Cập nhật thông tin tour</h2>
           <Button id="addt" variant="primary" onClick={handleEditTour}>
-            Lưu chỉnh sửa
+            Lưu
           </Button>
         </div>
       </center>
@@ -147,8 +332,8 @@ const EditTour = () => {
                   <Form.Control
                     type="text"
                     placeholder="Enter Tên Tour"
-                    name="TenTour"
-                    value={tourData.TenTour}
+                    name="tenTour"
+                    value={tourData.tenTour}
                     onChange={handleInputChange}
                   />
                 </Form.Group>
@@ -158,8 +343,12 @@ const EditTour = () => {
                   <Form.Label>Ngày Khởi Hành</Form.Label>
                   <Form.Control
                     type="date"
-                    name="NgayKhoiHanh"
-                    value={tourData.NgayKhoiHanh}
+                    name="ngayKhoiHanh"
+                    value={
+                      new Date(tourData.ngayKhoiHanh)
+                        .toISOString()
+                        .split("T")[0]
+                    }
                     onChange={handleInputChange}
                   />
                 </Form.Group>
@@ -172,8 +361,8 @@ const EditTour = () => {
                   <Form.Control
                     type="text"
                     placeholder="Enter Nơi Khởi Hành"
-                    name="NoiKhoiHanh"
-                    value={tourData.NoiKhoiHanh}
+                    name="noiKhoiHanh"
+                    value={tourData.noiKhoiHanh}
                     onChange={handleInputChange}
                   />
                 </Form.Group>
@@ -184,8 +373,8 @@ const EditTour = () => {
                   <Form.Control
                     type="number"
                     placeholder="Enter Giá"
-                    name="Gia"
-                    value={tourData.Gia}
+                    name="gia"
+                    value={tourData.gia}
                     onChange={handleInputChange}
                   />
                 </Form.Group>
@@ -196,8 +385,8 @@ const EditTour = () => {
                   <Form.Control
                     type="number"
                     placeholder="Enter Số Lượng Người"
-                    name="SoLuongNguoi"
-                    value={tourData.SoLuongNguoi}
+                    name="soLuongNguoi"
+                    value={tourData.soLuongNguoi}
                     onChange={handleInputChange}
                   />
                 </Form.Group>
@@ -209,8 +398,8 @@ const EditTour = () => {
                 <Form.Control
                   type="number"
                   placeholder="Enter Số Ngày"
-                  name="SoNgay"
-                  value={tourData.SoNgay}
+                  name="soNgay"
+                  value={tourData.soNgay}
                   onChange={handleInputChange}
                 />
               </Form.Group>
@@ -220,8 +409,8 @@ const EditTour = () => {
                 <Form.Control
                   type="number"
                   placeholder="Enter Số Đêm"
-                  name="SoDem"
-                  value={tourData.SoDem}
+                  name="soDem"
+                  value={tourData.soDem}
                   onChange={handleInputChange}
                 />
               </Form.Group>
@@ -229,8 +418,8 @@ const EditTour = () => {
                 <Form.Label>Giờ Tập Trung</Form.Label>
                 <Form.Control
                   type="time"
-                  name="GioTapTrung"
-                  value={tourData.GioTapTrung}
+                  name="gioTapTrung"
+                  value={tourData.gioTapTrung.slice(11, 16)}
                   onChange={handleInputChange}
                 />
               </Form.Group>
@@ -244,10 +433,10 @@ const EditTour = () => {
           <Col lg={7}>
             <Form.Group controlId="selectedTransportations">
               <Row className="selectlist">
-                {selectedTransportations.map((transportation, index) => (
+                {tourData.idPhuongTiens.map((transportation, index) => (
                   <React.Fragment key={index}>
                     <div
-                      className="row-col-2 col-2 col-lg-2 col-md-2 col-sm-2"
+                      className="row-col-3 col-3 col-lg-3 col-md-3 col-sm-3"
                       id="selecitem"
                     >
                       <span className="selectedtransname">
@@ -297,81 +486,12 @@ const EditTour = () => {
             </Form.Group>
           </Col>
         </div>
-        <Form.Group controlId="lichTrinh" className="lichtrinh row">
-          <center>
-            <h5 className="col-lg-12">Lịch trình </h5>
-          </center>
-          <Table striped bordered hover>
-            <thead>
-              <tr>
-                <th className="ngay">Ngày</th>
-                <th className="diemden">Điểm Đến</th>
-                <th className="mota">Mô Tả</th>
-                <th className="del"></th>
-              </tr>
-            </thead>
-            <tbody>
-              {tourData.lichTrinh.map((entry, index) => (
-                <tr key={index}>
-                  <td className="ngay">
-                    <Form.Control
-                      type="date"
-                      value={entry.Ngay}
-                      onChange={(e) =>
-                        handleItineraryEntryChange(
-                          index,
-                          "Ngay",
-                          e.target.value
-                        )
-                      }
-                    />
-                  </td>
-                  <td className="diemden">
-                    <Form.Control
-                      type="text"
-                      value={entry.DiemDen}
-                      onChange={(e) =>
-                        handleItineraryEntryChange(
-                          index,
-                          "DiemDen",
-                          e.target.value
-                        )
-                      }
-                    />
-                  </td>
-                  <td className="mota">
-                    <Form.Control
-                      type="text"
-                      value={entry.MoTa}
-                      onChange={(e) =>
-                        handleItineraryEntryChange(
-                          index,
-                          "MoTa",
-                          e.target.value
-                        )
-                      }
-                    />
-                  </td>
-                  <td className="del">
-                    <Button
-                      variant="outline-danger"
-                      onClick={() => delLichTrinh(index)}
-                    >
-                      <AiFillDelete />
-                    </Button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </Table>
-          <Button
-            variant="secondary"
-            className="addlich"
-            onClick={handleAddItineraryEntry}
-          >
-            Thêm Ngày
-          </Button>
-        </Form.Group>
+        <LichTrinh
+          tourData={tourData}
+          handleItineraryEntryChange={handleItineraryEntryChange}
+          delLichTrinh={delLichTrinh}
+          setTourData={setTourData}
+        />
       </Form>
     </>
   );
