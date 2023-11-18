@@ -1,52 +1,67 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Button, Form } from "react-bootstrap";
 import { AiFillEdit, AiFillDelete } from "react-icons/ai";
 import ReactPaginate from "react-paginate";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import "./index.scss";
+import axios from "../../../api/axios";
+import { formatTimeToHours } from "../../../utils/fomattime";
+import { formatDate } from "../../../utils/formatdate";
 const Tour = () => {
   const navigate = useNavigate();
-  const [currentPage, setCurrentPage] = useState(0);
+  const [listdata, setListdata] = useState([]);
+  const [editData, setEditData] = useState({});
+  const [pageNumber, setPageNumber] = useState(0);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [refreshFlag, setRefreshFlag] = useState(false);
+  const [filteredData, setFilteredData] = useState([]);
 
   const itemsPerPage = 10;
+  const offset = pageNumber * itemsPerPage;
 
-  const data = [
-    {
-      MaTour: 1,
-      TenTour: "Tour 1",
-      NgayKhoiHanh: "2023-01-01",
-      NoiKhoiHanh: "Hanoi",
-      GioTapTrung: "08:00 AM",
-      Gia: 100,
-    },
-    {
-      MaTour: 2,
-      TenTour: "Tour 2",
-      NgayKhoiHanh: "2023-02-01",
-      NoiKhoiHanh: "Ho Chi Minh City",
-      GioTapTrung: "09:30 AM",
-      Gia: 150,
-    },
-    // Add more data as needed
-  ];
-
-  const pageCount = Math.ceil(data.length / itemsPerPage);
-
-  const handlePageClick = (selectedPage) => {
-    setCurrentPage(selectedPage.selected);
+  const handlePageClick = (data) => {
+    const selectedPage = data.selected;
+    setPageNumber(selectedPage);
   };
+  const currentPageData = filteredData.slice(offset, offset + itemsPerPage);
 
+  const fetchdata = async () => {
+    try {
+      const res = await axios.get("api/Tours");
+      setFilteredData(res);
+      setListdata(res);
+      console.log(res);
+    } catch (e) {
+      console.error(e);
+    }
+  };
+  useEffect(() => {
+    fetchdata();
+  }, [refreshFlag]);
+
+  useEffect(() => {
+    if (searchQuery.length < 2 || searchQuery === "") setFilteredData(listdata);
+  }, [searchQuery]);
+
+  const handleSearchChange = (e) => {
+    setSearchQuery(e.target.value);
+    if (searchQuery.length < 2 || searchQuery === "") {
+      return;
+    }
+    const filteredResult = listdata.filter((item) => {
+      const searchString = searchQuery.toLowerCase();
+      return item.tenPhuongTien.toLowerCase().includes(searchString);
+    });
+    setFilteredData(filteredResult);
+    setPageNumber(0);
+  };
   const handleAddClick = () => {
     navigate("them");
   };
 
   const handleEditClick = (item) => {
-    navigate(`${item.MaTour}`, { state: { tour: item } });
+    navigate(`${item.maTour}`, { state: { tour: item } });
   };
-
-  const startIndex = currentPage * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-  const itemsToDisplay = data.slice(startIndex, endIndex);
 
   return (
     <>
@@ -59,11 +74,7 @@ const Tour = () => {
             Thêm mới
           </Button>
           <Form.Group className="search">
-            <Form.Control
-              type="text"
-              placeholder="Tên Tour"
-              // Add any search functionality if needed
-            />
+            <Form.Control type="text" placeholder="Tên Tour" />
           </Form.Group>
         </div>
 
@@ -84,14 +95,16 @@ const Tour = () => {
                 </tr>
               </thead>
               <tbody>
-                {itemsToDisplay.map((item) => (
+                {currentPageData.map((item) => (
                   <tr key={item.MaTour} onClick={() => handleEditClick(item)}>
-                    <td className="matour">{item.MaTour}</td>
-                    <td className="tentour">{item.TenTour}</td>
-                    <td className="ngay">{item.NgayKhoiHanh}</td>
-                    <td className="gio">{item.GioTapTrung}</td>
-                    <td className="noi">{item.NoiKhoiHanh}</td>
-                    <td className="gia">{item.Gia}</td>
+                    <td className="matour">{item.maTour}</td>
+                    <td className="tentour">{item.tenTour}</td>
+                    <td className="ngay">{formatDate(item.ngayKhoiHanh)}</td>
+                    <td className="gio">
+                      {formatTimeToHours(item.gioTapTrung)}
+                    </td>
+                    <td className="noi">{item.noiKhoiHanh}</td>
+                    <td className="gia">{item.gia}</td>
                     <td className="edit">
                       <Button
                         variant="outline-warning"
@@ -116,20 +129,20 @@ const Tour = () => {
         </div>
       </div>
       <ReactPaginate
-        pageCount={pageCount}
-        pageRangeDisplayed={3}
-        marginPagesDisplayed={2}
-        onPageChange={handlePageClick}
+        pageCount={Math.ceil(filteredData.length / itemsPerPage)} // Tổng số trang
+        pageRangeDisplayed={3} // Số trang hiển thị trước và sau trang hiện tại
+        marginPagesDisplayed={2} // Số trang hiển thị ở hai bên
+        onPageChange={handlePageClick} // Xử lý khi chuyển trang
         containerClassName={"pagination"}
         activeClassName={"active"}
         previousLabel={"Trước"}
         nextLabel={"Sau"}
-        previousLinkClassName={"page-link"}
-        nextLinkClassName={"page-link"}
-        pageClassName={"page-item"}
-        pageLinkClassName={"page-link"}
-        breakClassName={"page-item"}
-        breakLinkClassName={"page-link"}
+        previousLinkClassName={"page-link"} // Class cho nút "Trang trước"
+        nextLinkClassName={"page-link"} // Class cho nút "Trang sau"
+        pageClassName={"page-item"} // Class cho nút trang
+        pageLinkClassName={"page-link"} // Class cho liên kết trang
+        breakClassName={"page-item"} // Class cho nút "..."
+        breakLinkClassName={"page-link"} // Class cho liên kết "..."
       />
     </>
   );

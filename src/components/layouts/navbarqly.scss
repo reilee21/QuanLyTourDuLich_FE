@@ -4,6 +4,9 @@
   .title {
     width: 100%;
     margin-top: 5%;
+    display: flex;
+    justify-content: center;
+    cursor: pointer;
   }
   .sidebar-menu {
     margin-top: 20px;
@@ -37,13 +40,25 @@
   border-radius: 50%;
   text-align: center;
 }
+.sidebar {
+  display: flex;
+  flex-wrap: wrap;
+
+  align-content: space-between;
+  .taikhoan {
+    width: 100%;
+    padding: 12px;
+    button {
+      width: 300px;
+    }
+  }
+}
 @media (max-width: 1440px) {
   .sidebar {
     position: fixed;
     top: 0;
-    left: -300px;
+    left: -450px;
     transition: 0.2s linear;
-    width: max-content;
     z-index: 200;
   }
   .sidebar.open {
@@ -82,5 +97,9 @@
   }
 }
 .row {
+  justify-content: center;
+}
+.taikhoan {
+  display: flex;
   justify-content: center;
 }

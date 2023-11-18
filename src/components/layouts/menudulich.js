@@ -41,6 +41,7 @@ const MenuDuLich = (props) => {
               <div className="row">
                 {diadiems
                   .filter((item) => item.loai === dulichtype)
+                  .slice(0, 20)
                   .map((item, index) => (
                     <p
                       className="diadiemitem"

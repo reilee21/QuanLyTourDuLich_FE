@@ -11,15 +11,13 @@ import { GoogleOAuthProvider } from "@react-oauth/google";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
-  <React.StrictMode>
-    <AuthProvider>
-      <GoogleOAuthProvider clientId="958123963258-tl9ffg26r7ioopmh519m2q22o681ggi9.apps.googleusercontent.com">
-        <BrowserRouter>
-          <App />
-        </BrowserRouter>
-      </GoogleOAuthProvider>
-    </AuthProvider>
-  </React.StrictMode>
+  <AuthProvider>
+    <GoogleOAuthProvider clientId="958123963258-tl9ffg26r7ioopmh519m2q22o681ggi9.apps.googleusercontent.com">
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
+    </GoogleOAuthProvider>
+  </AuthProvider>
 );
 
 reportWebVitals();

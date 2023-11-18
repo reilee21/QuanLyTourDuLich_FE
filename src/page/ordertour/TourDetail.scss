@@ -1,0 +1,95 @@
+.botton-xacnhan {
+  margin-left: 2%;
+  width: 98%;
+  height: 40px;
+  border: none;
+  margin-top: 10px;
+  border-radius: 5px;
+  background-color: #b0980e;
+
+  color: white;
+  font-size: 17px;
+  font-weight: 600;
+}
+
+.botton-xacnhan:hover {
+  background-color: #f7d716;
+  color: #293462;
+}
+.booking-section1 {
+  margin: 0;
+  padding: 2%;
+  background-color: #293462;
+  border-radius: 2%;
+  height: fit-content;
+  color: white;
+  .booking-section {
+    padding: 5%;
+    input {
+      height: 40px;
+    }
+    .row {
+      align-items: center;
+      padding: 4px;
+      margin-top: 12px;
+    }
+  }
+}
+.tour-details {
+  min-height: 90vh;
+  padding: 2%;
+  background-color: rgb(250, 248, 248);
+  border-radius: 8px;
+  h5 {
+    margin: 2% 0;
+  }
+  .tour-info {
+    margin: 0 2%;
+
+    .tour-image {
+      border-radius: 8px;
+      .image {
+        width: 100%;
+        border-radius: 4px;
+      }
+    }
+    .avai-slots {
+      color: red;
+    }
+    .mota {
+      max-height: 270px;
+      overflow-y: scroll;
+      margin: 0;
+      padding: 8px;
+      background-color: white;
+      border-radius: 4px;
+    }
+    .tour-infop {
+      background-color: #293462;
+      border-radius: 8px;
+      color: whitesmoke;
+      margin: 1% 0;
+      padding: 5% 0;
+      p {
+        padding: 8px;
+      }
+    }
+  }
+}
+
+.hanhkhach {
+  justify-content: flex-start !important;
+  padding: 2% 0;
+  .ctn {
+    margin-left: 4%;
+    background-color: #293462;
+    padding: 8px;
+    border-radius: 8px;
+    .row {
+      justify-content: flex-start !important;
+
+      padding: 1% 10%;
+      color: white;
+    }
+  }
+}

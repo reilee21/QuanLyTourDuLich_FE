@@ -6,9 +6,9 @@ import AddDiemDenFormModal from "./Add";
 import EditDiemDenFormModal from "./Edit";
 import axios from "../../../api/axios";
 import { DeleteConfirmationModal } from "../../../components/exportcom";
-import LichTrinh from "../tour/lictrinh";
 const DiemDen = () => {
   const [diadiems, setDiadiems] = useState([]);
+
   const [listdata, setListdata] = useState([]);
   const [showAddFormModal, setShowAddFormModal] = useState(false);
   const [showEditFormModal, setShowEditFormModal] = useState(false);
@@ -128,7 +128,7 @@ const DiemDen = () => {
               <tbody>
                 {currentPageData.map((item, index) => (
                   <tr
-                    key={item.IdDiemDen}
+                    key={index}
                     className="diemdentr"
                     onClick={() => handleEditClick(item)}
                   >
