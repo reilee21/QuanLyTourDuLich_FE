@@ -274,14 +274,14 @@
 }
 
 .footer {
-    position: absolute;
+    position: sticky;
     background-color: rgba(27, 27, 27, 1.00);
-    ;
-
+    bottom: 0;
 
     left: 0;
     display: flex;
     right: 0;
+    margin: 0;
 }
 
 .footer1 {
