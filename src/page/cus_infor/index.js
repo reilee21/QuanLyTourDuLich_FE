@@ -77,7 +77,7 @@ function CustomerInfoForm() {
                 </Link>
               </td>
             </tr>
-            {phuongthuc === "jwt-auth" && (
+            {phuongthuc !== "jwt-Auth" && (
               <tr>
                 <td>
                   <Link to="/repass" className="black-link">

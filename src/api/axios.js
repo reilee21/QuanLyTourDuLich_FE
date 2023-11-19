@@ -1,5 +1,5 @@
 import axios from "axios";
-const somee = "http://huflittravel.somee.com";
+const somee = "https://huflittravel.somee.com";
 const local = "https://localhost:7102";
 
 const instance = axios.create({
