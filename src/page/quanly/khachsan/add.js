@@ -59,10 +59,10 @@ const AddKhachSan = () => {
       ten.trim() === "" ||
       diaChi.trim() === "" ||
       moTa.trim() === "" ||
-      idDoiTac.trim() === "" ||
-      soSao === 0
+      idDoiTac.trim() === ""
     ) {
       alert("Vui lòng điền đầy đủ thông tin");
+      console.log(khachSanData);
       return;
     }
     let isValid = true;
@@ -70,16 +70,20 @@ const AddKhachSan = () => {
       alert("Chưa có thông tin phòng");
       return;
     }
+
     for (const loaiPhong of khachSanData.phongs) {
-      if (
-        loaiPhong.tenLoai.trim().length < 5 ||
-        loaiPhong.moTa.trim().length < 5
-      ) {
-        isValid = false;
-        alert("Kiếm tra thông tin loại phòng");
-        break;
+      if (loaiPhong && loaiPhong.tenLoai && loaiPhong.mota) {
+        if (
+          loaiPhong.tenLoai.trim().length < 5 ||
+          loaiPhong.mota.trim().length < 5
+        ) {
+          isValid = false;
+          alert("Kiểm tra thông tin loại phòng");
+          break;
+        }
       }
     }
+
     if (!isValid) return;
 
     const { tendoitac, phongs, image, ...ksdatatosend } = khachSanData;
@@ -193,7 +197,7 @@ const AddKhachSan = () => {
               </div>
             </Row>
           </Form>
-          <LoaiPhongs updatePhongs={updatePhongs} />
+          <LoaiPhongs updatePhongs={updatePhongs} ksdata={khachSanData} />
         </div>
       </div>
     </>

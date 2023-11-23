@@ -29,7 +29,6 @@ const KhachSan = () => {
       const res = await axios.get("api/khachsans");
       setFilteredData(res);
       setListdata(res);
-      console.log(res);
     } catch (e) {
       console.error(e);
     }

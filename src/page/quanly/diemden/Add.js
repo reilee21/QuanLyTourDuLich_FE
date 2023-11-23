@@ -22,6 +22,8 @@ const AddDiemDenFormModal = ({ show, onClose }) => {
       tenDiemDen: formData.TenDiemDen,
       idDiaDiem: formData.IdDiaDiem,
     };
+    console.log(data);
+    return;
     try {
       const res = await axios.post("/api/diemdens", data);
       alert(`Thêm - ${res.tenDiemDen} - thành công`);
