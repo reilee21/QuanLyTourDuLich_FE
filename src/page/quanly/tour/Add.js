@@ -28,7 +28,7 @@ const AddTour = () => {
     useState(phuongtiens);
   const [showdspt, setShowdspt] = useState(false);
   const [tourData, setTourData] = useState({
-    maTour: "demo",
+    maTour: "x",
     tenTour: "",
     soLuongNguoi: 0,
     soLuongNguoiDaDat: 0,
