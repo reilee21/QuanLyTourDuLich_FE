@@ -10,22 +10,22 @@ const DoiTac = () => {
   const [showAddFormModal, setShowAddFormModal] = useState(false);
   const [showEditFormModal, setShowEditFormModal] = useState(false);
   const [showdelModal, setShowdelModal] = useState(false);
+  const [refreshFlag, setRefreshFlag] = useState(false);
 
   const [editData, setEditData] = useState({});
   const [searchQuery, setSearchQuery] = useState("");
   const [filteredData, setFilteredData] = useState([]);
-  const [refreshFlag, setRefreshFlag] = useState(false);
 
   const [listdata, setListdata] = useState([]);
   const [pageNumber, setPageNumber] = useState(0);
   const itemsPerPage = 10;
   const offset = pageNumber * itemsPerPage;
-
+  const [currentPageData, setCurrentPageData] = useState([]);
   const handlePageClick = (data) => {
     const selectedPage = data.selected;
     setPageNumber(selectedPage);
   };
-  const currentPageData = filteredData.slice(offset, offset + itemsPerPage);
+  //const currentPageData = filteredData.slice(offset, offset + itemsPerPage);
   const fetchdata = async () => {
     try {
       const res = await axios.get("api/DoiTacs");
@@ -37,7 +37,10 @@ const DoiTac = () => {
   };
   useEffect(() => {
     fetchdata();
-  }, [refreshFlag]);
+  }, [refreshFlag, editData]);
+  useEffect(() => {
+    setCurrentPageData(filteredData.slice(offset, offset + itemsPerPage));
+  }, [filteredData]);
 
   useEffect(() => {
     if (searchQuery.length < 2 || searchQuery === "") setFilteredData(listdata);
@@ -70,14 +73,13 @@ const DoiTac = () => {
     setShowAddFormModal(false);
     setShowEditFormModal(false);
     setShowdelModal(false);
-
-    setRefreshFlag((prev) => !prev);
+    setEditData({});
   };
   const handleDelete = async () => {
     try {
       await axios.delete(`api/DoiTacs/${editData.idDoiTac}`);
-
       closeModal();
+      setEditData({});
     } catch (e) {
       console.error(e);
     }

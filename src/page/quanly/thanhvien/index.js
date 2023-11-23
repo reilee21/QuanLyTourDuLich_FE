@@ -1,71 +1,87 @@
 import React, { useState, useEffect } from "react";
 import { Button, Form } from "react-bootstrap";
 import { AiFillEdit, AiFillDelete } from "react-icons/ai";
-import khachHangData from "./datatv";
+
 import ReactPaginate from "react-paginate";
-import AddFormModal from "./Add"; // Thay thế bằng thành phần AddFormModal thực tế
-import EditFormModal from "./Edit"; // Thay thế bằng thành phần EditFormModal thực tế
+import { DeleteConfirmationModal } from "../../../components/exportcom";
+
 import "./index.scss";
 import { Link } from "react-router-dom";
+import axios from "../../../api/axios";
+import AddKhachHangFormModal from "./Add";
+import EditKhachHangFormModal from "./Edit";
 
 const KhachHang = () => {
   const [listdata, setListdata] = useState([]);
-  const [showAddModal, setShowAddModal] = useState(false);
-  const [showEditModal, setShowEditModal] = useState(false);
+  const [showAddFormModal, setShowAddFormModal] = useState(false);
+  const [showEditFormModal, setShowEditFormModal] = useState(false);
+  const [showdelModal, setShowdelModal] = useState(false);
+
   const [editData, setEditData] = useState({});
   const [pageNumber, setPageNumber] = useState(0);
   const [searchQuery, setSearchQuery] = useState("");
+  const [refreshFlag, setRefreshFlag] = useState(false);
+  const [filteredData, setFilteredData] = useState([]);
 
   const itemsPerPage = 10;
   const offset = pageNumber * itemsPerPage;
 
-  const handlePageClick = (khachHangData) => {
-    const selectedPage = khachHangData.selected;
+  const handlePageClick = (data) => {
+    const selectedPage = data.selected;
     setPageNumber(selectedPage);
   };
-
-  useEffect(() => {
-    setListdata(khachHangData); // Thay thế 'data' bằng dữ liệu thực tế từ nguồn dữ liệu hoặc API
-  }, []);
-
-  const handleAddSubmit = () => {
-    setShowAddModal(false);
-  };
-
-  const openAddModal = () => {
-    setShowAddModal(true);
-  };
-
-  const openEditModal = (item) => {
-    setEditData(item);
-    setShowEditModal(true);
-  };
-
-  const closeEditModal = () => {
-    setShowEditModal(false);
-  };
-
-  const handleEditSubmit = (formData) => {
-    const updatedData = listdata.map((item) =>
-      item.MaKH === formData.MaKH ? formData : item
-    );
-    setListdata(updatedData);
-    closeEditModal();
-  };
-
-  const handleDelete = (item) => {
-    // Implement delete logic if needed
-  };
-
-  // Filter the data based on the search query
-  const filteredData = listdata.filter(
-    (item) =>
-      item.HoTen.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      item.SoDienThoaiKH.includes(searchQuery)
-  );
-
   const currentPageData = filteredData.slice(offset, offset + itemsPerPage);
 
+  const fetchdata = async () => {
+    try {
+      const res = await axios.get("api/khachhangs");
+      setFilteredData(res);
+      setListdata(res);
+    } catch (e) {
+      console.error(e);
+    }
+  };
+  useEffect(() => {
+    fetchdata();
+  }, [refreshFlag]);
+
+  useEffect(() => {
+    if (searchQuery.length < 2 || searchQuery === "") setFilteredData(listdata);
+  }, [searchQuery]);
+
+  const handleSearchChange = (e) => {
+    setSearchQuery(e.target.value);
+    if (searchQuery.length < 2 || searchQuery === "") {
+      return;
+    }
+    const filteredResult = listdata.filter((item) => {
+      const searchString = searchQuery.toLowerCase();
+      return item.hoTen.toLowerCase().includes(searchString);
+    });
+    setFilteredData(filteredResult);
+    setPageNumber(0);
+  };
+
+  const handleAddClick = () => {
+    setShowAddFormModal(true);
+  };
+
+  const closeModal = async () => {
+    setShowAddFormModal(false);
+    setShowEditFormModal(false);
+    setShowdelModal(false);
+
+    setRefreshFlag((prev) => !prev);
+  };
+  const handleDelete = async () => {
+    try {
+      await axios.delete(`api/khachhangs/${editData.maKh}`);
+      closeModal();
+      setEditData({});
+    } catch (e) {
+      console.error(e);
+    }
+  };
   return (
     <>
       <div className="row">
@@ -73,7 +89,7 @@ const KhachHang = () => {
           <h4>Danh sách khách hàng</h4>
         </div>
         <div className="col-md-12 d-flex justify-content-between align-items-center mb-3">
-          <Button className="add" variant="success" onClick={openAddModal}>
+          <Button className="add" variant="success" onClick={handleAddClick}>
             Thêm mới
           </Button>
           <div className="col-md-5 d-flex justify-content-between align-items-center ">
@@ -83,9 +99,9 @@ const KhachHang = () => {
             <Form.Group className="search">
               <Form.Control
                 type="text"
-                placeholder="Họ tên hoặc số điện thoại"
+                placeholder="Họ tên"
                 value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
+                onChange={handleSearchChange}
               />
             </Form.Group>
           </div>
@@ -109,18 +125,27 @@ const KhachHang = () => {
                 {filteredData.length > 0 &&
                   currentPageData.map((item, index) => {
                     return (
-                      <tr key={item.MaKH} onClick={() => openEditModal(item)}>
+                      <tr
+                        key={item.maKh}
+                        onClick={() => {
+                          setEditData(item);
+                          setShowEditFormModal(true);
+                        }}
+                      >
                         <td className="stt">{index + 1}</td>
-                        <td className="ten">{item.HoTen}</td>
-                        <td className="ngaysinh">{item.NgaySinh}</td>
-                        <td className="email">{item.Email}</td>
-                        <td className="diachi">{item.DiaChi}</td>
+                        <td className="ten">{item.hoTen}</td>
+                        <td className="ngaysinh">
+                          {item.ngaySinh.slice(0, 10)}
+                        </td>
+                        <td className="email">{item.email}</td>
+                        <td className="diachi">{item.diaChi}</td>
                         <td className="edit">
                           <Button
                             variant="outline-warning"
                             onClick={(e) => {
                               e.stopPropagation();
-                              openEditModal(item);
+                              setEditData(item);
+                              setShowEditFormModal(true);
                             }}
                           >
                             <AiFillEdit />
@@ -131,7 +156,8 @@ const KhachHang = () => {
                             variant="outline-danger"
                             onClick={(e) => {
                               e.stopPropagation();
-                              handleDelete(item);
+                              setEditData(item);
+                              setShowdelModal(true);
                             }}
                           >
                             <AiFillDelete />
@@ -145,7 +171,6 @@ const KhachHang = () => {
           </div>
         </div>
       </div>
-      {/* Tạo phân trang */}
       <ReactPaginate
         pageCount={Math.ceil(filteredData.length / itemsPerPage)} // Tổng số trang
         pageRangeDisplayed={3} // Số trang hiển thị trước và sau trang hiện tại
@@ -162,17 +187,16 @@ const KhachHang = () => {
         breakClassName={"page-item"} // Class cho nút "..."
         breakLinkClassName={"page-link"} // Class cho liên kết "..."
       />
-      <AddFormModal
-        show={showAddModal}
-        onClose={() => setShowAddModal(false)}
-        onSubmit={handleAddSubmit}
-      />
-
-      <EditFormModal
-        show={showEditModal}
-        onClose={closeEditModal}
-        onSubmit={handleEditSubmit}
+      <AddKhachHangFormModal show={showAddFormModal} onClose={closeModal} />
+      <EditKhachHangFormModal
+        show={showEditFormModal}
+        onClose={closeModal}
         editData={editData}
+      />
+      <DeleteConfirmationModal
+        show={showdelModal}
+        onCancel={closeModal}
+        onDelete={handleDelete}
       />
     </>
   );

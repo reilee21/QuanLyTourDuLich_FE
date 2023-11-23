@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { Modal, Form, Button, Row, Col } from "react-bootstrap";
+import axios from "../../../api/axios";
 
-const EditKhachHangFormModal = ({ show, onClose, onSubmit, editData }) => {
+const EditKhachHangFormModal = ({ show, onClose, editData }) => {
   const [formData, setFormData] = useState({});
 
   useEffect(() => {
-    setFormData(editData);
+    if (editData) setFormData(editData);
   }, [editData]);
 
   const handleChange = (e) => {
@@ -16,12 +17,22 @@ const EditKhachHangFormModal = ({ show, onClose, onSubmit, editData }) => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    onSubmit(formData);
-    onClose();
+    console.log(editData);
+    try {
+      const res = await axios.put(`/api/KhachHangs/${editData.maKh}`, editData);
+      console.log(res);
+      onClose();
+    } catch (error) {
+      console.error("POST Request Error:", error);
+    }
   };
-
+  const handlePhoneNumberChange = (e) => {
+    const numericValue = e.target.value.replace(/\D/g, "");
+    const limitedValue = numericValue.slice(0, 10);
+    setFormData({ soDienThoaiKh: limitedValue });
+  };
   return (
     <Modal show={show} onHide={onClose} size="lg">
       <Modal.Header closeButton>
@@ -35,9 +46,9 @@ const EditKhachHangFormModal = ({ show, onClose, onSubmit, editData }) => {
                 <Form.Label>Mã Khách Hàng</Form.Label>
                 <Form.Control
                   type="text"
-                  name="MaKH"
-                  value={formData.MaKH || ""}
-                  onChange={handleChange}
+                  name="maKh"
+                  value={formData.maKh || ""}
+                  disabled
                 />
               </Form.Group>
             </Col>
@@ -46,8 +57,8 @@ const EditKhachHangFormModal = ({ show, onClose, onSubmit, editData }) => {
                 <Form.Label>Họ tên</Form.Label>
                 <Form.Control
                   type="text"
-                  name="HoTen"
-                  value={formData.HoTen || ""}
+                  name="hoTen"
+                  value={formData.hoTen || ""}
                   onChange={handleChange}
                 />
               </Form.Group>
@@ -56,10 +67,11 @@ const EditKhachHangFormModal = ({ show, onClose, onSubmit, editData }) => {
               <Form.Group controlId="formSoDienThoaiKH">
                 <Form.Label>Số điện thoại</Form.Label>
                 <Form.Control
-                  type="text"
-                  name="SoDienThoaiKH"
-                  value={formData.SoDienThoaiKH || ""}
-                  onChange={handleChange}
+                  type="tel"
+                  name="soDienThoaiKh"
+                  value={formData.soDienThoaiKh || ""}
+                  onChange={handlePhoneNumberChange}
+                  pattern="[0-9]*"
                 />
               </Form.Group>
             </Col>
@@ -71,8 +83,10 @@ const EditKhachHangFormModal = ({ show, onClose, onSubmit, editData }) => {
                 <Form.Label>Ngày sinh</Form.Label>
                 <Form.Control
                   type="date"
-                  name="NgaySinh"
-                  value={formData.NgaySinh || ""}
+                  name="ngaySinh"
+                  value={
+                    formData.ngaySinh ? formData.ngaySinh.slice(0, 10) : ""
+                  }
                   onChange={handleChange}
                 />
               </Form.Group>
@@ -82,8 +96,8 @@ const EditKhachHangFormModal = ({ show, onClose, onSubmit, editData }) => {
                 <Form.Label>Email</Form.Label>
                 <Form.Control
                   type="text"
-                  name="Email"
-                  value={formData.Email || ""}
+                  name="email"
+                  value={formData.email || ""}
                   onChange={handleChange}
                 />
               </Form.Group>
@@ -95,8 +109,9 @@ const EditKhachHangFormModal = ({ show, onClose, onSubmit, editData }) => {
               <Form.Label>Số CCCD</Form.Label>
               <Form.Control
                 type="text"
-                name="SoCCCD"
-                value={formData.SoCCCD || ""}
+                name="soCCCD"
+                value={formData.soCCCD || ""}
+                placeholder="Số CCCD"
                 onChange={handleChange}
               />
             </Form.Group>
@@ -107,8 +122,9 @@ const EditKhachHangFormModal = ({ show, onClose, onSubmit, editData }) => {
               <Form.Label>Mã Passport</Form.Label>
               <Form.Control
                 type="text"
-                name="MaPassport"
-                value={formData.MaPassport || ""}
+                name="maPassport"
+                value={formData.maPassport || ""}
+                placeholder="Mã passport"
                 onChange={handleChange}
               />
             </Form.Group>
@@ -119,8 +135,8 @@ const EditKhachHangFormModal = ({ show, onClose, onSubmit, editData }) => {
               <Form.Label>Địa chỉ</Form.Label>
               <Form.Control
                 type="text"
-                name="DiaChi"
-                value={formData.DiaChi || ""}
+                name="diaChi"
+                value={formData.diaChi || ""}
                 onChange={handleChange}
               />
             </Form.Group>

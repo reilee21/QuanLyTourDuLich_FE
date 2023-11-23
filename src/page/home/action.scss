@@ -1,0 +1,118 @@
+.bk-tour {
+  margin: 20px 0;
+  .cl {
+    margin: 0 20px;
+  }
+  input {
+    height: 50px;
+    border-radius: 8px;
+    border: 5px solid #ffc709;
+    padding: 4px;
+  }
+  input:hover {
+    cursor: pointer;
+  }
+  input:focus {
+    outline: none;
+  }
+}
+.line {
+  width: 100%;
+  height: 1px;
+  background-color: rgb(214, 207, 207);
+  padding: 0 15%;
+}
+.timk {
+  background-color: #ffc709;
+  padding: 12px;
+  border-radius: 8px;
+  color: #293462;
+  height: 50px;
+  width: 150px;
+  span {
+    font-size: 14pt;
+    margin-left: 8px;
+  }
+}
+.timk:hover {
+  cursor: pointer;
+  background-color: #fabf00;
+}
+.bks {
+  height: 100px !important;
+  min-height: 0 !important;
+
+  .line {
+    width: 80% !important;
+  }
+  .bk-ks {
+    align-items: center;
+  }
+  input {
+    height: 50px;
+    border-radius: 8px;
+    border: 5px solid #ffc709;
+    padding: 4px;
+    margin: 20px;
+  }
+  input:hover {
+    cursor: pointer;
+  }
+  input:focus {
+    outline: none;
+  }
+}
+
+.search-bar input {
+  width: 400px;
+  height: 50px;
+  outline: none;
+  border: 5px solid #ffc709;
+  border-radius: 5px;
+  font-size: 20px;
+  padding: 0 8px;
+  font-size: 13pt;
+  margin-top: 20px;
+}
+
+.search-bar button {
+  position: relative;
+  text-align: center;
+  width: 150px;
+  height: 60px;
+  padding: 10px;
+  background: #ffc709;
+  color: #030303;
+  border-radius: 5px;
+  cursor: pointer;
+  border: 3px solid #ffc709;
+  margin-left: 20px;
+  font-size: 20px;
+}
+.search-bar button:hover {
+  background: #f9c004;
+  /* Thay đổi màu nền khi hover */
+  color: #293462;
+  border: 5px solid #f9c004;
+  /* Thay đổi màu chữ khi hover */
+}
+
+.listkh {
+  position: absolute;
+  background-color: whitesmoke;
+  width: 13%;
+  z-index: 200;
+  max-height: 160px;
+  overflow-y: scroll;
+  border-radius: 8px;
+  min-height: 0;
+  .item {
+    margin: 4px 2%;
+    padding: 8px;
+    border-radius: 8px;
+  }
+  .item:hover {
+    background-color: #293462;
+    color: white;
+  }
+}

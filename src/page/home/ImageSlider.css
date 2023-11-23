@@ -61,13 +61,7 @@
 
 }
 
-.home-features {}
 
-.search-bar {
-    padding: 20px;
-    border-radius: 5px;
-    text-align: center;
-}
 
 .image-slider-container {
     width: 100%;
@@ -90,33 +84,8 @@
 /* Định dạng màu của feature khi hover */
 .feature:hover {
     background: #F7D716;
-    /* Thay đổi màu nền khi hover */
     color: #293462;
-    /* Thay đổi màu chữ khi hover */
-}
-
-.search-bar input {
-    width: 350px;
-    height: 60px;
-    outline: none;
-    border: 3px solid #F7D716;
-    border-radius: 5px;
-    font-size: 20px;
-}
-
-.search-bar button {
-    position: relative;
-    text-align: center;
-    width: 150px;
-    height: 60px;
-    padding: 10px;
-    background: #F7D716;
-    color: #030303;
-    border-radius: 5px;
     cursor: pointer;
-    border: 3px solid #F7D716;
-    margin-left: 20px;
-    font-size: 20px;
 }
 
 .uudai {
@@ -125,13 +94,7 @@
     margin-bottom: 20px;
 }
 
-.search-bar button:hover {
-    background: #293462;
-    /* Thay đổi màu nền khi hover */
-    color: #F7D716;
-    border: 3px solid #293462;
-    /* Thay đổi màu chữ khi hover */
-}
+
 
 /* Ẩn dấu mũi tên điều hướng của uuư đãi */
 .slick-prev,

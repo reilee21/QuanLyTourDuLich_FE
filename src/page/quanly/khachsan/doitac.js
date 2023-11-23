@@ -1,52 +1,88 @@
-import React, { useState, useEffect } from "react";
+import axios from "../../../api/axios";
+import { useState } from "react";
+import { useEffect } from "react";
 import { Form } from "react-bootstrap";
 
-const SDoiTac = () => {
-  const [searchTerm, setSearchTerm] = useState("");
-  const [isOpen, setIsOpen] = useState(false);
-  const [doitacdt, setDoitacdt] = useState([]);
+const SDoiTac = ({ formData, setFormData }) => {
+  const [ddl, setDdl] = useState([]);
+  const [isDropdownVisible, setIsDropdownVisible] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [filteredOptions, setFilteredOptions] = useState(ddl);
+  useEffect(() => {
+    const dd = async () => {
+      try {
+        const res = await axios.get("/api/doitacs");
+        setDdl(res);
+      } catch (e) {
+        console.log(e);
+      }
+    };
 
-  const selectDoiTac = (selectedItem) => {
-    // setSearchTerm(selectedItem.ten);
-    // khachSanData.IdDoiTac = selectedItem.stt;
-    // setIsOpen(false);
+    dd();
+  }, []);
+  useEffect(() => {
+    if (ddl.length > 0 && formData.idDoiTac) {
+      const selecteddoitac = ddl.find(
+        (dt) => dt.idDoiTac === formData.idDoiTac
+      );
+
+      if (selecteddoitac) {
+        setFormData((prevData) => ({
+          ...prevData,
+          tendoitac: selecteddoitac.ten,
+        }));
+        setSearchQuery(selecteddoitac.ten);
+      }
+    }
+  }, [ddl, formData.idDoiTac]);
+
+  const handleSearchChange = (e) => {
+    const query = e.target.value;
+    setSearchQuery(query);
+    const filtered = ddl.filter((option) =>
+      option.ten.toLowerCase().includes(query.toLowerCase())
+    );
+    setFilteredOptions(filtered);
   };
-  //   useEffect(() => {
-  //     setDoitacdt(
-  //       data.filter((doitac) =>
-  //         doitac.ten.toLowerCase().includes(searchTerm.toLowerCase())
-  //       )
-  //     );
-  //     if (searchTerm.length < 1) setIsOpen(false);
-  //   }, [searchTerm]);
+
+  const handleBlur = () => {
+    setTimeout(() => setIsDropdownVisible(false), 200);
+  };
+
+  const handleFocus = () => {
+    setIsDropdownVisible(true);
+  };
+
+  const handleOptionClick = (option) => {
+    setFormData({ ...formData, idDoiTac: option.idDoiTac });
+    setSearchQuery(option.ten);
+    setIsDropdownVisible(false);
+  };
 
   return (
     <>
-      <Form.Group controlId="IdDoiTac" className="col-lg-6 col-md-6 col-sm-6">
-        <Form.Label>Đối Tác</Form.Label>
+      <Form.Group className="col-lg-6 col-md-6 col-sm-6">
+        <Form.Label>Chọn Đối tác</Form.Label>
         <Form.Control
           type="text"
-          placeholder="Tên Đối Tác"
           name="IdDoiTac"
-          value={searchTerm}
-          onChange={(e) => {
-            setSearchTerm(e.target.value);
-            setIsOpen(true);
-          }}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
+          onChange={handleSearchChange}
+          value={searchQuery}
         />
-        {isOpen && (
-          <div className="doitac-dropdown-list">
-            {doitacdt.map((item) => (
-              <div
-                key={item.stt}
-                className="dropdown-item"
-                onClick={() => {
-                  selectDoiTac(item);
-                }}
-              >
-                {item.ten}
-              </div>
-            ))}
+        {isDropdownVisible && filteredOptions.length > 0 && (
+          <div className="custom-dropdown">
+            <ul>
+              {filteredOptions.map((option) => (
+                <li
+                  key={option.idDoiTac}
+                  onClick={() => handleOptionClick(option)}
+                >
+                  {option.ten}
+                </li>
+              ))}
+            </ul>
           </div>
         )}
       </Form.Group>

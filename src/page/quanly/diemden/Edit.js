@@ -1,72 +1,40 @@
 import React, { useState, useEffect } from "react";
 import { Modal, Button, Form } from "react-bootstrap";
 import "./index.scss";
+import DDiaDiem from "./diadiem";
+import axios from "../../../api/axios";
 
-const destinationOptions = [
-  { value: 1, label: "Địa Điểm 1" },
-  { value: 2, label: "Địa Điểm 2" },
-  { value: 3, label: "Địa Điểm 3" },
-  // Add more destination options as needed
-];
-
-const EditDiemDenFormModal = ({ show, onClose, onSubmit, itemToEdit }) => {
-  const [formData, setFormData] = useState(itemToEdit);
-  const [searchQuery, setSearchQuery] = useState();
-  const [isDropdownVisible, setIsDropdownVisible] = useState(false);
-  const [filteredOptions, setFilteredOptions] = useState(destinationOptions);
-
+const EditDiemDenFormModal = ({ show, onClose, itemToEdit }) => {
+  const [formData, setFormData] = useState({
+    TenDiemDen: "",
+    IdDiaDiem: "",
+    TenDiaDiem: "",
+  });
   useEffect(() => {
-    setFormData(itemToEdit);
-
-    // Find the corresponding label for the IdDiaDiem
-    const defaultLabel = destinationOptions.find(
-      (option) => option.value === itemToEdit.IdDiaDiem
-    )?.label;
-
-    // Set the default value for searchQuery and update filteredOptions accordingly
-    setSearchQuery(defaultLabel || "");
-    setFilteredOptions(
-      defaultLabel
-        ? destinationOptions.filter((option) =>
-            option.label.toLowerCase().includes(defaultLabel.toLowerCase())
-          )
-        : destinationOptions
-    );
+    if (itemToEdit)
+      setFormData({
+        TenDiemDen: itemToEdit.tenDiemDen,
+        IdDiaDiem: itemToEdit.idDiaDiem,
+        TenDiaDiem: "",
+      });
   }, [itemToEdit]);
 
-  const handleSearchChange = (e) => {
-    const query = e.target.value;
-    setSearchQuery(query);
-    const filtered = destinationOptions.filter((option) =>
-      option.label.toLowerCase().includes(query.toLowerCase())
-    );
-    setFilteredOptions(filtered);
-  };
+  const handleSubmit = async () => {
+    const dt = {
+      idDiemDen: itemToEdit.idDiemDen,
+      tenDiemDen: formData.TenDiemDen,
+      idDiaDiem: formData.IdDiaDiem,
+    };
 
-  const handleOptionClick = (option) => {
-    setFormData({ ...formData, IdDiaDiem: option.value });
-    setSearchQuery(option.label);
-    console.log(1);
-    setIsDropdownVisible(false);
-  };
+    try {
+      await axios.put(`api/DiemDens/${dt.idDiemDen}`, dt);
+      alert(`Cập nhật - ${dt.tenDiemDen} - thành công`);
 
-  const handleFocus = () => {
-    setIsDropdownVisible(true);
+      onClose();
+    } catch (e) {
+      console.log(e);
+    }
   };
-
-  const handleBlur = () => {
-    // Add a small delay to prevent the dropdown from disappearing before clicking
-    setTimeout(() => {
-      setIsDropdownVisible(false);
-    }, 100);
-  };
-
-  const handleSubmit = () => {
-    // Handle form submission here
-    console.log(formData);
-    onClose();
-  };
-
   return (
     <Modal show={show} onHide={onClose}>
       <Modal.Header closeButton>
@@ -84,30 +52,8 @@ const EditDiemDenFormModal = ({ show, onClose, onSubmit, itemToEdit }) => {
                 setFormData({ ...formData, [e.target.name]: e.target.value })
               }
             />
-            <Form.Label>Chọn Địa Điểm</Form.Label>
-            <Form.Control
-              type="text"
-              name="IdDiaDiem"
-              onFocus={handleFocus}
-              onBlur={handleBlur}
-              onChange={handleSearchChange}
-              value={searchQuery}
-            />
-            {isDropdownVisible && (
-              <div className="custom-dropdown">
-                <ul>
-                  {filteredOptions.map((option) => (
-                    <li
-                      key={option.value}
-                      onClick={() => handleOptionClick(option)}
-                    >
-                      {option.label}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
           </Form.Group>
+          <DDiaDiem formData={formData} setFormData={setFormData} />
         </Form>
       </Modal.Body>
       <Modal.Footer>

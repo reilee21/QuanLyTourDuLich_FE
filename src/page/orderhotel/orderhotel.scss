@@ -15,10 +15,54 @@
     }
     .info {
       padding: 2%;
+      position: relative;
     }
   }
   .khachsan:hover {
     cursor: pointer;
     box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
   }
+  .diachi {
+    padding-top: 20px;
+    svg {
+      margin: 0 0 4px 0;
+      padding: 0;
+    }
+    span {
+      font-weight: 450;
+      font-size: medium;
+      color: rgb(3, 24, 130);
+      width: 100%;
+      height: 50px;
+      margin: 12px;
+    }
+  }
+  .lowest-price {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    span {
+      color: #fd5056;
+      font-weight: 700;
+      font-size: 16pt;
+      margin-left: 10px;
+    }
+  }
+}
+.star-icons {
+  svg {
+    margin: 0 0 0 2px;
+    padding: 0;
+  }
+}
+
+.star-rating {
+  white-space: nowrap;
+  svg.active {
+    color: #fdc432;
+    padding: 4px;
+  }
+}
+.star-rating [type="radio"] {
+  appearance: none;
 }

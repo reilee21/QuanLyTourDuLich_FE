@@ -1,29 +1,15 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Button, Form } from "react-bootstrap";
-import { Link } from "react-router-dom";
 import ReactPaginate from "react-paginate";
 import { AiFillEdit, AiFillDelete } from "react-icons/ai";
 import "./index.scss";
 import EditCustomerAccountModal from "./EditAccKH";
+import axios from "../../../api/axios";
 
 const TaiKhoanKH = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [pageNumber, setPageNumber] = useState(0);
-
-  const customerAccounts = [
-    {
-      MaKH: "KH1",
-      HoTen: "Nguyen Thi C",
-      Username: "ntc",
-      Password: "customer123",
-    },
-    {
-      MaKH: "KH2",
-      HoTen: "Nguyen Van D",
-      Username: "nvd",
-      Password: "securePwd",
-    },
-  ];
+  const [customerAccounts, setCustomerAccounts] = useState([]);
 
   const itemsPerPage = 10; // You can adjust this value as needed
   const offset = pageNumber * itemsPerPage;
@@ -41,6 +27,17 @@ const TaiKhoanKH = () => {
     setShowEditModal(true);
   };
 
+  useEffect(() => {
+    const fetchdata = async () => {
+      try {
+        const res = await axios.get("api/taikhoans");
+        setCustomerAccounts(res);
+      } catch (e) {
+        console.error(e);
+      }
+    };
+    fetchdata();
+  }, []);
   return (
     <>
       <div className="col-md-12">
@@ -58,7 +55,6 @@ const TaiKhoanKH = () => {
             <thead>
               <tr>
                 <th className="maKH">Mã KH</th>
-                <th className="hoTen">Họ và Tên</th>
                 <th className="username">Username</th>
                 <th className="password">Password</th>
                 <th className="edit"></th>
@@ -68,10 +64,9 @@ const TaiKhoanKH = () => {
             <tbody>
               {currentPageData.map((account) => (
                 <tr key={account.MaKH} onClick={() => handleEditClick(account)}>
-                  <td className="maKH">{account.MaKH}</td>
-                  <td className="hoTen">{account.HoTen}</td>
-                  <td className="username">{account.Username}</td>
-                  <td className="password">{account.Password}</td>
+                  <td className="maKH">{account.maKh}</td>
+                  <td className="username">{account.username}</td>
+                  <td className="password">{account.password}</td>
                   <td className="edit">
                     <Button
                       variant="outline-warning"

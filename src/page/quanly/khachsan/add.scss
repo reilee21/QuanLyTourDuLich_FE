@@ -1,7 +1,8 @@
 .addf {
   #imagePreview {
     height: 200px;
-    width: 200px;
+    width: 300px;
+    object-fit: cover;
   }
   #imageInput {
     width: 50%;
@@ -10,9 +11,30 @@
 
 .kslp {
   .tenp {
-    width: 30%;
+    width: 25%;
   }
   .motap {
-    width: 50%;
+    width: 40%;
   }
+}
+
+.gop {
+  align-items: center;
+  label {
+    margin: 0;
+  }
+}
+.iconaddp {
+  margin-left: 4%;
+  padding: 4px;
+}
+.iconaddp:hover {
+  cursor: pointer;
+}
+.btaddks {
+  position: absolute;
+  top: 20px;
+}
+.kstitle {
+  margin-top: 20px;
 }

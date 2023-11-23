@@ -16,7 +16,6 @@ const CphuongTien = () => {
   const [filteredTransportations, setFilteredTransportations] = useState(data);
 
   useEffect(() => {
-    // Filter transportation data based on the search term
     setFilteredTransportations(
       data.filter((transportation) =>
         transportation.tenPhuongTien
@@ -27,16 +26,14 @@ const CphuongTien = () => {
   }, [searchTerm]);
 
   const handleAddTransportation = () => {
-    // Add selected transportation to the list
     if (searchTerm.trim() !== "") {
       setSelectedTransportations([...selectedTransportations, searchTerm]);
-      setSearchTerm(""); // Reset search term and filtered list
+      setSearchTerm("");
       setFilteredTransportations(data);
     }
   };
 
   const handleRemoveTransportation = (index) => {
-    // Remove selected transportation from the list
     const updatedTransportations = [...selectedTransportations];
     updatedTransportations.splice(index, 1);
     setSelectedTransportations(updatedTransportations);

@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { Modal, Form, Button } from "react-bootstrap";
 import axios from "../../../api/axios";
+import DDoitac from "./doitac";
 
 const EditFormModal = ({ show, onClose, editData }) => {
   const [formData, setFormData] = useState({
     idPhuongTien: "",
     tenPhuongTien: "",
     moTa: "",
-    idDoiTac: null,
+    idDoiTac: "",
+    tendoitac: "",
   });
   useEffect(() => {
     if (editData) {
@@ -30,8 +32,10 @@ const EditFormModal = ({ show, onClose, editData }) => {
   };
 
   const handleSubmit = async (e) => {
+    const { tendoitac, ...dt } = formData;
     try {
-      axios.put(`api/PhuongTiens/${formData.idPhuongTien}`, formData);
+      await axios.put(`api/phuongtiens/${formData.idPhuongTien}`, dt);
+      alert(`Cập nhật phương tiện : ${formData.tenPhuongTien} thành công`);
 
       onClose();
     } catch (e) {
@@ -65,16 +69,7 @@ const EditFormModal = ({ show, onClose, editData }) => {
               onChange={handleChange}
             />
           </Form.Group>
-
-          <Form.Group controlId="formDoiTac">
-            <Form.Label>Đối tác</Form.Label>
-            <Form.Control
-              type="text"
-              name="idDoiTac"
-              value={formData.idDoiTac || ""} // Set the value based on formData
-              onChange={handleChange}
-            />
-          </Form.Group>
+          <DDoitac formData={formData} setFormData={setFormData} />
         </Form>
       </Modal.Body>
       <Modal.Footer>
