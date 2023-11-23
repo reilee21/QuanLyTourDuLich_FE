@@ -5,17 +5,35 @@ import axios from "../../api/axios";
 import { useAuth } from "../../context/AuthContext";
 import { formatDate } from "../../utils/formatdate";
 function CustomerInfoForm() {
-  const { logout, email, phuongthuc } = useAuth();
+  const [phuongthuc, setPhuongthuc] = useState("");
+  useEffect(() => {
+    const ggAuthCookie = document.cookie
+      .split("; ")
+      .find((cookie) => cookie.startsWith("gg-Auth"));
+    const jwtAuthCookie = document.cookie
+      .split("; ")
+      .find((cookie) => cookie.startsWith("jwt-Auth"));
+
+    if (ggAuthCookie) {
+      setPhuongthuc("gg-Auth");
+      return;
+    }
+    if (jwtAuthCookie) {
+      setPhuongthuc("jwt-Auth");
+      return;
+    }
+  }, []);
+  const { logout, email, id } = useAuth();
   const [customerInfo, setCustomerInfo] = useState({
-    HoTen: "",
-    SoDienThoaiKH: "",
-    NgaySinh: "",
-    Email: "",
-    SoCCCD: "",
-    MaPassport: "",
-    DiaChi: "",
-    MaKH: "",
-    DiemThuong: "",
+    hoTen: "",
+    soDienThoaiKH: "",
+    ngaySinh: "",
+    email: "",
+    soCCCD: "",
+    maPassport: "",
+    diaChi: "",
+    maKh: "",
+    diemThuong: "",
   });
 
   const handleChange = (e) => {
@@ -33,13 +51,12 @@ function CustomerInfoForm() {
           `/api/KhachHangs/GetKhachHangByEmail?email=${email}`
         );
         const userInfo = response;
-        // Update the state with the fetched user information
         setCustomerInfo({
           HoTen: userInfo.hoTen,
           SoDienThoaiKH: userInfo.soDienThoaiKh,
           NgaySinh: formatDate(userInfo.ngaySinh),
           Email: userInfo.email,
-          SoCCCD: userInfo.soCCCD || "",
+          SoCCCD: userInfo.soCccd || "",
           MaPassport: userInfo.maPassport || "",
 
           DiaChi: userInfo.diaChi,
@@ -52,55 +69,23 @@ function CustomerInfoForm() {
     };
 
     fetchUserInfo();
-  }, [email]); // Run the effect whenever the email changes
-  const handleSubmit = (e) => {
+  }, [email]);
+  const handleSubmit = async (e) => {
     e.preventDefault();
-
-    console.log("Submitted data:", customerInfo);
+    try {
+      const response = await axios.put(`/api/KhachHangs/${id}`, customerInfo);
+      alert("Cập nhật thành công");
+    } catch (e) {
+      alert("Lỗi không xác định");
+      console.error(e);
+    }
   };
+
   return (
     <>
-      <div className="cus_main">
-        <table className="cusinfo">
-          <tbody>
-            <tr>
-              <td>
-                <Link to="/doithuong" className="black-link">
-                  Đổi thưởng
-                </Link>
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <Link to="/histour" className="black-link">
-                  Tour đã đi
-                </Link>
-              </td>
-            </tr>
-            {phuongthuc !== "jwt-Auth" && (
-              <tr>
-                <td>
-                  <Link to="/repass" className="black-link">
-                    Đổi mật khẩu
-                  </Link>
-                </td>
-              </tr>
-            )}
-            <tr>
-              <td>
-                <Link
-                  to="/"
-                  onClick={logout}
-                  style={{ color: "red", borderTop: "1px solid #e0e0e0" }}
-                >
-                  Đăng xuất
-                </Link>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-        <div className="cus_infor-form col-md-4">
-          <h1 className="page-title"> Cập Nhật Thông Tin Khách Hàng</h1>
+      <div className="cus_main row">
+        <div className="cus_infor-form col-lg-4 col-md-4">
+          <h1 className="page-title"> Thông tin tài khoản</h1>
           <form onSubmit={handleSubmit}>
             <div className="row">
               <div className="col-md-5 col-sm-5 mb-3">
@@ -156,6 +141,7 @@ function CustomerInfoForm() {
                   onChange={handleChange}
                   className="form-control"
                   placeholder="Chưa cập nhật"
+                  maxLength={12}
                   required
                 />
               </div>
@@ -168,6 +154,7 @@ function CustomerInfoForm() {
                   onChange={handleChange}
                   className="form-control"
                   placeholder="Chưa cập nhật"
+                  maxLength={10}
                   required
                 />
               </div>

@@ -11,6 +11,7 @@ const EditTour = () => {
   const location = useLocation();
 
   const updateTourData = (res) => {
+    console.log(res);
     setTourData({
       ...tourData,
       maTour: res.maTour,
@@ -26,13 +27,32 @@ const EditTour = () => {
       image: res.image,
       anhBia: res.anhBia,
     });
+    const byteCharacters = atob(res.image);
+    const byteNumbers = new Array(byteCharacters.length);
+
+    for (let i = 0; i < byteCharacters.length; i++) {
+      byteNumbers[i] = byteCharacters.charCodeAt(i);
+    }
+
+    const byteArray = new Uint8Array(byteNumbers);
+    const blob = new Blob([byteArray], { type: "image/jpeg" });
+
+    const objectURL = URL.createObjectURL(blob);
+    const imagePreview = document.getElementById("imagePreview");
+
+    if (imagePreview) {
+      imagePreview.src = objectURL;
+    } else {
+      console.error("Image preview element not found.");
+    }
   };
+
   async function fetchDataForLichTrinh(lichTrinh) {
     try {
       const diemDenRes = await axios.get(`api/DiemDens/${lichTrinh.idDiemDen}`);
       return {
         Ngay: lichTrinh.ngay,
-        diemDen: diemDenRes, // Access data from the response
+        diemDen: diemDenRes,
         MoTa: lichTrinh.moTa,
       };
     } catch (error) {
@@ -59,13 +79,7 @@ const EditTour = () => {
       throw error;
     }
   }
-  async function callimg(name) {
-    const imgrs = await axios.get(`api/Tours/getimg/${name}`, {
-      responseType: "blob",
-    });
 
-    return imgrs;
-  }
   useEffect(() => {
     const fetchtour = async () => {
       try {
@@ -82,8 +96,6 @@ const EditTour = () => {
             async (phuongTien) => await fetchDataForTransportation(phuongTien)
           )
         );
-        const imgRes = await callimg(res.anhBia);
-        setIr(imgRes);
 
         setTourData((prevData) => ({
           ...prevData,
@@ -106,26 +118,7 @@ const EditTour = () => {
     };
     fetchtour();
   }, []);
-  const [ir, setIr] = useState("");
-  useEffect(() => {
-    if (ir && tourData.anhBia) setImg(ir);
-  }, [ir]);
-  function setImg(imgRes) {
-    const imagePreview = document.getElementById("imagePreview");
-    const imageInput = document.getElementById("imageInput");
 
-    const fileReader = new FileReader();
-    fileReader.onload = () => {
-      const base64String = fileReader.result;
-      imagePreview.src = base64String;
-    };
-    fileReader.readAsDataURL(imgRes);
-
-    const fileList = new DataTransfer();
-    fileList.items.add(new File([imgRes], tourData.anhBia));
-
-    imageInput.files = fileList.files;
-  }
   const fetchpt = async () => {
     try {
       const res = await axios.get("api/PhuongTiens");
@@ -181,6 +174,18 @@ const EditTour = () => {
   };
 
   const handleEditTour = async () => {
+    let validflag = true;
+    if (tourData.lichTrinhs.some((item) => !item.Ngay || !item.MoTa)) {
+      tourData.lichTrinhs.forEach((item) => {
+        if (!item.Ngay || !item.MoTa) {
+          alert(`Kiểm tra lại lịch trình ${item.diemDen.tenDiemDen}`);
+          validflag = false;
+          return;
+        }
+      });
+    }
+    if (!validflag) return;
+
     const formData = new FormData();
 
     const { lichTrinhs, idPhuongTiens, ...tourDataToSend } = tourData;
@@ -201,7 +206,8 @@ const EditTour = () => {
     formData.append("LichTrinhs", JSON.stringify(formattedList));
     formData.append("TourPhuongTiens", JSON.stringify(tourData.idPhuongTiens));
     try {
-      const res = await axios.put("/api/Tours", formData);
+      await axios.put(`/api/Tours/${tourData.maTour}`, formData);
+      alert("Cập nhật tour thành công");
     } catch (error) {
       console.error("Error adding formattedList:", error.response);
     }
@@ -393,7 +399,7 @@ const EditTour = () => {
               </Col>
             </Row>
             <Row>
-              <Form.Group controlId="SoNgay" className="col-lg-3">
+              <Form.Group controlId="SoNgay" className="col-lg-2">
                 <Form.Label>Số Ngày</Form.Label>
                 <Form.Control
                   type="number"
@@ -404,7 +410,7 @@ const EditTour = () => {
                 />
               </Form.Group>
 
-              <Form.Group controlId="SoDem" className="col-lg-3">
+              <Form.Group controlId="SoDem" className="col-lg-2">
                 <Form.Label>Số Đêm</Form.Label>
                 <Form.Control
                   type="number"
@@ -414,13 +420,22 @@ const EditTour = () => {
                   onChange={handleInputChange}
                 />
               </Form.Group>
-              <Form.Group controlId="GioTapTrung" className="col-lg-4">
+              <Form.Group controlId="GioTapTrung" className="col-lg-3">
                 <Form.Label>Giờ Tập Trung</Form.Label>
                 <Form.Control
                   type="time"
                   name="gioTapTrung"
                   value={tourData.gioTapTrung.slice(11, 16)}
                   onChange={handleInputChange}
+                />
+              </Form.Group>
+              <Form.Group controlId="SoLuongNguoiDaDat" className="col-lg-3">
+                <Form.Label>Đã đặt</Form.Label>
+                <Form.Control
+                  type="number"
+                  name="soLuongNguoiDaDat"
+                  value={tourData.soLuongNguoiDaDat}
+                  disabled
                 />
               </Form.Group>
             </Row>

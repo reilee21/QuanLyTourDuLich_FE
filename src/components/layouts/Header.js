@@ -1,19 +1,30 @@
 // Header.js
 import { Link, useNavigate } from "react-router-dom";
-import { Navbar, Nav, Button } from "react-bootstrap";
-import "./Header.css";
+import { Navbar, Nav, Button, Row } from "react-bootstrap";
+import "./Header.scss";
 import { useAuth } from "../../context/AuthContext";
 import { GoPerson } from "react-icons/go";
 import { AiOutlineSearch } from "react-icons/ai";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import MenuDuLich from "./menudulich";
+import axios from "../../api/axios";
 const Header = () => {
-  const { isLogin } = useAuth();
+  const { isLogin, logout } = useAuth();
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
-
+  const [openTK, setOpenTK] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
   const handleDulichClick = () => {
     setIsOpen(!isOpen);
+  };
+  const handleSearch = async () => {
+    try {
+      const queryString = `tendiadiem=${searchQuery}`; // Construct query string for the API
+      const res = await axios.get(`/api/Tours/SearchTour?${queryString}`);
+      navigate("timkiemtour", { state: { tourlist: res } });
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
   };
   return (
     <>
@@ -64,7 +75,7 @@ const Header = () => {
             >
               FAQ
             </Nav>
-            <Nav
+            {/* <Nav
               className="nav-cus_info"
               style={{ display: "inline-block" }}
               as={Link}
@@ -72,21 +83,23 @@ const Header = () => {
               onClick={() => setIsOpen(false)}
             >
               Tin tức
-            </Nav>
+            </Nav> */}
           </div>
           <Nav>
             <div className="nav-main">
               <input
-                placeholder="Tìm kiếm ở đây...."
+                placeholder="Nhập địa điểm bạn muốn đến"
                 type="text"
                 className="nav-input"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
                 onClick={() => setIsOpen(false)}
               />
               <Button
                 className="btn-search"
                 onClick={() => {
+                  handleSearch();
                   setIsOpen(false);
-                  navigate("/search");
                 }}
               >
                 <AiOutlineSearch />
@@ -105,12 +118,43 @@ const Header = () => {
                 <Nav
                   className="nav-cus_info"
                   style={{ display: "inline-block" }}
-                  as={Link}
-                  to="/cus_info"
-                  onClick={() => setIsOpen(false)}
+                  onClick={() => {
+                    setIsOpen(false);
+                    setOpenTK(!openTK);
+                  }}
                 >
                   <GoPerson size={24} />
                 </Nav>
+              )}
+              {openTK && (
+                <div className="dropdownaccount">
+                  <Row
+                    onClick={() => {
+                      navigate("thongtintaikhoan");
+                      setOpenTK(false);
+                    }}
+                  >
+                    <span>Thông tin tài khoản</span>
+                  </Row>
+                  <Row
+                    onClick={() => {
+                      navigate("doimatkhau");
+                      setOpenTK(false);
+                    }}
+                  >
+                    <span>Đối mật khẩu </span>
+                  </Row>
+                  <Row
+                    onClick={() => {
+                      logout();
+                      navigate("/");
+
+                      setOpenTK(false);
+                    }}
+                  >
+                    <span>Đăng xuất</span>
+                  </Row>
+                </div>
               )}
             </div>
           </Nav>

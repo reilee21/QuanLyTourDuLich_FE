@@ -153,7 +153,7 @@ function RegistrationForm() {
       console.error("POST Request Error:", error);
     }
     try {
-      const response = await axios.post("/api/TaiKhoans", khachhangaccregis);
+      await axios.post("/api/TaiKhoans", khachhangaccregis);
       navigate("/login");
     } catch (error) {
       console.error("POST Request Error:", error);

@@ -1,4 +1,4 @@
-import { Route, Router, Routes } from "react-router-dom";
+import { Route, Router, Routes, useNavigate } from "react-router-dom";
 import "./App.css";
 import {
   defaultRoute,
@@ -10,51 +10,21 @@ import DefaultLayout from "./components/layouts/Layout";
 import LayoutQly from "./components/layouts/LayoutQly";
 import { useEffect, useState } from "react";
 import { useAuth } from "./context/AuthContext";
-import HotelDetail from "./page/orderhotel/hoteldetail";
-import NewsArticlePage from "./page/News/NewsArticle";
-import TourDetail from "./page/ordertour/tourdetail";
-import HistoryPage from "./page/histour"; // Import the HistoryPage component
-
-// <<<<<<< bookingtour
-// //App.js
-// import React from 'react';
-// import { Routes, Route } from 'react-router-dom';
-// import './App.css';
-// import { defaultRoute } from './routes';
-// import DefaultLayout from './components/layouts/Layout';
-// import HotelDetail from './page/orderhotel/hoteldetail'; // Import trang HotelDetail
-// import NewsArticlePage from './page/News/NewsArticle';
-// import TourDetail from './page/ordertour/tourdetail';
-
-// function App() {
-//   return (
-//     <div className="App">
-//       <Routes>
-//         <Route path="/" element={<DefaultLayout />}>
-//           {defaultRoute.map((route, index) => {
-//             const Page = route.component;
-//             return <Route key={index} path={route.path} element={<Page />} />;
-//           })}
-//           {/* Thêm route cho HotelDetail */}
-//           <Route path="/hoteldetail/:hotelId" element={<HotelDetail />} />
-//           <Route path="/tourdetail/:tourId" element={<TourDetail />} /> {/* Thêm route cho TourDetail */}
-//           <Route path="/news/:id" element={<NewsArticlePage />} />
-//         </Route>
-// =======
-// import { Route, Router, Routes } from "react-router-dom";
-// import "./App.css";
-// import { defaultRoute, quanlyRoute } from "./routes";
-// import DefaultLayout from "./components/layouts/Layout";
-// import LayoutQly from "./components/layouts/LayoutQly";
-// import { useState } from "react";
-// >>>>>>> submain
+import NotFound from "./page/test";
 
 function App() {
-  const [role, setRole] = useState("qly");
-  const { isLogin, setupLogin2 } = useAuth();
+  const [roles, setRoles] = useState("");
+  const { isLogin, setupLogin2, role } = useAuth();
+  const navigate = useNavigate();
   useEffect(() => {
     setupLogin2();
   }, []);
+  useEffect(() => {
+    if (role != "client" && isLogin) {
+      setRoles("qly");
+      navigate("/admin");
+    }
+  }, [isLogin]);
   return (
     <div className="App">
       <Routes>
@@ -63,6 +33,7 @@ function App() {
             const Page = route.component;
             return <Route key={index} path={route.path} element={<Page />} />;
           })}
+          <Route path="*" component={NotFound} />
         </Route>
         {!isLogin ? (
           <Route path="/" element={<DefaultLayout />}>
@@ -70,6 +41,7 @@ function App() {
               const Page = route.component;
               return <Route key={index} path={route.path} element={<Page />} />;
             })}
+            <Route path="*" component={NotFound} />
           </Route>
         ) : (
           <Route path="/" element={<DefaultLayout />}>
@@ -77,15 +49,17 @@ function App() {
               const Page = route.component;
               return <Route key={index} path={route.path} element={<Page />} />;
             })}
+            <Route path="*" component={NotFound} />
           </Route>
         )}
 
-        {role && role === "qly" && (
+        {roles && roles === "qly" && (
           <Route path="/admin" element={<LayoutQly />}>
             {quanlyRoute.map((route, index) => {
               const Page = route.component;
               return <Route key={index} path={route.path} element={<Page />} />;
             })}
+            <Route path="*" component={NotFound} />
           </Route>
         )}
       </Routes>

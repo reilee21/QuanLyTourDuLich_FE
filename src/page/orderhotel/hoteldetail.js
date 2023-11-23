@@ -1,232 +1,178 @@
 // HotelDetail.js
 import React, { useEffect, useState } from "react";
-import { useParams, useLocation } from "react-router-dom";
-import khachsanImage from "../../assets/image/khachsan1.jpg";
-import "./HotelDetail.scss";
+import { useParams, useNavigate } from "react-router-dom";
+import "./scss/HotelDetail.scss";
+import "./scss/loader.scss";
+import { TiStarFullOutline } from "react-icons/ti";
+import Success from "../../components/others/succsess";
+import emailjs from "@emailjs/browser";
+import { useAuth } from "../../context/AuthContext";
+
+import axios from "../../api/axios";
 import { Row } from "react-bootstrap";
-import { RiMapPin2Line } from "react-icons/ri";
-
+import ListPhong from "./listPhong";
+import BookingKS from "./cardbks";
 const HotelDetail = () => {
-  const { hotelId } = useParams();
-  const location = useLocation();
-  const hotel = location.state.hotel;
-  const [hotelDetails, setHotelDetails] = useState(null);
-  const [selectedRooms, setSelectedRooms] = useState({});
-  const [isMounted, setIsMounted] = useState(true);
+  const serviceId = "service_rj30hx7";
+  const templateId = "template_3slecnd";
+  const publicKey = "L_RN4MgMzJH7bImjz";
+  const { email, id, isLogin } = useAuth();
 
-  useEffect(() => {
-    const fetchHotelDetails = async () => {
-      const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+  const [formData, setFormData] = useState({
+    email: email,
+    title: "Mã Booking",
+    message: "123",
+    end: "",
+  });
 
-      await delay(500);
-
-      const fakeData = [
-        {
-          id: 1,
-          name: "Khách sạn A",
-          destination: "Đà Nẵng",
-          description: "Mô tả khách sạn A.",
-          imageUrl: khachsanImage,
-          roomTypes: [
-            {
-              id: 1,
-              name: "Phòng Deluxe",
-              description: "Mô tả phòng Deluxe.",
-              price: 200,
-              idKhachSan: "KS001",
-            },
-            {
-              id: 2,
-              name: "Phòng Suite",
-              description: "Mô tả phòng Suite.",
-              price: 300,
-              idKhachSan: "KS001",
-            },
-          ],
-        },
-        {
-          id: 2,
-          name: "Khách sạn B",
-          destination: "Hội An",
-          description: "Mô tả khách sạn B.",
-          imageUrl: khachsanImage,
-          roomTypes: [
-            {
-              id: 3,
-              name: "Phòng Standard",
-              description: "Mô tả phòng Standard.",
-              price: 150,
-              idKhachSan: "KS002",
-            },
-            {
-              id: 4,
-              name: "Phòng Executive",
-              description: "Mô tả phòng Executive.",
-              price: 250,
-              idKhachSan: "KS002",
-            },
-          ],
-        },
-      ];
-
-      const selectedHotel = fakeData.find(
-        (hotel) => hotel.id.toString() === hotelId
-      );
-
-      if (isMounted) {
-        setHotelDetails(selectedHotel);
-      }
-    };
-
-    fetchHotelDetails();
-
-    return () => {
-      setIsMounted(false);
-    };
-  }, [hotelId, isMounted]);
-
-  const handleAddToCart = (roomType) => {
-    const currentQuantity = selectedRooms[roomType.id] || 0;
-    setSelectedRooms({ ...selectedRooms, [roomType.id]: currentQuantity + 1 });
+  const sendEmail = () => {
+    emailjs
+      .send(serviceId, templateId, formData, publicKey)
+      .then((response) => {})
+      .catch((error) => {
+        console.error("Email failed to send:", error);
+      });
   };
 
-  const handleRemoveFromCart = (roomType) => {
-    const currentQuantity = selectedRooms[roomType.id] || 0;
-    if (currentQuantity > 0) {
-      setSelectedRooms({
-        ...selectedRooms,
-        [roomType.id]: currentQuantity - 1,
-      });
+  const param = useParams();
+  const navigate = useNavigate();
+
+  const [showModal, setShowModal] = useState(false);
+
+  const [selectedRoom, setSelectedRoom] = useState(null);
+
+  const [hotel, setHotel] = useState(null);
+  const [bookingKS, setBookingKS] = useState({
+    ngayNhan: new Date(),
+    ngayTra: new Date(),
+    phongs: [],
+  });
+  const [bk, setBk] = useState({
+    thoiDiemBook: new Date(),
+    giaTri: "",
+    thanhToan: false,
+    loaiBooking: 1,
+    maKh: id,
+  });
+  const getData = async () => {
+    const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+    await delay(800);
+    try {
+      const res = await axios.get(`/api/khachsans/${param.hotelId}`);
+      setHotel(res);
+    } catch (e) {
+      alert("Lỗi không xác định");
+      console.error(e);
     }
   };
-
-  const calculateTotalPriceAndRooms = () => {
-    let totalPrice = 0;
-    let bookedRooms = [];
-    console.log(hotel);
-    Object.keys(selectedRooms).forEach((roomId) => {
-      const roomType = hotelDetails.roomTypes.find(
-        (room) => room.id === parseInt(roomId, 10)
+  const renderStars = (rating) => {
+    const stars = [];
+    for (let i = 1; i <= 5; i++) {
+      stars.push(
+        i <= rating ? (
+          <TiStarFullOutline key={i} size={22} color="#fdc432" />
+        ) : (
+          ""
+        )
       );
-      if (roomType) {
-        totalPrice += roomType.price * selectedRooms[roomId];
-        bookedRooms.push(`${selectedRooms[roomId]} ${roomType.name}`);
-      }
-    });
-
-    return { totalPrice, bookedRooms };
+    }
+    return stars;
   };
+  useEffect(() => {
+    getData();
+  }, []);
 
-  if (!hotelDetails) {
-    return <p>Loading...</p>;
-  }
-
-  const { totalPrice, bookedRooms } = calculateTotalPriceAndRooms();
-  const handleConfirmBooking = () => {
-    console.log(selectedRooms);
-    const totalQuantity = Object.values(selectedRooms).reduce(
-      (sum, quantity) => sum + quantity,
-      0
+  if (!hotel) {
+    return (
+      <>
+        <h4 className="wait"> Xin vui lòng chờ trong giây lát ...</h4>
+        <div className="loader-container">
+          <span className="loader"></span>
+        </div>
+      </>
     );
-
-    if (totalQuantity === 0) {
-      alert("Vui lòng chọn ít nhất một phòng trước khi xác nhận đặt phòng.");
+  }
+  const confirm = async () => {
+    if (!isLogin) {
+      alert("Hãy đăng nhập");
+      navigate("/login");
       return;
     }
+    const formData = new FormData();
+    const { phongs, ...bkf } = bookingKS;
+    Object.keys(bkf).forEach((key) => {
+      formData.append(key, bkf[key]);
+    });
+    formData.append("phongs", JSON.stringify(bookingKS.phongs));
+    formData.append("booking", JSON.stringify(bk));
 
-    alert("Đặt phòng thành công");
+    try {
+      await axios.post(`api/bookingks`, formData);
+      setShowModal(true);
+      sendEmail();
+
+      setTimeout(() => {
+        navigate(`/booking/payment`);
+      }, 2000);
+    } catch (e) {
+      alert("Lỗi không xác định");
+
+      console.error(e);
+      return;
+    }
   };
-
+  const addToOrder = (room) => {
+    setSelectedRoom((prevRoom) => {
+      if (prevRoom === room) {
+        return null;
+      } else {
+        return room;
+      }
+    });
+  };
   return (
-    <>
-      <div className="hotel-bk-page row">
-        <div className="hotel col-lg-9 md-9 sm-9">
-          <Row className="hotel-inf">
-            <div className="col-lg-5 md-5 sm-5">
+    <div className="hotel">
+      <Row>
+        <div className="info col-lg-8 col-md-8 col-sm-8">
+          <Row className="coban">
+            <div className="anh col-lg-6 col-md-6 col-sm-6">
               <img
                 className="imghotel col-lg-3 col-md-3"
-                src={hotel.imageUrl}
+                src={`data:image/jpeg;base64,${hotel.anh}`}
+                alt={`Tour Image ${hotel.ten}`}
               />
             </div>
-            <div className="col-lg-7 md-7 sm-7">
-              <h4>{hotel.name}</h4>
-              <p>
-                <RiMapPin2Line />
-                {hotel.diachi}
-              </p>
-              <p>{hotel.description}</p>
-            </div>
-          </Row>
-        </div>
-        <div className="bkcart col-lg-3 md-3 sm-3">
-          <div className="main-tong-tien">
-            <div className="tongtien">
-              <p className="tongtien1">Đơn hàng</p>
-              <div className="cart-detail">
-                <p>
-                  Số phòng:
-                  {Object.values(selectedRooms).reduce(
-                    (sum, quantity) => sum + quantity,
-                    0
-                  )}
-                </p>
-                <p>Tổng tiền: {totalPrice} VND</p>
-                {bookedRooms.length > 0 && (
-                  <div>
-                    <p>Phòng đã đặt</p>
-                    <ul>
-                      {bookedRooms.map((room) => (
-                        <li key={room}>{room}</li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
+            <div className="thongtin col-lg-6 col-md-6 col-sm-6">
+              <div className="row ten">
+                <span>{hotel.ten}</span>
+              </div>
+              <div className="sao">{renderStars(hotel.soSao)}</div>
+              <div className="row mota">
+                <span>{hotel.moTa}</span>
               </div>
             </div>
-            <div>
-              <button
-                className="xac-nhan"
-                onClick={handleConfirmBooking}
-                disabled={
-                  Object.values(selectedRooms).reduce(
-                    (sum, quantity) => sum + quantity,
-                    0
-                  ) === 0
-                }
-              >
-                Xác nhận
-              </button>
-            </div>
-          </div>
+          </Row>
+          <Row className="phongs">
+            <ListPhong
+              bk={bookingKS}
+              setBk={setBookingKS}
+              hotel={hotel}
+              addRoomToOrder={addToOrder}
+              selectedRoom={selectedRoom}
+            />
+          </Row>
         </div>
-      </div>
-      <div className="hotel-details">
-        {hotelDetails.roomTypes && hotelDetails.roomTypes.length > 0 ? (
-          <div className="cart-room">
-            <ul className="room-list">
-              <h3 className="hotel-details-1">Danh Sách Phòng</h3>
-              {hotelDetails.roomTypes.map((roomType) => (
-                <li key={roomType.id} className="room-item">
-                  <div className="room-details">
-                    <h3>{roomType.name}</h3>
-                    <p>Mô tả: {roomType.description}</p>
-                    <p>Giá: {roomType.price}</p>
-                  </div>
-                  <div className="room-button-wrapper">
-                    <button onClick={() => handleRemoveFromCart(roomType)}>
-                      -
-                    </button>
-                    <button onClick={() => handleAddToCart(roomType)}>+</button>
-                  </div>
-                </li>
-              ))}
-            </ul>
-          </div>
-        ) : (
-          <p>No room types available.</p>
-        )}
-      </div>
-    </>
+        <div className="booking col-lg-4 col-md-4 col-sm-4">
+          <BookingKS
+            selectedRoom={selectedRoom}
+            setBookingKS={setBookingKS}
+            confirm={confirm}
+            setBk={setBk}
+          />
+        </div>
+      </Row>
+      <Success show={showModal} onHide={() => setShowModal(false)} />
+    </div>
   );
 };
 

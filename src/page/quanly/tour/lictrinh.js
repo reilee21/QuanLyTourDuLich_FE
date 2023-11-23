@@ -41,7 +41,6 @@ const LichTrinh = ({
     const isAlreadySelected = tourData.lichTrinhs.some(
       (entry) => entry.diemDen.tenDiemDen === diemDen.tenDiemDen
     );
-    console.log(diemDen);
     if (!isAlreadySelected) {
       const updatedItinerary = [
         ...tourData.lichTrinhs,
@@ -117,44 +116,55 @@ const LichTrinh = ({
             </tr>
           </thead>
           <tbody>
-            {tourData.lichTrinhs.map((entry, index) => (
-              <tr key={index}>
-                <td className="ngay">
-                  <Form.Control
-                    type="date"
-                    value={
-                      entry.Ngay
-                        ? new Date(entry.Ngay).toISOString().split("T")[0]
-                        : new Date()
-                    }
-                    onChange={(e) =>
-                      handleItineraryEntryChange(index, "Ngay", e.target.value)
-                    }
-                  />
-                </td>
-                <td className="diemden">
-                  <p> {entry.diemDen.tenDiemDen}</p>
-                </td>
+            {tourData.lichTrinhs
+              .sort((a, b) => new Date(a.Ngay) - new Date(b.Ngay))
+              .map((entry, index) => (
+                <tr key={index}>
+                  <td className="ngay">
+                    <Form.Control
+                      type="date"
+                      value={
+                        entry.Ngay
+                          ? new Date(entry.Ngay).toISOString().split("T")[0]
+                          : new Date()
+                      }
+                      onChange={(e) =>
+                        handleItineraryEntryChange(
+                          index,
+                          "Ngay",
+                          e.target.value
+                        )
+                      }
+                      required
+                    />
+                  </td>
+                  <td className="diemden">
+                    <p> {entry.diemDen.tenDiemDen}</p>
+                  </td>
 
-                <td className="mota">
-                  <Form.Control
-                    type="text"
-                    value={entry.MoTa}
-                    onChange={(e) =>
-                      handleItineraryEntryChange(index, "MoTa", e.target.value)
-                    }
-                  />
-                </td>
-                <td className="del">
-                  <Button
-                    variant="outline-danger"
-                    onClick={() => delLichTrinh(index)}
-                  >
-                    <AiFillDelete />
-                  </Button>
-                </td>
-              </tr>
-            ))}
+                  <td className="mota">
+                    <Form.Control
+                      type="text"
+                      value={entry.MoTa}
+                      onChange={(e) =>
+                        handleItineraryEntryChange(
+                          index,
+                          "MoTa",
+                          e.target.value
+                        )
+                      }
+                    />
+                  </td>
+                  <td className="del">
+                    <Button
+                      variant="outline-danger"
+                      onClick={() => delLichTrinh(index)}
+                    >
+                      <AiFillDelete />
+                    </Button>
+                  </td>
+                </tr>
+              ))}
             <tr className="col-span-3"></tr>
           </tbody>
         </Table>

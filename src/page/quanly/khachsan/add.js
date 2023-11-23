@@ -1,66 +1,35 @@
 import React, { useState, useEffect } from "react";
-import { Button, Form, Row, Table } from "react-bootstrap";
-import "./index.scss";
+import { Button, Form, Row, Col, FormControl } from "react-bootstrap";
 import "./add.scss";
 import SDoiTac from "./doitac";
 import LoaiPhongs from "./loaiphongs";
+import axios from "../../../api/axios";
+import { useNavigate } from "react-router-dom";
 const AddKhachSan = () => {
-  const data = [
-    {
-      stt: 1,
-      ten: "Doi Tac 1",
-      email: "doitac1@example.com",
-      sdt: "1234567890",
-    },
-    {
-      stt: 2,
-      ten: "Doi Tac 2",
-      email: "doitac2@example.com",
-      sdt: "9876543210",
-    },
-  ];
-  const [loaiphonglist, setLoaiphonglist] = useState([]);
-  const [imgFile, setImgFile] = useState("");
   const [khachSanData, setKhachSanData] = useState({
-    Ten: "",
-    DiaChi: "",
-    MoTa: "",
-    IdDoiTac: "",
+    ten: "",
+    diaChi: "",
+    moTa: "",
+    idDoiTac: "",
+    tendoitac: "",
+    phongs: [],
+    image: "x",
+    soSao: 0,
   });
+  const navigate = useNavigate();
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
+  const handleInputChange = (event) => {
+    const { name, value } = event.target;
     setKhachSanData({
       ...khachSanData,
       [name]: value,
     });
   };
-
-  const handleAddKhachSan = () => {
-    console.log(khachSanData);
-    console.log(loaiphonglist);
-  };
-
-  const handleAddLoaiPhong = () => {
-    const newLoaiPhong = {
-      TenLoai: "",
-      Mota: "",
-      Gia: 0,
-    };
-
-    setLoaiphonglist([...loaiphonglist, newLoaiPhong]);
-  };
-
-  const handleLoaiPhongChange = (index, fieldName, fieldValue) => {
-    const updatedLoaiPhongList = [...loaiphonglist];
-    updatedLoaiPhongList[index][fieldName] = fieldValue;
-
-    setLoaiphonglist(updatedLoaiPhongList);
-  };
-  const selectDoiTac = (selectedItem) => {
-    // setSearchTerm(selectedItem.ten);
-    // khachSanData.IdDoiTac = selectedItem.stt;
-    // setIsOpen(false);
+  const updatePhongs = (updatedPhongs) => {
+    setKhachSanData({
+      ...khachSanData,
+      phongs: updatedPhongs,
+    });
   };
 
   useEffect(() => {
@@ -75,7 +44,6 @@ const AddKhachSan = () => {
           const fileReader = new FileReader();
           fileReader.onload = function (e) {
             imagePreview.src = e.target.result;
-            // setSelectedImage(e.target.result);
           };
           fileReader.readAsDataURL(selectedFile);
         } else {
@@ -84,6 +52,54 @@ const AddKhachSan = () => {
       });
     }
   }, []);
+
+  const handleAddKhachSan = async () => {
+    const { ten, diaChi, moTa, idDoiTac, soSao } = khachSanData;
+    if (
+      ten.trim() === "" ||
+      diaChi.trim() === "" ||
+      moTa.trim() === "" ||
+      idDoiTac.trim() === "" ||
+      soSao === 0
+    ) {
+      alert("Vui lòng điền đầy đủ thông tin");
+      return;
+    }
+    let isValid = true;
+    if (khachSanData.phongs.length < 1) {
+      alert("Chưa có thông tin phòng");
+      return;
+    }
+    for (const loaiPhong of khachSanData.phongs) {
+      if (
+        loaiPhong.tenLoai.trim().length < 5 ||
+        loaiPhong.moTa.trim().length < 5
+      ) {
+        isValid = false;
+        alert("Kiếm tra thông tin loại phòng");
+        break;
+      }
+    }
+    if (!isValid) return;
+
+    const { tendoitac, phongs, image, ...ksdatatosend } = khachSanData;
+    const formData = new FormData();
+    Object.keys(ksdatatosend).forEach((key) => {
+      formData.append(key, ksdatatosend[key]);
+    });
+
+    formData.append("phongs", JSON.stringify(khachSanData.phongs));
+    const imageInput = document.getElementById("imageInput");
+    const selectedFile = imageInput.files[0];
+    formData.append("image", selectedFile);
+    try {
+      await axios.post("/api/khachsans", formData);
+      alert("Thêm khách sạn thành công");
+      navigate(-1);
+    } catch (error) {
+      console.error("Lỗi", error.response);
+    }
+  };
   return (
     <>
       <Button variant="primary" onClick={handleAddKhachSan} className="btaddks">
@@ -95,7 +111,7 @@ const AddKhachSan = () => {
       <div className="contain row">
         <div className="addf col-lg-12 col-md-12">
           <Form>
-            <Row>
+            <Row className="anhbia">
               <div className="col-lg-5 md-5 sm-5">
                 <Row>
                   <img id="imagePreview" src="" alt="Preview" />
@@ -114,37 +130,62 @@ const AddKhachSan = () => {
                     <Form.Control
                       type="text"
                       placeholder="Enter Tên Khách Sạn"
-                      name="Ten"
-                      value={khachSanData.Ten}
+                      name="ten"
+                      value={khachSanData.ten}
                       onChange={handleInputChange}
                     />
                   </Form.Group>
-                  <SDoiTac selectDoiTac={selectDoiTac} />
+                  <SDoiTac
+                    formData={khachSanData}
+                    setFormData={setKhachSanData}
+                  />
+                </Row>
+                <Row>
+                  <Form.Label>Địa Chỉ</Form.Label>
                 </Row>
                 <Row>
                   <Form.Group
                     controlId="DiaChi"
                     className="col-lg-12 col-md-12"
                   >
-                    <Form.Label>Địa Chỉ</Form.Label>
                     <Form.Control
                       type="text"
                       placeholder="Enter Địa Chỉ"
-                      name="DiaChi"
-                      value={khachSanData.DiaChi}
+                      name="diaChi"
+                      value={khachSanData.diaChi}
                       onChange={handleInputChange}
                     />
                   </Form.Group>
                 </Row>
+                <Row className="gop">
+                  <Form.Label className="col-lg-4 col-md-4">Mô Tả</Form.Label>
+                  <Form.Label className="col-lg-2 col-md-2">Số Sao</Form.Label>
+                  <Form.Group
+                    controlId="SoSao"
+                    className="col-lg-6 col-md-6 col-sm-6"
+                  >
+                    <Form.Control
+                      as="select"
+                      name="soSao"
+                      value={khachSanData.soSao}
+                      onChange={handleInputChange}
+                    >
+                      <option value="1">1 sao</option>
+                      <option value="2">2 sao</option>
+                      <option value="3">3 sao</option>
+                      <option value="4">4 sao</option>
+                      <option value="5">5 sao</option>
+                    </Form.Control>
+                  </Form.Group>
+                </Row>
                 <Row>
                   <Form.Group controlId="MoTa" className="col-lg-12 col-md-12">
-                    <Form.Label>Mô Tả</Form.Label>
                     <Form.Control
                       as="textarea"
                       rows={3}
                       placeholder="Enter Mô Tả"
-                      name="MoTa"
-                      value={khachSanData.MoTa}
+                      name="moTa"
+                      value={khachSanData.moTa}
                       onChange={handleInputChange}
                     />
                   </Form.Group>
@@ -152,11 +193,7 @@ const AddKhachSan = () => {
               </div>
             </Row>
           </Form>
-          <LoaiPhongs
-            loaiphonglist={loaiphonglist}
-            handleLoaiPhongChange={handleLoaiPhongChange}
-            handleAddLoaiPhong={handleAddLoaiPhong}
-          />
+          <LoaiPhongs updatePhongs={updatePhongs} />
         </div>
       </div>
     </>

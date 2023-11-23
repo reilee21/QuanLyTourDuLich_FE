@@ -1,0 +1,137 @@
+.hotel {
+  margin-top: 3%;
+  min-height: 90vh;
+  margin-bottom: 3%;
+  .info {
+    .coban {
+      height: 320px;
+      background-color: #293462;
+      border-radius: 4px;
+      .thongtin {
+        padding: 8px 12px;
+        .mota {
+          color: aliceblue;
+          max-height: 60%;
+          overflow-y: scroll;
+        }
+      }
+      .ten {
+        padding: 8px 0;
+        color: azure;
+        font-size: 16pt;
+        font-weight: 600;
+        min-height: 50px;
+      }
+      .sao {
+        svg {
+          padding: 0;
+          margin: 4px;
+        }
+      }
+      .anh {
+        padding: 0;
+        .imghotel {
+          width: 100%;
+          height: 320px;
+          object-fit: cover;
+          border-radius: 4px;
+        }
+      }
+    }
+  }
+  .booking {
+    height: fit-content;
+  }
+  .phongs {
+    justify-content: flex-start !important;
+    margin-top: 1%;
+    .row {
+      padding: 0;
+      margin: 0;
+    }
+    .phong {
+      padding: 8px;
+      transition: linear;
+      .gia {
+        width: 100%;
+        text-align: start;
+        font-size: large;
+        color: rgb(188, 61, 61);
+        font-weight: 500;
+      }
+      .ten {
+        background-color: #fdc432;
+        padding: 10px;
+        margin: 0 10px;
+        color: #293462;
+        border-top-left-radius: 4px;
+        border-top-right-radius: 4px;
+      }
+      .info {
+        position: relative;
+
+        .avai {
+          position: absolute;
+          bottom: 10px;
+          color: rgb(231, 33, 33);
+          font-size: large;
+
+          font-weight: 600;
+        }
+      }
+      .anh {
+        padding: 0;
+        .imghotel {
+          width: 100%;
+          height: auto;
+          object-fit: cover;
+          border-bottom-left-radius: 4px;
+        }
+      }
+    }
+    .phong:hover {
+      scale: 1.02;
+      box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px,
+        rgba(0, 0, 0, 0.24) 0px 1px 2px;
+    }
+  }
+}
+
+.bkp {
+  align-items: center;
+  .ten {
+    font-weight: 500;
+  }
+  button {
+    width: 30px;
+    height: 30px;
+    padding: 0;
+    margin: 0 4px;
+    border-radius: 4px;
+  }
+}
+.order-details {
+  background-color: #c6ceee;
+  padding: 8px;
+  border-radius: 8px;
+  .total {
+    color: #ea8f06;
+    font-weight: 700;
+    padding: 0 50px;
+  }
+  .nhan,
+  .tra {
+    margin: 4px;
+    border: #ea8f06 2px solid;
+    color: #293462;
+    padding: 8px;
+    border-radius: 4px;
+  }
+  .nhan:focus,
+  .tra:focus {
+    outline: #ea8f06 3px solid;
+  }
+}
+.confirm {
+  margin: 10px;
+}

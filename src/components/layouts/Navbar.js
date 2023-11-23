@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "./navbarqly.scss";
 import { Nav, NavLink, Button } from "react-bootstrap";
 import {
@@ -11,12 +11,16 @@ import {
 import { useState } from "react";
 const NavBarQly = () => {
   const [selectedMenu, setSelectedMenu] = useState("main");
+  const navi = useNavigate();
 
   const handleMenuChange = (menu) => {
     setSelectedMenu(menu);
   };
   const back = () => {
     setSelectedMenu("main");
+  };
+  const Inftk = () => {
+    navi("taikhoancanhan");
   };
   return (
     <>
@@ -48,7 +52,7 @@ const NavBarQly = () => {
         </div>
       </div>
       <div className="taikhoan">
-        <Button>Tài khoản</Button>
+        <Button onClick={Inftk}>Tài khoản</Button>
       </div>
     </>
   );

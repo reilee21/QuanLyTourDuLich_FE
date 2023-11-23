@@ -44,17 +44,25 @@
     margin: 2% 0;
   }
   .tour-info {
-    margin: 0 2%;
-
     .tour-image {
       border-radius: 8px;
+      margin: 2% 0;
+
       .image {
         width: 100%;
         border-radius: 4px;
+        height: 100%;
+        object-fit: cover;
       }
     }
     .avai-slots {
-      color: red;
+      color: white !important;
+      margin-left: 20px;
+      .num {
+        color: rgb(230, 110, 12) !important;
+        margin-left: 20px;
+        font-size: large;
+      }
     }
     .mota {
       max-height: 270px;
@@ -68,28 +76,64 @@
       background-color: #293462;
       border-radius: 8px;
       color: whitesmoke;
-      margin: 1% 0;
-      padding: 5% 0;
+      padding: 3% 2% 0 2%;
+      margin: 2% 0;
+      .row {
+        align-items: center;
+        padding: 0 8px 8px 8px;
+      }
       p {
         padding: 8px;
+        color: #ffffff;
+      }
+      span {
+        font-weight: 700;
+        color: #f7d716;
+      }
+      .gia {
+        font-weight: 750 !important;
+      }
+      .dattour {
+        .clk {
+          width: 200px;
+          background-color: #f77816;
+          border-radius: 8px;
+          padding: 4px;
+          margin: 0 auto;
+          cursor: pointer;
+          span {
+            color: azure !important;
+          }
+        }
+        .clk:hover {
+          background-color: #ff6f00;
+        }
       }
     }
   }
 }
 
-.hanhkhach {
-  justify-content: flex-start !important;
-  padding: 2% 0;
-  .ctn {
-    margin-left: 4%;
-    background-color: #293462;
-    padding: 8px;
-    border-radius: 8px;
-    .row {
-      justify-content: flex-start !important;
+.lichtrinh {
+  .right {
+    border-right: #293462 2px solid;
+    height: fit-content;
+  }
+  .ngay {
+    color: #293462;
+    font-size: larger;
+    font-weight: 700;
+    width: 100%;
+    .ind {
+      font-size: medium;
 
-      padding: 1% 10%;
-      color: white;
+      font-weight: 500 !important;
     }
+  }
+  .mota {
+    font-size: 15px;
+    text-align: left;
+  }
+  .ddd {
+    justify-content: flex-end !important;
   }
 }

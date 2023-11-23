@@ -22,6 +22,9 @@ import EditKhachSan from "./khachsan/edit";
 import KhuyenMai from "./khuyenmai";
 import AddKhuyenMai from "./khuyenmai/add";
 import EditKhuyenMai from "./khuyenmai/edit";
+import EmployeeInfo from "./ACC";
+import Booking from "./booking";
+import DetailBooking from "./booking/detailbooking";
 export {
   PhuongTien,
   DiaDiem,
@@ -47,4 +50,7 @@ export {
   KhuyenMai,
   AddKhuyenMai,
   EditKhuyenMai,
+  EmployeeInfo,
+  Booking,
+  DetailBooking,
 };

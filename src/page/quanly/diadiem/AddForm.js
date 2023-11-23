@@ -1,3 +1,4 @@
+import axios from "../../../api/axios";
 import React, { useState } from "react";
 import { Modal, Button, Form } from "react-bootstrap";
 
@@ -18,10 +19,21 @@ const AddDiaDiemFormModal = ({ show, onClose, onSubmit }) => {
     }
   };
 
-  const handleSubmit = () => {
-    // Handle form submission here
-    console.log(formData);
-    //onClose();
+  const handleSubmit = async () => {
+    const data = {
+      tenDiaDiem: formData.tenDiaDiem,
+      loai: formData.loai,
+    };
+
+    try {
+      const res = await axios.post("/api/diadiems", data);
+      alert(`Thêm - ${res.tenDiaDiem} - thành công`);
+
+      onClose();
+    } catch (e) {
+      console.log(e);
+    }
+    setFormData({ tenDiaDiem: "", loai: false });
   };
 
   return (

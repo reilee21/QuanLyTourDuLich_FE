@@ -10,7 +10,6 @@ const EditCustomerAccountModal = ({ show, onClose, onSubmit, itemToEdit }) => {
   };
 
   const handleSubmit = () => {
-    // Handle updating the account with the updated Username and Password
     onSubmit(formData);
     onClose();
   };
