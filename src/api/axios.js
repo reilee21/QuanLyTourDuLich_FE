@@ -1,9 +1,12 @@
 import axios from "axios";
+
 const somee = "https://huflittravel.somee.com";
-const local = "https://localhost:7102";
 
 const instance = axios.create({
   baseURL: somee,
+  headers: {
+    "Access-Control-Allow-Origin": "https://huflittravel.vercel.app",
+  },
 });
 
 instance.interceptors.response.use(
@@ -14,4 +17,5 @@ instance.interceptors.response.use(
     return Promise.reject(error);
   }
 );
+
 export default instance;
