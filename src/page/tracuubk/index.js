@@ -54,9 +54,7 @@ const TraCuuBooking = () => {
         getTour(bookingData.bookingTours[0].idBookingTour);
       }
   }, [bookingData]);
-  useEffect(() => {
-    console.log(bookingData);
-  }, [bookingData]);
+  useEffect(() => {}, [bookingData]);
 
   return (
     <div className="container-fluids">

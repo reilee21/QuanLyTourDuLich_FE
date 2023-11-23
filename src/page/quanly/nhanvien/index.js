@@ -27,10 +27,7 @@ const NhanVien = () => {
     setEditData(item);
     setShowCreateAcc(true);
   };
-  const handleDelete = (item) => {
-    console.log(item);
-  };
-  // Example data for NhanVien
+  const handleDelete = (item) => {};
   const data = [
     {
       MaNV: "NV1",

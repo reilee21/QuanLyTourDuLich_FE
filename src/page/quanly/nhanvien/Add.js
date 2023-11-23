@@ -29,9 +29,7 @@ const AddNhanVienFormModal = ({ show, onClose, onSubmit }) => {
     setSelectedChucVu(e.target.value);
   };
   const handleSubmit = () => {
-    // Handle form submission here
-    console.log(formData);
-    onSubmit(formData); // Pass the form data to the parent component
+    onSubmit(formData);
     onClose();
   };
 

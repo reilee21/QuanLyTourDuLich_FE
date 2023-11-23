@@ -31,7 +31,6 @@ const Voucher = () => {
       const res = await axios.get("api/vouchers");
       setFilteredData(res);
       setListdata(res);
-      console.log(res);
     } catch (e) {
       console.error(e);
     }

@@ -123,7 +123,6 @@ const AddKhuyenMai = () => {
 
   const handleAddKhuyenMai = (e) => {
     khuyenMaiData.Tours = selectedTour;
-    console.log(khuyenMaiData);
   };
   return (
     <>

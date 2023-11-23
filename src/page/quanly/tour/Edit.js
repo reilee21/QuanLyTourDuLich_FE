@@ -11,7 +11,6 @@ const EditTour = () => {
   const location = useLocation();
 
   const updateTourData = (res) => {
-    console.log(res);
     setTourData({
       ...tourData,
       maTour: res.maTour,

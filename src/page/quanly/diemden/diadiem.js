@@ -54,7 +54,10 @@ const DDiaDiem = ({ formData, setFormData }) => {
   };
 
   const handleOptionClick = (option) => {
-    setFormData({ ...formData, IdDiaDiem: option.idDiaDiem });
+    setFormData({
+      ...formData,
+      IdDiaDiem: option.idDiaDiem,
+    });
     setSearchQuery(option.tenDiaDiem);
     setIsDropdownVisible(false);
   };

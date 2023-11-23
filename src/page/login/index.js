@@ -66,7 +66,7 @@ const FormLogin = () => {
                 handleGoogleLogin(credentialResponse);
               }}
               onError={() => {
-                console.log("Login Failed");
+                alert("Lỗi");
               }}
             />
           </div>

@@ -51,7 +51,6 @@ const SearchPage = () => {
     } else if (!isNaN(maxPrice) && !isNaN(minPrice)) {
       filtered = filtered.filter((hotel) => {
         const gia = getLowestPrice(hotel.loaiPhongs);
-        console.log(minPrice);
         return gia >= minPrice && gia <= maxPrice;
       });
     }

@@ -21,8 +21,7 @@ const EditKhachHangFormModal = ({ show, onClose, editData }) => {
     e.preventDefault();
     console.log(editData);
     try {
-      const res = await axios.put(`/api/KhachHangs/${editData.maKh}`, editData);
-      console.log(res);
+      await axios.put(`/api/KhachHangs/${editData.maKh}`, editData);
       onClose();
     } catch (error) {
       console.error("POST Request Error:", error);

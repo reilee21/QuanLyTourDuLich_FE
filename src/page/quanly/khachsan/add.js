@@ -54,7 +54,7 @@ const AddKhachSan = () => {
   }, []);
 
   const handleAddKhachSan = async () => {
-    const { ten, diaChi, moTa, idDoiTac, soSao } = khachSanData;
+    const { ten, diaChi, moTa, idDoiTac } = khachSanData;
     if (
       ten.trim() === "" ||
       diaChi.trim() === "" ||
@@ -62,7 +62,6 @@ const AddKhachSan = () => {
       idDoiTac.trim() === ""
     ) {
       alert("Vui lòng điền đầy đủ thông tin");
-      console.log(khachSanData);
       return;
     }
     let isValid = true;
