@@ -48,10 +48,9 @@
 }
 .anhbia {
   img {
-    width: 200px;
-    height: 200px;
-    min-width: 200px;
-    min-height: 200px;
+    width: 350px;
+    height: 250px;
+    object-fit: cover;
   }
 }
 .pt {
@@ -101,7 +100,7 @@ label {
   font-weight: 500;
 }
 .dd {
-  position: fixed;
+  position: absolute;
   max-height: 300px;
   overflow-y: scroll;
   width: 22%;

@@ -63,7 +63,16 @@ const DiemDen = () => {
     }
     const filteredResult = listdata.filter((item) => {
       const searchString = searchQuery.toLowerCase();
-      return item.TenDiemDen.toLowerCase().includes(searchString);
+      const ddiem = diadiems.filter((item) => {
+        return item.tenDiaDiem
+          .toLowerCase()
+          .includes(searchString.toLowerCase());
+      });
+      const item2 = ddiem.some((d) => d.idDiaDiem === item.idDiaDiem)
+        ? item
+        : "";
+
+      return item.tenDiemDen.toLowerCase().includes(searchString) || item2;
     });
     setFilteredData(filteredResult);
     setPageNumber(0);
@@ -85,13 +94,13 @@ const DiemDen = () => {
     setRefreshFlag((prev) => !prev);
   };
   const handleDelete = async () => {
-    console.log(diadiems);
-    // try {
-    //   await axios.delete(`api/DiemDens/${editData.idDiemDen}`);
-    //   closeModal();
-    // } catch (e) {
-    //   console.error(e);
-    // }
+    try {
+      await axios.delete(`api/DiemDens/${editData.idDiemDen}`);
+      closeModal();
+      setEditData({});
+    } catch (e) {
+      console.error(e);
+    }
   };
   return (
     <>
@@ -106,8 +115,9 @@ const DiemDen = () => {
           <Form.Group className="search">
             <Form.Control
               type="text"
-              placeholder="Tên điểm đến"
+              placeholder="Tên điểm đến hoặc địa điểm"
               value={searchQuery}
+              onChange={handleSearchChange}
             />
           </Form.Group>
         </div>
@@ -157,7 +167,8 @@ const DiemDen = () => {
                         variant="outline-danger"
                         onClick={(e) => {
                           e.stopPropagation();
-                          handleDelete(item);
+                          setShowdelModal(true);
+                          setEditData(item);
                         }}
                       >
                         <AiFillDelete />

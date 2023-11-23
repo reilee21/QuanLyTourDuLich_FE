@@ -29,9 +29,10 @@ const EditDiaDiemFormModal = ({ show, onClose, itemToEdit }) => {
     }
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     try {
-      axios.put(`api/DiaDiems/${formData.idDiaDiem}`, formData);
+      await axios.put(`api/DiaDiems/${formData.idDiaDiem}`, formData);
+      alert(`Cập nhật - ${formData.tenDiaDiem} - thành công`);
 
       onClose();
     } catch (e) {

@@ -23,7 +23,7 @@ const MainMenu = ({ onMenuChange }) => {
       <NavLink
         className="link-name"
         as={Link}
-        to="booking/tour"
+        to="booking"
         onClick={() => onMenuChange("bk")}
       >
         <span>Booking</span>

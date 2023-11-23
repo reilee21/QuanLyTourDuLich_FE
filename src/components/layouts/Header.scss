@@ -1,0 +1,135 @@
+.color {
+  z-index: 9999;
+}
+.nav-login,
+.nav-search,
+.nav-cus_info {
+  color: black;
+  margin: 0 10px;
+  text-decoration: none;
+  cursor: pointer;
+}
+.btn-search {
+  height: 44px;
+  border-radius: 0px;
+  border-bottom-right-radius: 8px;
+  border-top-right-radius: 8px;
+}
+.nav-search {
+  position: absolute;
+  top: 8 px;
+  right: 120px;
+}
+
+.nav-home {
+  color: black;
+  text-decoration: none;
+}
+
+.nav-input {
+  padding: 8px 70px 8px 4px;
+  outline: none;
+  border: 2px solid rgb(62, 136, 221);
+  border-bottom-left-radius: 8px;
+  border-top-left-radius: 8px;
+  width: 300px;
+}
+
+.nav-main {
+  display: flex;
+  position: relative;
+  justify-content: space-between;
+  padding-left: 100px;
+  align-items: center;
+}
+
+.navbar-main {
+  display: flex;
+  justify-content: space-between;
+  padding-left: 200px;
+  align-items: center;
+}
+
+.color {
+  background-color: #fff;
+}
+
+.brand-text {
+  font-size: 25px;
+}
+
+.dulich {
+  padding-right: 20px;
+  font-weight: 500;
+  font-size: large;
+  cursor: pointer;
+}
+.dulich-item {
+  position: absolute;
+  background-color: white;
+  top: -500px;
+  width: 100%;
+  box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
+  padding: 20px;
+  transition: linear;
+  z-index: -100;
+}
+.dulich-item.active {
+  top: 60px;
+  z-index: 100;
+}
+.dulich-item .detail .row {
+  justify-content: flex-start;
+}
+.dulich-item .detail p {
+  width: 150px;
+  font-size: 10pt;
+}
+.dulich-item .type {
+  border-right: 2px solid rgb(68, 0, 255);
+}
+
+.type .item {
+  height: 50px;
+  cursor: pointer;
+  align-items: center;
+  font-weight: 500;
+}
+.type .item:hover {
+  color: blue;
+  font-weight: bold;
+}
+.type .item.active {
+  color: blue;
+  font-weight: bold;
+}
+.diadiemitem {
+  padding: 4px 8px;
+  font-size: 12pt;
+  margin: 4px 8px;
+  border-radius: 8px;
+}
+.diadiemitem:hover {
+  background-color: aliceblue;
+  cursor: pointer;
+}
+.dropdownaccount {
+  position: absolute;
+  top: 50px;
+  background-color: rgb(255, 254, 254);
+  right: 0;
+  padding: 8px;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+  border-radius: 4px;
+  z-index: 200;
+  .row {
+    margin: 4px;
+    padding: 4px 2px;
+    cursor: pointer;
+    border-radius: 4px;
+  }
+  .row:hover {
+    background-color: rgb(5, 63, 128);
+    color: #ffcc25;
+  }
+}

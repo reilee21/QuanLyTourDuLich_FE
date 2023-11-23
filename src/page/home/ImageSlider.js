@@ -13,12 +13,7 @@ import {
   faCube,
   faGlobe,
 } from "@fortawesome/free-solid-svg-icons";
-import {
-  faFacebook,
-  faInstagram,
-  faYoutube,
-} from "@fortawesome/free-brands-svg-icons";
-
+import Action from "./action";
 //import vào nha
 import { Slide } from "react-slideshow-image";
 import "react-slideshow-image/dist/styles.css";
@@ -129,12 +124,6 @@ const favoriteDestinations = [
 ];
 
 const ImageSlider = () => {
-  const [searchVisible, setSearchVisible] = useState(false);
-
-  const toggleSearch = () => {
-    setSearchVisible(!searchVisible);
-  };
-
   return (
     <div>
       <div className="image-slider-wrapper">
@@ -148,38 +137,7 @@ const ImageSlider = () => {
           </Slide>
         </div>
       </div>
-      <div className="home-features">
-        <div className="feature-container">
-          <Link to="/ordertour" style={{ textDecoration: "none" }}>
-            <div className="feature">
-              <div className="feature-icon">
-                <FontAwesomeIcon icon={faPlane} size="3x" />
-              </div>
-              <p>Đặt Tour</p>
-            </div>
-          </Link>
-          <Link to="/orderhotel" style={{ textDecoration: "none" }}>
-            <div className="feature">
-              <div className="feature-icon">
-                <FontAwesomeIcon icon={faHotel} size="3x" />
-              </div>
-              <p>Đặt Khách Sạn</p>
-            </div>
-          </Link>
-          <div className="feature" onClick={toggleSearch}>
-            <div className="feature-icon">
-              <FontAwesomeIcon icon={faSearch} size="3x" />
-            </div>
-            <p>Tra cứu booking</p>
-          </div>
-        </div>
-        {searchVisible && (
-          <div className="search-bar">
-            <input type="text" placeholder="Nhập số booking" />
-            <button>Tìm kiếm</button>
-          </div>
-        )}
-      </div>
+      <Action />
       <div className="offer-slider">
         <h2 className="uudai">Ưu đãi</h2>
         <Slide {...offerSliderSettings} arrows={false} dots={true}>

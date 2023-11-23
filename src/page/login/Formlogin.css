@@ -77,16 +77,15 @@
 .login-container {
     background-image: url(../../assets/image/login.png);
     background-size: cover;
-    background-repeat: no-repeat;
-    background-position: center;
-    /* Other styling for the login container */
-    position: absolute;
+    background-repeat: no-repeat;    
     left: 0;
     right: 0;
     top: 65px;
     bottom: 0;
     width: 100%;
     overflow: hidden;
+    min-height: 90vh;
+    position: absolute;
     /* Set the height to the full viewport height */
 }
 

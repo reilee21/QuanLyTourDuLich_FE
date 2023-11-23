@@ -53,14 +53,14 @@ const PTDVMenu = () => {
       >
         <span> Khách sạn</span>
       </NavLink>
-      <NavLink
+      {/* <NavLink
         className={`link-name ${activeLink === "khuyenmai" ? "active" : ""}`}
         onClick={() => handleNavLinkClick("khuyenmai")}
         as={Link}
         to="ptdv/khuyenmai"
       >
         <span> Khuyến mãi</span>
-      </NavLink>
+      </NavLink> */}
     </>
   );
 };

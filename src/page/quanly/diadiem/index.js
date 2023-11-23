@@ -51,7 +51,7 @@ const DiaDiem = () => {
     }
     const filteredResult = listdata.filter((item) => {
       const searchString = searchQuery.toLowerCase();
-      return item.tenPhuongTien.toLowerCase().includes(searchString);
+      return item.tenDiaDiem.toLowerCase().includes(searchString);
     });
     setFilteredData(filteredResult);
     setPageNumber(0);
@@ -76,6 +76,7 @@ const DiaDiem = () => {
     try {
       await axios.delete(`api/DiaDiems/${editData.idDiaDiem}`);
       closeModal();
+      setEditData({});
     } catch (e) {
       console.error(e);
     }
@@ -96,6 +97,7 @@ const DiaDiem = () => {
               type="text"
               placeholder="Tên địa điểm"
               value={searchQuery}
+              onChange={handleSearchChange}
             />
           </Form.Group>
         </div>
@@ -137,6 +139,8 @@ const DiaDiem = () => {
                         variant="outline-danger"
                         onClick={(e) => {
                           e.stopPropagation();
+                          setShowdelModal(true);
+                          setEditData(item);
                         }}
                       >
                         <AiFillDelete />

@@ -9,10 +9,27 @@ export function useAuth() {
 
 export function AuthProvider({ children }) {
   const [isLogin, setIsLogin] = useState();
+  const [id, setId] = useState("");
   const [phuongthuc, setPhuongthuc] = useState("");
   const [role, setRole] = useState("");
   const [email, setEmail] = useState("");
+  useEffect(() => {
+    const ggAuthCookie = document.cookie
+      .split("; ")
+      .find((cookie) => cookie.startsWith("gg-Auth"));
+    const jwtAuthCookie = document.cookie
+      .split("; ")
+      .find((cookie) => cookie.startsWith("jwt-Auth"));
 
+    if (ggAuthCookie) {
+      setPhuongthuc("gg-Auth");
+      return;
+    }
+    if (jwtAuthCookie) {
+      setPhuongthuc("jwt-Auth");
+      return;
+    }
+  }, [isLogin]);
   const setupLogin2 = () => {
     const ggAuthCookie = document.cookie
       .split("; ")
@@ -27,12 +44,15 @@ export function AuthProvider({ children }) {
       setRole("client");
       setIsLogin(true);
       setEmail(decodedToken.email);
+      setPhuongthuc("gg-Auth");
       return;
     } else if (jwtAuthCookie) {
       const token = jwtDecode(jwtAuthCookie);
       setIsLogin(true);
       setRole(token.role);
       setEmail(token.email);
+      setId(token.id);
+      setPhuongthuc("jwt-Auth");
     }
   };
 
@@ -48,6 +68,8 @@ export function AuthProvider({ children }) {
         setRole("client");
         setIsLogin(true);
         setEmail(decodedToken.email);
+
+        setPhuongthuc("gg-Auth");
         return;
       }
     }
@@ -56,6 +78,9 @@ export function AuthProvider({ children }) {
     setIsLogin(true);
     setRole(token.role);
     setEmail(token.email);
+    setId(token.id);
+
+    setPhuongthuc("jwt-Auth");
   };
 
   useEffect(() => {
@@ -69,6 +94,7 @@ export function AuthProvider({ children }) {
       const currentTime = Math.floor(Date.now() / 1000);
       if (decodedToken.exp > currentTime) {
         setPhuongthuc("jwt-Auth");
+
         setupLogin(jwtAuthCookie);
       } else {
         checkTokenExpiration();
@@ -170,7 +196,16 @@ export function AuthProvider({ children }) {
 
   return (
     <AuthContext.Provider
-      value={{ isLogin, login, logout, googlelogin, role, email, setupLogin2 }}
+      value={{
+        isLogin,
+        login,
+        logout,
+        googlelogin,
+        role,
+        email,
+        setupLogin2,
+        id,
+      }}
     >
       {children}
     </AuthContext.Provider>

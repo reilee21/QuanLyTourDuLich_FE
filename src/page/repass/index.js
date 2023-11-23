@@ -18,7 +18,9 @@ const ChangePasswordPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [formData, setFormData] = useState({
     email: email,
-    otp: generateOTP(),
+    title: "Mã OTP để cập nhật mật khẩu",
+    message: generateOTP(),
+    end: "Đừng gửi mã xác nhận cho ai khác.",
   });
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -50,7 +52,7 @@ const ChangePasswordPage = () => {
       return;
     }
     try {
-      const response = await axios.put(
+      await axios.put(
         `/api/TaiKhoans/ChangePassword?email=${email}&newpass=${newPassword}`
       );
       navigate("/");

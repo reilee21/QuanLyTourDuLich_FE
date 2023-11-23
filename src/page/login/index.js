@@ -12,7 +12,9 @@ const FormLogin = () => {
   const handleAccountLogin = async (e) => {
     e.preventDefault();
     const success = await login(username, password);
-    if (success) navigate("/");
+    if (success) {
+      navigate(-1);
+    } else alert("Sai tài khoản hoặc mật khẩu");
   };
 
   const handleGoogleLogin = async (credentialResponse) => {

@@ -1,34 +1,80 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Button, Form } from "react-bootstrap";
 import { AiFillEdit, AiFillDelete } from "react-icons/ai";
 import ReactPaginate from "react-paginate";
 import { useNavigate } from "react-router-dom";
-import data from "./data";
+import { DeleteConfirmationModal } from "../../../components/exportcom";
+import axios from "../../../api/axios";
+
 const KhachSan = () => {
   const navigate = useNavigate();
-
-  const [currentPage, setCurrentPage] = useState(0);
+  const [listdata, setListdata] = useState([]);
+  const [editData, setEditData] = useState({});
+  const [pageNumber, setPageNumber] = useState(0);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [filteredData, setFilteredData] = useState([]);
+  const [showdelModal, setShowdelModal] = useState(false);
 
   const itemsPerPage = 10;
+  const offset = pageNumber * itemsPerPage;
 
-  const pageCount = Math.ceil(data.length / itemsPerPage);
-
-  const handlePageClick = (selectedPage) => {
-    setCurrentPage(selectedPage.selected);
+  const handlePageClick = (data) => {
+    const selectedPage = data.selected;
+    setPageNumber(selectedPage);
   };
+  const currentPageData = filteredData.slice(offset, offset + itemsPerPage);
 
+  const fetchdata = async () => {
+    try {
+      const res = await axios.get("api/khachsans");
+      setFilteredData(res);
+      setListdata(res);
+      console.log(res);
+    } catch (e) {
+      console.error(e);
+    }
+  };
+  useEffect(() => {
+    fetchdata();
+  }, []);
+
+  useEffect(() => {
+    if (searchQuery.length < 2 || searchQuery === "") setFilteredData(listdata);
+  }, [searchQuery]);
+
+  const handleSearchChange = (e) => {
+    setSearchQuery(e.target.value);
+    if (searchQuery.length < 2 || searchQuery === "") {
+      return;
+    }
+    const filteredResult = listdata.filter((item) => {
+      const searchString = searchQuery.toLowerCase();
+
+      return (
+        item.ten.toLowerCase().includes(searchString) ||
+        item.diaChi.toLowerCase().includes(searchString)
+      );
+    });
+    setFilteredData(filteredResult);
+    setPageNumber(0);
+  };
   const handleAddClick = () => {
-    // Navigate to the add hotel page
     navigate("add");
   };
 
   const handleEditClick = (item) => {
-    navigate(`${item.IdKhachSan}`, { state: item });
+    navigate(`${item.idKhachSan}`, { state: { ks: item } });
   };
+  const handleDelete = async () => {
+    try {
+      await axios.delete(`/api/khachsans/${editData.idKhachSan}`);
+      fetchdata();
+    } catch (e) {
+      alert("Không thể xoá khách sạn");
+    }
 
-  const startIndex = currentPage * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-  const itemsToDisplay = data.slice(startIndex, endIndex);
+    setShowdelModal(false);
+  };
 
   return (
     <>
@@ -43,8 +89,9 @@ const KhachSan = () => {
           <Form.Group className="search">
             <Form.Control
               type="text"
-              placeholder="Tên Khách Sạn"
-              // Add any search functionality if needed
+              placeholder="Tên Khách Sạn hoặc địa chỉ"
+              value={searchQuery}
+              onChange={handleSearchChange}
             />
           </Form.Group>
         </div>
@@ -57,23 +104,21 @@ const KhachSan = () => {
                   <th className="stt">STT</th>
                   <th className="tenks">Tên Khách Sạn</th>
                   <th className="diachi">Địa Chỉ</th>
-                  <th className="mota">Mô Tả</th>
-                  <th className="iddoitac"> Đối Tác</th>
+                  <th className="iddoitac"> Số sao</th>
                   <th className="edit"></th>
                   <th className="del"></th>
                 </tr>
               </thead>
               <tbody>
-                {itemsToDisplay.map((item, index) => (
+                {currentPageData.map((item, index) => (
                   <tr
-                    key={item.IdKhachSan}
+                    key={item.idKhachSan}
                     onClick={() => handleEditClick(item)}
                   >
                     <td className="stt">{index + 1}</td>
-                    <td className="tenks">{item.Ten}</td>
-                    <td className="diachi">{item.DiaChi}</td>
-                    <td className="mota">{item.MoTa}</td>
-                    <td className="iddoitac">{item.IdDoiTac}</td>
+                    <td className="tenks">{item.ten}</td>
+                    <td className="diachi">{item.diaChi}</td>
+                    <td className="iddoitac">{item.soSao}</td>
                     <td className="edit">
                       <Button
                         variant="outline-warning"
@@ -86,7 +131,14 @@ const KhachSan = () => {
                       </Button>
                     </td>
                     <td className="del">
-                      <Button variant="outline-danger">
+                      <Button
+                        variant="outline-danger"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setEditData(item);
+                          setShowdelModal(true);
+                        }}
+                      >
                         <AiFillDelete />
                       </Button>
                     </td>
@@ -98,20 +150,28 @@ const KhachSan = () => {
         </div>
       </div>
       <ReactPaginate
-        pageCount={pageCount}
-        pageRangeDisplayed={3}
-        marginPagesDisplayed={2}
-        onPageChange={handlePageClick}
+        pageCount={Math.ceil(filteredData.length / itemsPerPage)} // Tổng số trang
+        pageRangeDisplayed={3} // Số trang hiển thị trước và sau trang hiện tại
+        marginPagesDisplayed={2} // Số trang hiển thị ở hai bên
+        onPageChange={handlePageClick} // Xử lý khi chuyển trang
         containerClassName={"pagination"}
         activeClassName={"active"}
         previousLabel={"Trước"}
         nextLabel={"Sau"}
-        previousLinkClassName={"page-link"}
-        nextLinkClassName={"page-link"}
-        pageClassName={"page-item"}
-        pageLinkClassName={"page-link"}
-        breakClassName={"page-item"}
-        breakLinkClassName={"page-link"}
+        previousLinkClassName={"page-link"} // Class cho nút "Trang trước"
+        nextLinkClassName={"page-link"} // Class cho nút "Trang sau"
+        pageClassName={"page-item"} // Class cho nút trang
+        pageLinkClassName={"page-link"} // Class cho liên kết trang
+        breakClassName={"page-item"} // Class cho nút "..."
+        breakLinkClassName={"page-link"} // Class cho liên kết "..."
+      />
+      <DeleteConfirmationModal
+        show={showdelModal}
+        onCancel={() => {
+          setEditData(null);
+          setShowdelModal(false);
+        }}
+        onDelete={handleDelete}
       />
     </>
   );

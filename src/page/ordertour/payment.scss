@@ -1,0 +1,25 @@
+.card {
+  background-color: #293462;
+  position: absolute;
+  top: 150px;
+  min-height: 300px;
+  padding: 20px;
+  h3,
+  h4,
+  h5 {
+    color: whitesmoke !important;
+    font-weight: 400;
+    span {
+      font-weight: 600 !important;
+    }
+  }
+  h5 {
+    margin-top: 20px;
+  }
+  .trc {
+    cursor: pointer;
+  }
+  .trc:hover {
+    text-decoration: underline;
+  }
+}

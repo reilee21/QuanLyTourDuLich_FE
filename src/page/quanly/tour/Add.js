@@ -3,8 +3,10 @@ import { Button, Form, Row, Col, FormControl } from "react-bootstrap";
 import "./add.scss";
 import axios from "../../../api/axios";
 import LichTrinh from "./lictrinh";
+import { useNavigate } from "react-router-dom";
 
 const AddTour = () => {
+  const navigate = useNavigate();
   const [phuongtiens, setPhuongtiens] = useState([]);
   const [selectedImage, setSelectedImage] = useState(null);
 
@@ -62,6 +64,18 @@ const AddTour = () => {
   };
 
   const handleAddTour = async () => {
+    let validflag = true;
+    if (tourData.lichTrinhs.some((item) => !item.Ngay || !item.MoTa)) {
+      tourData.lichTrinhs.forEach((item) => {
+        if (!item.Ngay || !item.MoTa) {
+          alert(`Kiểm tra lại lịch trình ${item.diemDen.tenDiemDen}`);
+          validflag = false;
+          return;
+        }
+      });
+    }
+    if (!validflag) return;
+
     const formData = new FormData();
 
     const { lichTrinhs, idPhuongTiens, ...tourDataToSend } = tourData;
@@ -82,9 +96,11 @@ const AddTour = () => {
     formData.append("LichTrinhs", JSON.stringify(formattedList));
     formData.append("TourPhuongTiens", JSON.stringify(tourData.idPhuongTiens));
     try {
-      const res = await axios.post("/api/Tours", formData);
+      await axios.post("/api/Tours", formData);
+      alert("Tạo tour thành công");
+      navigate(-1);
     } catch (error) {
-      console.error("Error adding formattedList:", error.response);
+      console.error("Lỗi", error.response);
     }
   };
   const delLichTrinh = (index) => {

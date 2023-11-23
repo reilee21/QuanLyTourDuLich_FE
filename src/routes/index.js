@@ -1,38 +1,19 @@
 import HomePage from "../page/home/ImageSlider";
 import LoginPage from "../page/login";
-import SearchPage from "../page/search";
 import RegisterPage from "../page/register";
 import Cus_Infro from "../page/cus_infor";
-import DoiThuong from "../page/doithuong";
-import Histour from "../page/histour";
 import Repass from "../page/repass";
 import Contact from "../page/contact";
 import FAQ from "../page/FAQ";
-
+import TraCuuBooking from "../page/tracuubk";
 import OrderHotel from "../page/orderhotel";
 import OrderTour from "../page/ordertour";
 import News from "../page/News/NewsPage";
 import NewsArticlePage from "../page/News/NewsArticle";
 import TourDetail from "../page/ordertour/tourdetail";
 import HotelDetail from "../page/orderhotel/hoteldetail";
-// const defaultRoute = [
-//     { path: '/', component: HomePage },
-//     { path: '/login', component: LoginPage },
-//     { path: '/search', component: SearchPage },
-//     { path: '/register', component: RegisterPage },
-//     { path: '/cus_info', component: Cus_Infro },
-//     { path: '/doithuong', component: DoiThuong },
-//     { path: '/histour', component: Histour },
-//     { path: '/repass', component: Repass },
-//     { path: '/contact', component: Contact },
-//     { path: '/FAQ', component: FAQ },
-//     { path: '/orderhotel', component: OrderHotel },
-//     { path: '/ordertour', component: OrderTour },
-//     { path: '/new', component: News },
-// ]
-// export { defaultRoute }
-// =======
-
+import BookTour from "../page/ordertour/bookingtour";
+import Payment from "../page/ordertour/payment";
 import {
   PhuongTien,
   DiaDiem,
@@ -58,21 +39,27 @@ import {
   KhuyenMai,
   AddKhuyenMai,
   EditKhuyenMai,
+  EmployeeInfo,
+  Booking,
+  DetailBooking,
 } from "../page/quanly/export";
 
 const defaultRoute = [
   { path: "/", component: HomePage },
-  { path: "/search", component: SearchPage },
   { path: "/contact", component: Contact },
   { path: "/FAQ", component: FAQ },
-  { path: "/orderhotel", component: OrderHotel },
-  { path: "/hoteldetail/:hotelId", component: HotelDetail },
+  { path: "/timkiemkhachsan", component: OrderHotel },
+  { path: "/tracuubooking/:bookingid", component: TraCuuBooking },
 
-  { path: "/ordertour", component: OrderTour },
-  { path: "/tourdetail/:tourId", component: TourDetail },
+  { path: "/timkiemtour", component: OrderTour },
+  { path: "/timkiemtour/:tendiadiem", component: OrderTour },
+
+  { path: `/tour/:tourId`, component: TourDetail },
 
   { path: "/news", component: News },
   { path: "/news/:id", component: NewsArticlePage },
+  { path: `/booking/tour/:tourId`, component: BookTour },
+  { path: "/hoteldetail/:hotelId", component: HotelDetail },
 ];
 const NotLogInRoute = [
   { path: "login", component: LoginPage },
@@ -80,13 +67,16 @@ const NotLogInRoute = [
   { path: "register", component: RegisterPage },
 ];
 const IsLoginRoute = [
-  { path: "/cus_info", component: Cus_Infro },
-  { path: "/doithuong", component: DoiThuong },
-  { path: "/histour", component: Histour },
-  { path: "/repass", component: Repass },
+  { path: "/thongtintaikhoan", component: Cus_Infro },
+  { path: "/doimatkhau", component: Repass },
+
+  { path: "/booking/payment", component: Payment },
 ];
 const quanlyRoute = [
   { path: "/admin", component: PhuongTien },
+
+  { path: "taikhoancanhan", component: EmployeeInfo },
+
   { path: "ptdv/phuongtien", component: PhuongTien },
   { path: "ptdv/diadiem", component: DiaDiem },
   { path: "ptdv/diemden", component: DiemDen },
@@ -109,6 +99,12 @@ const quanlyRoute = [
   { path: "more/baiviet/:id", component: EditBaiViet },
   { path: "more/baiviet/:id/preview", component: PreviewBaiViet },
   { path: "more/baiviet/them", component: AddBaiViet },
+
+  { path: "booking", component: Booking },
+  { path: "booking/:bookingid", component: DetailBooking },
+
+  { path: "booking/thanhvien", component: KhachHang },
+  { path: "booking/thanhvien/taikhoan", component: TaiKhoanKH },
 
   { path: "cskh/thanhvien", component: KhachHang },
   { path: "cskh/thanhvien/taikhoan", component: TaiKhoanKH },

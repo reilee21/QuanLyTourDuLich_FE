@@ -10,6 +10,8 @@ import { DeleteConfirmationModal } from "../../../components/exportcom";
 
 const PhuongTien = () => {
   const [listdata, setListdata] = useState([]);
+  const [dtd, setDtd] = useState([]);
+
   const [showAddFormModal, setShowAddFormModal] = useState(false);
   const [showEditFormModal, setShowEditFormModal] = useState(false);
   const [showdelModal, setShowdelModal] = useState(false);
@@ -82,6 +84,18 @@ const PhuongTien = () => {
       console.error(e);
     }
   };
+  useEffect(() => {
+    const dt = async () => {
+      try {
+        const res = await axios.get(`api/doitacs`);
+        setDtd(res);
+      } catch (e) {
+        console.error(e);
+      }
+    };
+    dt();
+  }, []);
+
   return (
     <>
       <div className="row">
@@ -95,7 +109,7 @@ const PhuongTien = () => {
           <Form.Group className="search">
             <Form.Control
               type="text"
-              placeholder="Tên phương tiện hoặc tên đối tác"
+              placeholder="Tên phương tiện "
               value={searchQuery}
               onChange={handleSearchChange}
             />
@@ -125,7 +139,9 @@ const PhuongTien = () => {
                       <td className="stt">{index + 1}</td>
                       <td className="ten">{item.tenPhuongTien}</td>
                       <td className="mota">{item.moTa}</td>
-                      <td className="doitac">{item.doiTac}</td>
+                      <td className="doitac">
+                        {dtd.find((dt) => dt.idDoiTac === item.idDoiTac)?.ten}
+                      </td>
                       <td className="edit">
                         <Button
                           variant="outline-warning"

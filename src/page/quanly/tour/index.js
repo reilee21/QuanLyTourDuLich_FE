@@ -2,19 +2,21 @@ import React, { useState, useEffect } from "react";
 import { Button, Form } from "react-bootstrap";
 import { AiFillEdit, AiFillDelete } from "react-icons/ai";
 import ReactPaginate from "react-paginate";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import "./index.scss";
 import axios from "../../../api/axios";
 import { formatTimeToHours } from "../../../utils/fomattime";
 import { formatDate } from "../../../utils/formatdate";
+import { DeleteConfirmationModal } from "../../../components/exportcom";
+
 const Tour = () => {
   const navigate = useNavigate();
   const [listdata, setListdata] = useState([]);
   const [editData, setEditData] = useState({});
   const [pageNumber, setPageNumber] = useState(0);
   const [searchQuery, setSearchQuery] = useState("");
-  const [refreshFlag, setRefreshFlag] = useState(false);
   const [filteredData, setFilteredData] = useState([]);
+  const [showdelModal, setShowdelModal] = useState(false);
 
   const itemsPerPage = 10;
   const offset = pageNumber * itemsPerPage;
@@ -37,7 +39,7 @@ const Tour = () => {
   };
   useEffect(() => {
     fetchdata();
-  }, [refreshFlag]);
+  }, []);
 
   useEffect(() => {
     if (searchQuery.length < 2 || searchQuery === "") setFilteredData(listdata);
@@ -50,7 +52,11 @@ const Tour = () => {
     }
     const filteredResult = listdata.filter((item) => {
       const searchString = searchQuery.toLowerCase();
-      return item.tenPhuongTien.toLowerCase().includes(searchString);
+
+      return (
+        item.tenTour.toLowerCase().includes(searchString) ||
+        item.maTour.toLowerCase().includes(searchString)
+      );
     });
     setFilteredData(filteredResult);
     setPageNumber(0);
@@ -61,6 +67,16 @@ const Tour = () => {
 
   const handleEditClick = (item) => {
     navigate(`${item.maTour}`, { state: { tour: item } });
+  };
+  const handleDelete = async () => {
+    try {
+      await axios.delete(`/api/tours/${editData.maTour}`);
+      fetchdata();
+    } catch (e) {
+      alert("Không thể xoá tour");
+    }
+
+    setShowdelModal(false);
   };
 
   return (
@@ -74,7 +90,12 @@ const Tour = () => {
             Thêm mới
           </Button>
           <Form.Group className="search">
-            <Form.Control type="text" placeholder="Tên Tour" />
+            <Form.Control
+              type="text"
+              placeholder="Tên Tour hoặc mã tour"
+              value={searchQuery}
+              onChange={handleSearchChange}
+            />
           </Form.Group>
         </div>
 
@@ -96,7 +117,7 @@ const Tour = () => {
               </thead>
               <tbody>
                 {currentPageData.map((item) => (
-                  <tr key={item.MaTour} onClick={() => handleEditClick(item)}>
+                  <tr key={item.maTour} onClick={() => handleEditClick(item)}>
                     <td className="matour">{item.maTour}</td>
                     <td className="tentour">{item.tenTour}</td>
                     <td className="ngay">{formatDate(item.ngayKhoiHanh)}</td>
@@ -104,7 +125,7 @@ const Tour = () => {
                       {formatTimeToHours(item.gioTapTrung)}
                     </td>
                     <td className="noi">{item.noiKhoiHanh}</td>
-                    <td className="gia">{item.gia}</td>
+                    <td className="gia">{item.gia.toLocaleString()} đ</td>
                     <td className="edit">
                       <Button
                         variant="outline-warning"
@@ -117,7 +138,14 @@ const Tour = () => {
                       </Button>
                     </td>
                     <td className="del">
-                      <Button variant="outline-danger">
+                      <Button
+                        variant="outline-danger"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setEditData(item);
+                          setShowdelModal(true);
+                        }}
+                      >
                         <AiFillDelete />
                       </Button>
                     </td>
@@ -128,6 +156,14 @@ const Tour = () => {
           </div>
         </div>
       </div>
+      <DeleteConfirmationModal
+        show={showdelModal}
+        onCancel={() => {
+          setEditData(null);
+          setShowdelModal(false);
+        }}
+        onDelete={handleDelete}
+      />
       <ReactPaginate
         pageCount={Math.ceil(filteredData.length / itemsPerPage)} // Tổng số trang
         pageRangeDisplayed={3} // Số trang hiển thị trước và sau trang hiện tại

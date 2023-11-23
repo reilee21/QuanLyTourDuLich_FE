@@ -1,10 +1,19 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
+
 import { useState, useEffect } from "react";
 import axios from "../../api/axios";
 const MenuDuLich = (props) => {
   const [dulichtype, setDulichtype] = useState(true);
   const [diadiems, setDiadiems] = useState([]);
+  const navigate = useNavigate();
 
+  const [formsearch, setFormsearch] = useState({
+    noikhoihanh: "",
+    diemden: "",
+    ngaykhoihanh: "",
+    iddiadiem: "",
+  });
   useEffect(() => {
     const fetchDD = async () => {
       try {
@@ -15,9 +24,25 @@ const MenuDuLich = (props) => {
       }
     };
     fetchDD();
-  }, [diadiems]);
+  }, []);
 
-  const handleDiaDiemClick = (diadiem) => {};
+  const handleDiaDiemClick = async (diadiem) => {
+    setFormsearch({
+      ...formsearch,
+      diemden: diadiem.tenDiaDiem,
+      iddiadiem: diadiem.idDiaDiem,
+    });
+    const { diemden, ...postrq } = formsearch;
+    const queryString = new URLSearchParams(postrq).toString();
+    try {
+      const res = await axios.get(`/api/Tours/SearchTour?${queryString}`);
+      navigate(`/timkiemtour/${diadiem.tenDiaDiem}`, {
+        state: { tourlist: res },
+      });
+    } catch (e) {
+      console.error(e);
+    }
+  };
   return (
     <>
       <div className={`dulich-item ${props.isOpen ? "active" : ""} col-lg-12 `}>
@@ -41,7 +66,7 @@ const MenuDuLich = (props) => {
               <div className="row">
                 {diadiems
                   .filter((item) => item.loai === dulichtype)
-                  .slice(0, 20)
+                  .slice(0, 25)
                   .map((item, index) => (
                     <p
                       className="diadiemitem"
