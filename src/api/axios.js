@@ -3,7 +3,7 @@ const somee = "https://huflittravel.somee.com";
 const local = "https://localhost:7102";
 
 const instance = axios.create({
-  baseURL: local,
+  baseURL: somee,
 });
 
 instance.interceptors.response.use(

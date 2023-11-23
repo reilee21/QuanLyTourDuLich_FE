@@ -20,11 +20,11 @@ function App() {
     setupLogin2();
   }, []);
   useEffect(() => {
-    if (role != "client" && isLogin) {
+    if (role != "client" && role.length > 0 && isLogin) {
       setRoles("qly");
       navigate("/admin");
     }
-  }, [isLogin]);
+  }, [isLogin, role]);
   return (
     <div className="App">
       <Routes>

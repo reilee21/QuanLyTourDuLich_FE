@@ -7,13 +7,14 @@ import { GoogleLogin } from "@react-oauth/google";
 const FormLogin = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const { login, googlelogin } = useAuth();
+  const { login, googlelogin, role } = useAuth();
   const navigate = useNavigate();
   const handleAccountLogin = async (e) => {
     e.preventDefault();
     const success = await login(username, password);
     if (success) {
-      navigate(-1);
+      if (role === "client") navigate(-1);
+      else navigate("/admin");
     } else alert("Sai tài khoản hoặc mật khẩu");
   };
 
